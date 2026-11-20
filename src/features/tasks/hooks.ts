@@ -1,0 +1,16 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuthStore } from '../../stores/authStore';
+import { fetchTasks,fetchTask,fetchTodayTasks,createTask,updateTask,completeTask,deleteTask,createSubtask,toggleSubtask,deleteSubtask,searchTasks } from './api';
+import { scheduleTaskReminder, cancelNotification } from '../../lib/notifications/service';
+import type { TaskFormValues } from '../../lib/validation/schemas';
+export const TASKS_KEY='tasks', TODAY_KEY='tasks:today';
+export const useTasks=()=>{ const uid=useAuthStore(s=>s.user?.id); return useQuery({ queryKey:[TASKS_KEY,uid], queryFn:()=>fetchTasks(uid!), enabled:Boolean(uid), staleTime:30_000 }); };
+export const useTask=(id:string)=>useQuery({ queryKey:[TASKS_KEY,id], queryFn:()=>fetchTask(id), enabled:Boolean(id) });
+export const useTodayTasks=()=>{ const uid=useAuthStore(s=>s.user?.id); return useQuery({ queryKey:[TODAY_KEY,uid], queryFn:()=>fetchTodayTasks(uid!), enabled:Boolean(uid), staleTime:60_000 }); };
+export const useSearchTasks=(q:string)=>{ const uid=useAuthStore(s=>s.user?.id); return useQuery({ queryKey:[TASKS_KEY,'search',uid,q], queryFn:()=>searchTasks(uid!,q), enabled:Boolean(uid)&&q.length>1, staleTime:10_000 }); };
+export function useCreateTask(){ const uid=useAuthStore(s=>s.user?.id); const qc=useQueryClient(); return useMutation({ mutationFn:(v:TaskFormValues)=>createTask(uid!,v), onSuccess:async(task)=>{ qc.invalidateQueries({queryKey:[TASKS_KEY]}); qc.invalidateQueries({queryKey:[TODAY_KEY]}); if(task.reminder_at) await scheduleTaskReminder(task.id,task.title,new Date(task.reminder_at)).catch(()=>{}); } }); }
+export function useUpdateTask(){ const qc=useQueryClient(); return useMutation({ mutationFn:({id,updates}:{id:string;updates:Partial<TaskFormValues>})=>updateTask(id,updates), onSuccess:async(task)=>{ qc.invalidateQueries({queryKey:[TASKS_KEY]}); qc.invalidateQueries({queryKey:[TODAY_KEY]}); await cancelNotification(`task_${task.id}`).catch(()=>{}); if(task.reminder_at) await scheduleTaskReminder(task.id,task.title,new Date(task.reminder_at)).catch(()=>{}); } }); }
+export function useCompleteTask(){ const qc=useQueryClient(); return useMutation({ mutationFn:completeTask, onMutate:async(id)=>{ await qc.cancelQueries({queryKey:[TODAY_KEY]}); const prev=qc.getQueryData([TODAY_KEY]); qc.setQueryData([TODAY_KEY],(old:unknown[])=>old?.filter((t:{ id:string })=>t.id!==id)??[]); return { prev }; }, onError:(_e,_id,ctx)=>qc.setQueryData([TODAY_KEY],ctx?.prev), onSettled:()=>{ qc.invalidateQueries({queryKey:[TASKS_KEY]}); qc.invalidateQueries({queryKey:[TODAY_KEY]}); } }); }
+export function useDeleteTask(){ const qc=useQueryClient(); return useMutation({ mutationFn:deleteTask, onSuccess:()=>{ qc.invalidateQueries({queryKey:[TASKS_KEY]}); qc.invalidateQueries({queryKey:[TODAY_KEY]}); } }); }
+export function useCreateSubtask(){ const qc=useQueryClient(); return useMutation({ mutationFn:({taskId,title}:{taskId:string;title:string})=>createSubtask(taskId,title), onSuccess:(_d,{taskId})=>qc.invalidateQueries({queryKey:[TASKS_KEY,taskId]}) }); }
+export function useToggleSubtask(){ const qc=useQueryClient(); return useMutation({ mutationFn:({id,completed}:{id:string;completed:boolean})=>toggleSubtask(id,completed), onSuccess:()=>qc.invalidateQueries({queryKey:[TASKS_KEY]}) }); }

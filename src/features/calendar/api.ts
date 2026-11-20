@@ -1,0 +1,8 @@
+import { supabase } from '../../lib/supabase/client';
+import type { CalendarEvent } from '../../types';
+import type { EventFormValues } from '../../lib/validation/schemas';
+export async function fetchEvents(uid:string,from:string,to:string):Promise<CalendarEvent[]> { const { data,error }=await supabase.from('events').select('*').eq('user_id',uid).gte('start_at',from).lte('end_at',to).order('start_at',{ascending:true}); if(error)throw new Error(error.message); return data as CalendarEvent[]; }
+export async function fetchUpcomingEvents(uid:string,limit=5):Promise<CalendarEvent[]> { const { data,error }=await supabase.from('events').select('*').eq('user_id',uid).gte('start_at',new Date().toISOString()).order('start_at',{ascending:true}).limit(limit); if(error)throw new Error(error.message); return data as CalendarEvent[]; }
+export async function createEvent(uid:string,values:EventFormValues,timezone:string):Promise<CalendarEvent> { const { data,error }=await supabase.from('events').insert({ user_id:uid,...values, timezone }).select().single(); if(error)throw new Error(error.message); return data as CalendarEvent; }
+export async function updateEvent(id:string,updates:Partial<EventFormValues>):Promise<CalendarEvent> { const { data,error }=await supabase.from('events').update({ ...updates, updated_at:new Date().toISOString() }).eq('id',id).select().single(); if(error)throw new Error(error.message); return data as CalendarEvent; }
+export async function deleteEvent(id:string):Promise<void> { const { error }=await supabase.from('events').delete().eq('id',id); if(error)throw new Error(error.message); }

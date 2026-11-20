@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native builds
+android/
+ios/
+
+# Environment — NEVER commit secrets
+.env
+.env.local
+.env.*.local
+
+# EAS secrets
+google-service-account.json
+*.p8
+*.p12
+*.mobileprovision
+
+# Build artifacts
+*.jks
+*.keystore
+*.aab
+*.apk
+*.ipa
+
+# Test / coverage
+coverage/
+.jest-cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
