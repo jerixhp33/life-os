@@ -16,6 +16,8 @@ import { useUpcomingEvents } from '../../src/features/calendar/hooks';
 import { useAuthStore, isCleanAvatarUrl } from '../../src/stores/authStore';
 import { Card, TouchableCard } from '../../src/components/ui/Card';
 import { SkeletonCard, EmptyState } from '../../src/components/feedback';
+import { OmniCaptureBar } from '../../src/components/intelligence/OmniCaptureBar';
+import { DailyBriefCard } from '../../src/components/intelligence/DailyBriefCard';
 
 const AVATAR_CACHE_KEY = 'lifeos_cached_avatar_url';
 
@@ -276,6 +278,20 @@ export default function HomeScreen() {
               Day Streak
             </Text>
           </TouchableOpacity>
+        </Animated.View>
+
+        {/* ============================================================== */}
+        {/* 2.5 OMNI CAPTURE INTELLIGENCE BAR                              */}
+        {/* ============================================================== */}
+        <Animated.View entering={FadeInUp.duration(420).delay(110)} style={{ paddingHorizontal: spacing[5], marginTop: spacing[3] }}>
+          <OmniCaptureBar onSuccess={() => qc.invalidateQueries()} />
+        </Animated.View>
+
+        {/* ============================================================== */}
+        {/* 2.6 AUTONOMOUS DAILY BRIEF CARD                                */}
+        {/* ============================================================== */}
+        <Animated.View entering={FadeInUp.duration(420).delay(130)} style={{ paddingHorizontal: spacing[5], marginTop: spacing[3] }}>
+          <DailyBriefCard />
         </Animated.View>
 
         {/* ============================================================== */}
