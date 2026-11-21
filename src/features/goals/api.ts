@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '../../lib/supabase/client';
 import type { Goal, GoalMilestone } from '../../types';
 import type { GoalFormValues } from '../../lib/validation/schemas';
@@ -102,6 +103,7 @@ export async function createGoal(uid: string, values: GoalFormValues): Promise<G
 }
 
 export async function updateGoal(id: string, updates: Partial<Goal>): Promise<Goal> {
+  await syncLocalGoalUpdate(id, updates);
   try {
     const { data, error }: any = await withTimeout(
       supabase.from('goals').update({ ...updates, updated_at: new Date().toISOString() }).eq('id', id).select().single(),
@@ -113,6 +115,52 @@ export async function updateGoal(id: string, updates: Partial<Goal>): Promise<Go
   }
 
   return { id, ...updates } as Goal;
+}
+
+async function syncLocalGoalUpdate(id: string, updates: Partial<Goal>) {
+  try {
+    const allKeys = await AsyncStorage.getAllKeys();
+    const goalKeys = allKeys.filter((k) => k.startsWith('lifeos_data_goals_'));
+    for (const gk of goalKeys) {
+      const strippedKey = gk.replace('lifeos_data_', '');
+      const cached = await getLocalData<Goal[]>(strippedKey);
+      if (cached) {
+        const updated = cached.map((g) => (g.id === id ? { ...g, ...updates, updated_at: new Date().toISOString() } : g));
+        await setLocalData(strippedKey, updated);
+      }
+    }
+  } catch {}
+}
+
+async function syncLocalMilestoneToggle(milestoneId: string, goalId: string, completed: boolean) {
+  try {
+    const allKeys = await AsyncStorage.getAllKeys();
+    const goalKeys = allKeys.filter((k) => k.startsWith('lifeos_data_goals_'));
+    for (const gk of goalKeys) {
+      const strippedKey = gk.replace('lifeos_data_', '');
+      const cached = await getLocalData<Goal[]>(strippedKey);
+      if (cached) {
+        const updated = cached.map((g) => {
+          if (g.id === goalId) {
+            const msList = (g.milestones ?? []).map((m) =>
+              m.id === milestoneId ? { ...m, completed, completed_at: completed ? new Date().toISOString() : null } : m
+            );
+            const done = msList.filter((m) => m.completed).length;
+            const newProg = msList.length ? Math.round((done / msList.length) * 100) : g.progress;
+            return {
+              ...g,
+              progress: newProg,
+              status: (newProg === 100 ? 'completed' : g.status === 'completed' && newProg < 100 ? 'active' : g.status) as Goal['status'],
+              milestones: msList,
+              updated_at: new Date().toISOString(),
+            };
+          }
+          return g;
+        });
+        await setLocalData(strippedKey, updated);
+      }
+    }
+  } catch {}
 }
 
 export async function updateGoalProgress(id: string, progress: number): Promise<Goal> {
@@ -160,14 +208,22 @@ export async function createMilestone(
 }
 
 export async function completeMilestone(milestoneId: string, goalId: string): Promise<void> {
+  await toggleMilestone(milestoneId, goalId, true);
+}
+
+export async function toggleMilestone(milestoneId: string, goalId: string, completed: boolean): Promise<void> {
+  await syncLocalMilestoneToggle(milestoneId, goalId, completed);
+  const completed_at = completed ? new Date().toISOString() : null;
   try {
-    await supabase.from('goal_milestones').update({ completed: true, completed_at: new Date().toISOString() }).eq('id', milestoneId);
+    await supabase.from('goal_milestones').update({ completed, completed_at }).eq('id', milestoneId);
     const { data } = await supabase.from('goal_milestones').select('completed').eq('goal_id', goalId);
     if (data?.length) {
       const done = data.filter((m) => m.completed).length;
       await updateGoalProgress(goalId, (done / data.length) * 100);
     }
-  } catch {}
+  } catch (err) {
+    console.warn('[toggleMilestone] offline fallback:', err);
+  }
 }
 
 export async function deleteMilestone(id: string): Promise<void> {
