@@ -27,6 +27,7 @@ import {
 } from '../../src/features/habits/api';
 import { useAuthStore } from '../../src/stores/authStore';
 import { EmptyState, SkeletonCard } from '../../src/components/feedback';
+import { AppBackground } from '../../src/components/layout/AppBackground';
 import type { Habit } from '../../src/types';
 
 const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -120,20 +121,9 @@ export default function HabitsScreen() {
   };
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: theme.bg.primary }]} edges={['top', 'left', 'right']}>
-      {/* Radiant Glowing Background Light */}
-      <View pointerEvents="none" style={s.ambientGlowContainer}>
-        <LinearGradient
-          colors={
-            isDark
-              ? ['rgba(225, 29, 72, 0.20)', 'rgba(168, 85, 247, 0.14)', 'transparent']
-              : ['rgba(254, 205, 211, 0.50)', 'rgba(233, 213, 255, 0.35)', 'transparent']
-          }
-          start={{ x: 0.1, y: 0 }}
-          end={{ x: 0.9, y: 0.8 }}
-          style={s.ambientGlow}
-        />
-      </View>
+    <SafeAreaView style={s.safe} edges={['top', 'left', 'right']}>
+      {/* 4K Blurred Organic U-Shape Wallpaper Background */}
+      <AppBackground screenName="habits" />
 
       {/* ============================================================== */}
       {/* 1. TOP HEADER WITH GLOSSY "+ NEW HABIT" BUTTON                 */}

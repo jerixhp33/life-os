@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider, useTheme } from '../src/theme/ThemeContext';
 import { useAuthStore } from '../src/stores/authStore';
 import { useSecurityStore } from '../src/stores/securityStore';
+import { useWallpaperStore } from '../src/stores/wallpaperStore';
 import { useRealtimeSync } from '../src/lib/supabase/realtime';
 import { setupNotificationChannels } from '../src/lib/notifications/service';
 import { LoadingScreen } from '../src/components/feedback';
@@ -27,6 +28,7 @@ function Inner() {
   useEffect(() => {
     initialize();
     initSecurity();
+    useWallpaperStore.getState().initialize();
     setupNotificationChannels().catch(() => {});
 
     const sub = AppState.addEventListener('change', (nextState: AppStateStatus) => {
@@ -77,6 +79,7 @@ function Inner() {
         <Stack.Screen name="ai/chat" options={{ presentation: 'card', animation: 'slide_from_right', gestureEnabled: true }} />
         <Stack.Screen name="settings/profile" options={{ presentation: 'card', animation: 'slide_from_right', gestureEnabled: true }} />
         <Stack.Screen name="settings/security" options={{ presentation: 'card', animation: 'slide_from_right', gestureEnabled: true }} />
+        <Stack.Screen name="settings/wallpaper" options={{ presentation: 'card', animation: 'slide_from_right', gestureEnabled: true }} />
         <Stack.Screen name="settings/export" options={{ presentation: 'card', animation: 'slide_from_right', gestureEnabled: true }} />
       </Stack>
       <BiometricLockModal />

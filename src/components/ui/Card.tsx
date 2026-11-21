@@ -28,7 +28,7 @@ const BORDER_WIDTH = 1.2;
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 function enteringAnimation(index: number) {
-  return FadeInDown.duration(380).delay(index * 45).springify();
+  return FadeInDown.duration(380).delay(index * 40).springify();
 }
 
 function elevationShadow(elevation: CardProps['elevation']) {
@@ -37,16 +37,17 @@ function elevationShadow(elevation: CardProps['elevation']) {
   return shadows.md;
 }
 
+// Glassy white transparent gradients with specular reflection
 const DARK_GRADIENT: readonly [string, string, ...string[]] = [
-  'rgba(255, 255, 255, 0.12)',
-  'rgba(26, 90, 127, 0.25)',
-  'rgba(10, 36, 56, 0.85)',
+  'rgba(255, 255, 255, 0.18)',
+  'rgba(255, 255, 255, 0.06)',
+  'rgba(14, 28, 48, 0.70)',
 ];
 
 const LIGHT_GRADIENT: readonly [string, string, ...string[]] = [
   'rgba(255, 255, 255, 0.96)',
-  'rgba(235, 245, 252, 0.88)',
-  'rgba(212, 222, 227, 0.80)',
+  'rgba(255, 255, 255, 0.85)',
+  'rgba(238, 245, 252, 0.78)',
 ];
 
 export function Card({
@@ -58,8 +59,8 @@ export function Card({
   const { isDark } = useTheme();
 
   const borderColor = isDark
-    ? 'rgba(168, 220, 244, 0.28)'
-    : 'rgba(255, 255, 255, 0.88)';
+    ? 'rgba(255, 255, 255, 0.22)'
+    : 'rgba(255, 255, 255, 0.92)';
 
   return (
     <Animated.View
@@ -71,18 +72,27 @@ export function Card({
         style,
       ]}
     >
-      {Platform.OS === 'ios' && (
-        <BlurView
-          tint={isDark ? 'dark' : 'light'}
-          intensity={55}
-          style={StyleSheet.absoluteFill}
-        />
-      )}
+      <BlurView
+        tint={isDark ? 'dark' : 'light'}
+        intensity={Platform.OS === 'ios' ? 60 : 45}
+        style={StyleSheet.absoluteFill}
+      />
       <LinearGradient
         colors={isDark ? DARK_GRADIENT : LIGHT_GRADIENT}
         start={{ x: 0, y: 0 }}
-        end={{ x: 0.9, y: 1 }}
+        end={{ x: 0.85, y: 1 }}
         style={StyleSheet.absoluteFill}
+      />
+      {/* Specular hairline top reflection */}
+      <View
+        style={[
+          styles.specularShine,
+          {
+            backgroundColor: isDark
+              ? 'rgba(255, 255, 255, 0.38)'
+              : 'rgba(255, 255, 255, 0.95)',
+          },
+        ]}
       />
       <View style={styles.content}>{children}</View>
     </Animated.View>
@@ -104,18 +114,18 @@ export function TouchableCard({
   }));
 
   const borderColor = isDark
-    ? 'rgba(168, 220, 244, 0.28)'
-    : 'rgba(255, 255, 255, 0.88)';
+    ? 'rgba(255, 255, 255, 0.24)'
+    : 'rgba(255, 255, 255, 0.92)';
 
   return (
     <AnimatedPressable
       entering={enteringAnimation(index ?? 0)}
       onPress={onPress}
       onPressIn={() => {
-        scale.value = withSpring(0.97, { damping: 15, stiffness: 300 });
+        scale.value = withSpring(0.975, { damping: 18, stiffness: 350 });
       }}
       onPressOut={() => {
-        scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+        scale.value = withSpring(1, { damping: 18, stiffness: 350 });
       }}
       accessibilityRole="button"
       style={[
@@ -126,18 +136,27 @@ export function TouchableCard({
         style,
       ]}
     >
-      {Platform.OS === 'ios' && (
-        <BlurView
-          tint={isDark ? 'dark' : 'light'}
-          intensity={55}
-          style={StyleSheet.absoluteFill}
-        />
-      )}
+      <BlurView
+        tint={isDark ? 'dark' : 'light'}
+        intensity={Platform.OS === 'ios' ? 60 : 45}
+        style={StyleSheet.absoluteFill}
+      />
       <LinearGradient
         colors={isDark ? DARK_GRADIENT : LIGHT_GRADIENT}
         start={{ x: 0, y: 0 }}
-        end={{ x: 0.9, y: 1 }}
+        end={{ x: 0.85, y: 1 }}
         style={StyleSheet.absoluteFill}
+      />
+      {/* Specular hairline top reflection */}
+      <View
+        style={[
+          styles.specularShine,
+          {
+            backgroundColor: isDark
+              ? 'rgba(255, 255, 255, 0.38)'
+              : 'rgba(255, 255, 255, 0.95)',
+          },
+        ]}
       />
       <View style={styles.content}>{children}</View>
     </AnimatedPressable>
@@ -150,6 +169,13 @@ const styles = StyleSheet.create({
     borderWidth: BORDER_WIDTH,
     overflow: 'hidden',
     position: 'relative',
+  },
+  specularShine: {
+    position: 'absolute',
+    top: 0,
+    left: 24,
+    right: 24,
+    height: 1,
   },
   content: {
     padding: 16,

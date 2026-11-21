@@ -1,5 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
+import { AppBackground } from '../layout/AppBackground';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../theme/ThemeContext';
 import { spacing, radius, fontSize, fontWeight } from '../../theme/tokens';
@@ -148,22 +158,267 @@ const erS = StyleSheet.create({
   msg: { fontSize: fontSize.base, textAlign: 'center', lineHeight: 22 },
 });
 
-export function LoadingScreen() {
-  const { theme } = useTheme();
+export function LoadingScreen({ message = 'Initializing intelligence system...' }: { message?: string }) {
+  const { theme, isDark } = useTheme();
+
+  const pulse = useSharedValue(1);
+  const glow = useSharedValue(0.4);
+  const progress = useSharedValue(0);
+
+  useEffect(() => {
+    pulse.value = withRepeat(
+      withSequence(
+        withTiming(1.08, { duration: 1600, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1, { duration: 1600, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1,
+      true
+    );
+
+    glow.value = withRepeat(
+      withSequence(
+        withTiming(0.85, { duration: 1600, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0.4, { duration: 1600, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1,
+      true
+    );
+
+    progress.value = withRepeat(
+      withTiming(1, { duration: 2200, easing: Easing.inOut(Easing.cubic) }),
+      -1,
+      false
+    );
+  }, []);
+
+  const haloAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: pulse.value }],
+    opacity: glow.value,
+  }));
+
+  const progressAnimatedStyle = useAnimatedStyle(() => ({
+    width: `${Math.round(progress.value * 100)}%`,
+  }));
+
   return (
-    <View style={[lS.container, { backgroundColor: theme.bg.primary }]}>
-      <Text style={[lS.logo, { color: theme.brand.primary }]}>LifeOS</Text>
-      <Text style={{ fontSize: fontSize.xs, color: theme.text.tertiary, marginTop: -8 }}>
-        One UI Frosted Glass Edition
-      </Text>
-      <Spinner size="small" />
+    <View style={lS.container}>
+      <AppBackground screenName="loading" />
+
+      {/* Center Branding Content */}
+      <View style={lS.centerContent}>
+        {/* Glowing Geometric LifeOS Glyph */}
+        <View style={lS.glyphWrapper}>
+          {/* Pulsing Aura Halo */}
+          <Animated.View style={[lS.haloRing, haloAnimatedStyle]}>
+            <LinearGradient
+              colors={['#38BDF8', '#6366F1', '#A855F7']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={StyleSheet.absoluteFill}
+            />
+          </Animated.View>
+
+          {/* Frosted Glass Emblem Frame */}
+          <View
+            style={[
+              lS.emblemBox,
+              {
+                backgroundColor: isDark
+                  ? 'rgba(255, 255, 255, 0.12)'
+                  : 'rgba(255, 255, 255, 0.92)',
+                borderColor: isDark
+                  ? 'rgba(255, 255, 255, 0.28)'
+                  : 'rgba(255, 255, 255, 0.95)',
+              },
+            ]}
+          >
+            <LinearGradient
+              colors={['#2563EB', '#6366F1']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={lS.innerCube}
+            >
+              <Ionicons name="cube-outline" size={32} color="#FFFFFF" />
+            </LinearGradient>
+          </View>
+        </View>
+
+        {/* Title & Brand Name */}
+        <View style={lS.textBlock}>
+          <Text style={[lS.brandTitle, { color: theme.text.primary }]}>LifeOS</Text>
+          <View
+            style={[
+              lS.tagPill,
+              {
+                backgroundColor: isDark
+                  ? 'rgba(56, 189, 248, 0.12)'
+                  : 'rgba(2, 132, 199, 0.08)',
+                borderColor: isDark
+                  ? 'rgba(56, 189, 248, 0.25)'
+                  : 'rgba(2, 132, 199, 0.18)',
+              },
+            ]}
+          >
+            <View style={lS.statusDot} />
+            <Text style={[lS.tagText, { color: isDark ? '#38BDF8' : '#0284C7' }]}>
+              Personal Intelligence System
+            </Text>
+          </View>
+        </View>
+
+        {/* Micro Progress Bar & Status Message */}
+        <View style={lS.progressSection}>
+          <View
+            style={[
+              lS.progressBarTrack,
+              {
+                backgroundColor: isDark
+                  ? 'rgba(255, 255, 255, 0.1)'
+                  : 'rgba(15, 23, 42, 0.08)',
+              },
+            ]}
+          >
+            <Animated.View style={[lS.progressBarFill, progressAnimatedStyle]}>
+              <LinearGradient
+                colors={['#38BDF8', '#6366F1']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={StyleSheet.absoluteFill}
+              />
+            </Animated.View>
+          </View>
+
+          <Text style={[lS.statusMsg, { color: isDark ? '#819BB3' : '#64748B' }]}>
+            {message}
+          </Text>
+        </View>
+      </View>
+
+      {/* Minimal Footer */}
+      <View style={lS.footer}>
+        <Ionicons
+          name="shield-checkmark-outline"
+          size={13}
+          color={isDark ? '#64748B' : '#94A3B8'}
+        />
+        <Text style={[lS.footerText, { color: isDark ? '#64748B' : '#94A3B8' }]}>
+          Zero-Knowledge Encrypted · Cloud Synced
+        </Text>
+      </View>
     </View>
   );
 }
 
 const lS = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: spacing[4] },
-  logo: { fontSize: 28, fontWeight: fontWeight.bold, letterSpacing: -0.5 },
+  container: {
+    flex: 1,
+    position: 'relative',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 56,
+    paddingHorizontal: 24,
+  },
+  centerContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 22,
+    width: '100%',
+  },
+  glyphWrapper: {
+    width: 104,
+    height: 104,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  haloRing: {
+    position: 'absolute',
+    width: 104,
+    height: 104,
+    borderRadius: 52,
+    opacity: 0.5,
+  },
+  emblemBox: {
+    width: 78,
+    height: 78,
+    borderRadius: 24,
+    borderWidth: 1.2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#38BDF8',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.35,
+    shadowRadius: 18,
+    elevation: 8,
+  },
+  innerCube: {
+    width: 58,
+    height: 58,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textBlock: {
+    alignItems: 'center',
+    gap: 8,
+  },
+  brandTitle: {
+    fontSize: 32,
+    fontWeight: '800',
+    letterSpacing: -0.6,
+  },
+  tagPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 9999,
+    borderWidth: 1,
+  },
+  statusDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#38BDF8',
+  },
+  tagText: {
+    fontSize: 12,
+    fontWeight: '600',
+    letterSpacing: 0.2,
+  },
+  progressSection: {
+    width: '75%',
+    maxWidth: 240,
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 8,
+  },
+  progressBarTrack: {
+    width: '100%',
+    height: 4,
+    borderRadius: 2,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    borderRadius: 2,
+  },
+  statusMsg: {
+    fontSize: 12,
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  footerText: {
+    fontSize: 11,
+    fontWeight: '500',
+  },
 });
 
 export function Badge({ label, color, bg, style }: { label: string; color: string; bg: string; style?: object }) {

@@ -39,6 +39,7 @@ import { SipCalculatorModal } from '../../src/components/finance/SipCalculatorMo
 import { UpiPaymentModal } from '../../src/components/finance/UpiPaymentModal';
 import { OmniCaptureBar } from '../../src/components/intelligence/OmniCaptureBar';
 import { pickAndScanReceipt } from '../../src/lib/intelligence/receiptScanner';
+import { AppBackground } from '../../src/components/layout/AppBackground';
 import type { Transaction } from '../../src/types';
 
 const CATEGORY_ICONS: Record<string, { icon: keyof typeof Ionicons.glyphMap; gradient: [string, string] }> = {
@@ -138,20 +139,9 @@ export default function FinanceScreen() {
   };
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: theme.bg.primary }]} edges={['top', 'left', 'right']}>
-      {/* Radiant Glowing Background Light */}
-      <View pointerEvents="none" style={s.ambientGlowContainer}>
-        <LinearGradient
-          colors={
-            isDark
-              ? ['rgba(245, 158, 11, 0.20)', 'rgba(16, 185, 129, 0.14)', 'transparent']
-              : ['rgba(254, 243, 199, 0.50)', 'rgba(209, 250, 229, 0.35)', 'transparent']
-          }
-          start={{ x: 0.1, y: 0 }}
-          end={{ x: 0.9, y: 0.8 }}
-          style={s.ambientGlow}
-        />
-      </View>
+    <SafeAreaView style={s.safe} edges={['top', 'left', 'right']}>
+      {/* 4K Blurred Organic U-Shape Wallpaper Background */}
+      <AppBackground screenName="finance" />
 
       {/* ============================================================== */}
       {/* 1. TOP HEADER WITH GLASS ACTION BUTTONS                        */}

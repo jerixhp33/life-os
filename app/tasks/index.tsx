@@ -24,6 +24,7 @@ import {
   useDeleteTask,
 } from '../../src/features/tasks/hooks';
 import { OmniCaptureBar } from '../../src/components/intelligence/OmniCaptureBar';
+import { AppBackground } from '../../src/components/layout/AppBackground';
 import type { Task, TaskPriority } from '../../src/types';
 
 const PRIORITY_META: Record<
@@ -113,20 +114,9 @@ export default function TasksScreen() {
   };
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: theme.bg.primary }]} edges={['top', 'left', 'right']}>
-      {/* Radiant Glowing Background Light */}
-      <View pointerEvents="none" style={s.ambientGlowContainer}>
-        <LinearGradient
-          colors={
-            isDark
-              ? ['rgba(99, 102, 241, 0.25)', 'rgba(56, 189, 248, 0.16)', 'transparent']
-              : ['rgba(199, 210, 254, 0.50)', 'rgba(224, 242, 254, 0.35)', 'transparent']
-          }
-          start={{ x: 0.1, y: 0 }}
-          end={{ x: 0.9, y: 0.8 }}
-          style={s.ambientGlow}
-        />
-      </View>
+    <SafeAreaView style={s.safe} edges={['top', 'left', 'right']}>
+      {/* 4K Blurred Organic U-Shape Wallpaper Background */}
+      <AppBackground screenName="tasks" />
 
       {/* ============================================================== */}
       {/* 1. TOP HEADER WITH GLOSSY "+ NEW TASK" BUTTON                  */}

@@ -20,6 +20,7 @@ import { Card, TouchableCard } from '../../src/components/ui/Card';
 import { SkeletonCard, EmptyState } from '../../src/components/feedback';
 import { OmniCaptureBar } from '../../src/components/intelligence/OmniCaptureBar';
 import { DailyBriefCard } from '../../src/components/intelligence/DailyBriefCard';
+import { AppBackground } from '../../src/components/layout/AppBackground';
 
 const AVATAR_CACHE_KEY = 'lifeos_cached_avatar_url';
 
@@ -95,7 +96,10 @@ export default function HomeScreen() {
   const dayStreak = habits?.length ? calculateStreak(habitLogs ?? []) : 0;
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: theme.bg.primary }]} edges={['top', 'left', 'right']}>
+    <SafeAreaView style={s.safe} edges={['top', 'left', 'right']}>
+      {/* 4K Blurred Organic U-Shape Wallpaper Background */}
+      <AppBackground screenName="home" />
+
       <ScrollView
         contentContainerStyle={s.scroll}
         showsVerticalScrollIndicator={false}

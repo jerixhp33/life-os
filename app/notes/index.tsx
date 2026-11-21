@@ -24,6 +24,7 @@ import {
   useUpdateNote,
 } from '../../src/features/notes/hooks';
 import { OmniCaptureBar } from '../../src/components/intelligence/OmniCaptureBar';
+import { AppBackground } from '../../src/components/layout/AppBackground';
 import type { Note } from '../../src/types';
 
 export default function NotesScreen() {
@@ -75,20 +76,9 @@ export default function NotesScreen() {
   };
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: theme.bg.primary }]} edges={['top', 'left', 'right']}>
-      {/* Radiant Glowing Background Light */}
-      <View pointerEvents="none" style={s.ambientGlowContainer}>
-        <LinearGradient
-          colors={
-            isDark
-              ? ['rgba(139, 92, 246, 0.25)', 'rgba(56, 189, 248, 0.16)', 'transparent']
-              : ['rgba(233, 213, 255, 0.50)', 'rgba(199, 210, 254, 0.35)', 'transparent']
-          }
-          start={{ x: 0.1, y: 0 }}
-          end={{ x: 0.9, y: 0.8 }}
-          style={s.ambientGlow}
-        />
-      </View>
+    <SafeAreaView style={s.safe} edges={['top', 'left', 'right']}>
+      {/* 4K Blurred Organic U-Shape Wallpaper Background */}
+      <AppBackground screenName="notes" />
 
       {/* ============================================================== */}
       {/* 1. TOP HEADER WITH GLOSSY "+ NEW NOTE" BUTTON                  */}

@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useTheme } from '../../theme/ThemeContext';
 import { spacing, fontSize, fontWeight, touchTarget } from '../../theme/tokens';
+import { AppBackground } from './AppBackground';
 
 interface Props {
   children: React.ReactNode;
@@ -17,6 +18,8 @@ interface Props {
   style?: object;
   contentStyle?: object;
   edges?: Array<'top' | 'bottom' | 'left' | 'right'>;
+  screenName?: string;
+  withBackground?: boolean;
 }
 
 export function ScreenLayout({
@@ -29,8 +32,10 @@ export function ScreenLayout({
   style,
   contentStyle,
   edges = ['top', 'bottom', 'left', 'right'],
+  screenName,
+  withBackground = true,
 }: Props) {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const router = useRouter();
 
   const handleBack = () => {
@@ -63,19 +68,44 @@ export function ScreenLayout({
   );
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: theme.bg.primary }, style]} edges={edges}>
+    <SafeAreaView
+      style={[
+        styles.safe,
+        { backgroundColor: withBackground ? (isDark ? '#060B13' : '#F8FAFC') : theme.bg.primary },
+        style,
+      ]}
+      edges={edges}
+    >
+      {withBackground && <AppBackground screenName={screenName} />}
+
       {(title || showBack || rightAction) && (
-        <View style={[styles.header, { borderBottomColor: theme.border.subtle }]}>
+        <View
+          style={[
+            styles.header,
+            {
+              borderBottomColor: isDark
+                ? 'rgba(255, 255, 255, 0.08)'
+                : 'rgba(15, 23, 42, 0.06)',
+            },
+          ]}
+        >
           {showBack ? (
             <TouchableOpacity
               onPress={handleBack}
               activeOpacity={0.7}
-              style={styles.backBtn}
+              style={[
+                styles.backBtn,
+                {
+                  backgroundColor: isDark
+                    ? 'rgba(255, 255, 255, 0.12)'
+                    : 'rgba(15, 23, 42, 0.06)',
+                },
+              ]}
               accessibilityLabel="Go back"
               accessibilityRole="button"
               hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             >
-              <Ionicons name="chevron-back" size={24} color={theme.text.primary} />
+              <Ionicons name="chevron-back" size={20} color={theme.text.primary} />
             </TouchableOpacity>
           ) : (
             <View style={styles.placeholder} />
@@ -94,19 +124,34 @@ export function ScreenLayout({
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1 },
+  safe: { flex: 1, position: 'relative' },
   flex: { flex: 1 },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 56,
+    justifyContent: 'space-between',
     paddingHorizontal: spacing[4],
+    paddingVertical: spacing[3],
     borderBottomWidth: StyleSheet.hairlineWidth,
+    minHeight: 56,
   },
-  backBtn: { width: touchTarget.min, height: touchTarget.min, alignItems: 'flex-start', justifyContent: 'center' },
-  placeholder: { width: touchTarget.min },
-  title: { flex: 1, fontSize: fontSize.md, fontWeight: fontWeight.bold, textAlign: 'center' },
-  rightAction: { width: touchTarget.min, alignItems: 'flex-end', justifyContent: 'center' },
+  backBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.bold,
+    letterSpacing: -0.3,
+    marginHorizontal: spacing[2],
+  },
+  placeholder: { width: 36 },
+  rightAction: { minWidth: 36, alignItems: 'flex-end', justifyContent: 'center' },
   content: { flex: 1 },
-  scrollContent: { flexGrow: 1 },
+  scrollContent: { flexGrow: 1, paddingBottom: spacing[8] },
 });

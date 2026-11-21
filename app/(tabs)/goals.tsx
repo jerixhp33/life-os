@@ -26,6 +26,7 @@ import {
 } from '../../src/features/goals/api';
 import { useAuthStore } from '../../src/stores/authStore';
 import { SkeletonCard, EmptyState } from '../../src/components/feedback';
+import { AppBackground } from '../../src/components/layout/AppBackground';
 import type { Goal, GoalCategory, GoalMilestone } from '../../src/types';
 
 // Category theme styling with rich gradients and vector icons
@@ -160,20 +161,9 @@ export default function GoalsScreen() {
   }, [totalCount, completedCount, avg, activeCount]);
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: theme.bg.primary }]} edges={['top', 'left', 'right']}>
-      {/* Radiant Glowing Background Light (Matches Calendar & Home) */}
-      <View pointerEvents="none" style={s.ambientGlowContainer}>
-        <LinearGradient
-          colors={
-            isDark
-              ? ['rgba(99, 102, 241, 0.25)', 'rgba(168, 85, 247, 0.16)', 'transparent']
-              : ['rgba(199, 210, 254, 0.50)', 'rgba(233, 213, 255, 0.35)', 'transparent']
-          }
-          start={{ x: 0.1, y: 0 }}
-          end={{ x: 0.9, y: 0.8 }}
-          style={s.ambientGlow}
-        />
-      </View>
+    <SafeAreaView style={s.safe} edges={['top', 'left', 'right']}>
+      {/* 4K Blurred Organic U-Shape Wallpaper Background */}
+      <AppBackground screenName="goals" />
 
       {/* ============================================================== */}
       {/* 1. TOP HEADER WITH GLOSSY ACTIONS                              */}

@@ -379,6 +379,28 @@ export default function ProfileSettingsScreen() {
                 );
               })}
             </View>
+
+            <View style={[s.divider, { backgroundColor: theme.border.subtle, marginVertical: spacing[3] }]} />
+
+            <TouchableOpacity
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                router.push('/settings/wallpaper');
+              }}
+              style={s.settRow}
+              activeOpacity={0.7}
+            >
+              <View style={[s.iconBox, { backgroundColor: isDark ? 'rgba(56, 189, 248, 0.15)' : 'rgba(2, 132, 199, 0.12)' }]}>
+                <Ionicons name="color-palette" size={18} color={theme.brand.primary} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={[s.settLabel, { color: theme.text.primary }]}>Wallpaper & Visuals</Text>
+                <Text style={{ color: theme.text.tertiary, fontSize: fontSize.xs }}>
+                  Organic U-Shape blend, blur, vignette & per-page art
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={theme.text.tertiary} />
+            </TouchableOpacity>
           </Card>
         </Animated.View>
 

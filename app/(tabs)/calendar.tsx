@@ -28,6 +28,7 @@ import { spacing, fontSize, fontWeight, radius, shadows } from '../../src/theme/
 import { useEvents } from '../../src/features/calendar/hooks';
 import { SkeletonCard, EmptyState } from '../../src/components/feedback';
 import { TouchableCard } from '../../src/components/ui/Card';
+import { AppBackground } from '../../src/components/layout/AppBackground';
 import type { CalendarEvent } from '../../src/types';
 
 const EC: Record<string, string> = {
@@ -108,7 +109,10 @@ export default function CalendarScreen() {
   };
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: theme.bg.primary }]} edges={['top', 'left', 'right']}>
+    <SafeAreaView style={s.safe} edges={['top', 'left', 'right']}>
+      {/* 4K Blurred Organic U-Shape Wallpaper Background */}
+      <AppBackground screenName="calendar" />
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 120 }}

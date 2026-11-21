@@ -20,6 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../src/theme/ThemeContext';
 import { spacing, fontSize, fontWeight, radius, shadows } from '../../src/theme/tokens';
 import { useAuthStore, isCleanAvatarUrl } from '../../src/stores/authStore';
+import { AppBackground } from '../../src/components/layout/AppBackground';
 
 const AVATAR_CACHE_KEY = 'lifeos_cached_avatar_url';
 
@@ -130,20 +131,9 @@ export default function MoreScreen() {
   };
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: theme.bg.primary }]} edges={['top', 'left', 'right']}>
-      {/* Radiant Glowing Background Light (Matches Calendar, Home & Goals) */}
-      <View pointerEvents="none" style={s.ambientGlowContainer}>
-        <LinearGradient
-          colors={
-            isDark
-              ? ['rgba(99, 102, 241, 0.25)', 'rgba(168, 85, 247, 0.16)', 'transparent']
-              : ['rgba(199, 210, 254, 0.50)', 'rgba(233, 213, 255, 0.35)', 'transparent']
-          }
-          start={{ x: 0.1, y: 0 }}
-          end={{ x: 0.9, y: 0.8 }}
-          style={s.ambientGlow}
-        />
-      </View>
+    <SafeAreaView style={s.safe} edges={['top', 'left', 'right']}>
+      {/* 4K Blurred Organic U-Shape Wallpaper Background */}
+      <AppBackground screenName="more" />
 
       {/* ============================================================== */}
       {/* 1. TOP HEADER WITH GLOSSY THEME BUTTON                         */}
@@ -462,7 +452,35 @@ export default function MoreScreen() {
 
             <View style={[s.rowDivider, { backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : '#F1F5F9' }]} />
 
-            {/* 3. Security & Biometrics */}
+            {/* 3. Wallpaper & Visuals */}
+            <TouchableOpacity
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                router.push('/settings/wallpaper');
+              }}
+              style={s.settRow}
+              activeOpacity={0.7}
+            >
+              <LinearGradient
+                colors={['#2563EB', '#38BDF8']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={s.settSquircle}
+              >
+                <Ionicons name="color-palette" size={17} color="#FFFFFF" />
+              </LinearGradient>
+              <View style={{ flex: 1 }}>
+                <Text style={[s.settLabel, { color: theme.text.primary }]}>Wallpaper & Visuals</Text>
+                <Text style={[s.settSub, { color: isDark ? '#819BB3' : '#64748B' }]}>
+                  Organic U-shape blend, blur & per-page setup
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={16} color={isDark ? '#819BB3' : '#94A3B8'} />
+            </TouchableOpacity>
+
+            <View style={[s.rowDivider, { backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : '#F1F5F9' }]} />
+
+            {/* 4. Security & Biometrics */}
             <TouchableOpacity
               onPress={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
