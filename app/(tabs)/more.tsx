@@ -150,7 +150,11 @@ export default function MoreScreen() {
                 },
               ]}
             >
-              <Ionicons name="grid" size={11} color={isDark ? '#38BDF8' : '#0284C7'} />
+              <Image
+                source={require('../../assets/logo.png')}
+                style={{ width: 14, height: 14 }}
+                resizeMode="contain"
+              />
               <Text style={[s.headerBadgeText, { color: isDark ? '#38BDF8' : '#0284C7' }]}>
                 Hub & Preferences
               </Text>

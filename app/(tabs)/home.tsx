@@ -110,9 +110,16 @@ export default function HomeScreen() {
         {/* ============================================================== */}
         <Animated.View entering={FadeInDown.duration(420)} style={s.header}>
           <View style={{ flex: 1 }}>
-            <Text style={[s.greetingSub, { color: isDark ? '#94A3B8' : '#64748B' }]}>
-              {greeting}
-            </Text>
+            <View style={s.brandHeaderRow}>
+              <Image
+                source={require('../../assets/logo.png')}
+                style={s.headerAppLogo}
+                resizeMode="contain"
+              />
+              <Text style={[s.greetingSub, { color: isDark ? '#94A3B8' : '#64748B' }]}>
+                {greeting}
+              </Text>
+            </View>
             <View style={s.nameGreetingRow}>
               <Text style={[s.nameTitle, { color: theme.text.primary }]}>
                 Hello, {firstName} 👋
@@ -579,6 +586,16 @@ const s = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: 16,
+  },
+  brandHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 2,
+  },
+  headerAppLogo: {
+    width: 20,
+    height: 20,
   },
   greetingSub: {
     fontSize: 13,

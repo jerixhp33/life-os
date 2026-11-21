@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -232,14 +232,13 @@ export function LoadingScreen({ message = 'Initializing intelligence system...' 
               },
             ]}
           >
-            <LinearGradient
-              colors={['#2563EB', '#6366F1']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={lS.innerCube}
-            >
-              <Ionicons name="cube-outline" size={32} color="#FFFFFF" />
-            </LinearGradient>
+            <View style={lS.innerCube}>
+              <Image
+                source={require('../../../assets/logo.png')}
+                style={lS.logoImage}
+                resizeMode="contain"
+              />
+            </View>
           </View>
         </View>
 
@@ -353,11 +352,16 @@ const lS = StyleSheet.create({
     elevation: 8,
   },
   innerCube: {
-    width: 58,
-    height: 58,
-    borderRadius: 18,
+    width: 62,
+    height: 62,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
+  },
+  logoImage: {
+    width: 58,
+    height: 58,
   },
   textBlock: {
     alignItems: 'center',

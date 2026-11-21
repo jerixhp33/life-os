@@ -344,7 +344,11 @@ export default function WallpaperSettingsScreen() {
                   </Text>
                 </View>
                 <View style={styles.mockAvatar}>
-                  <Ionicons name="cube" size={14} color="#FFFFFF" />
+                  <Image
+                    source={require('../../assets/logo.png')}
+                    style={{ width: 22, height: 22 }}
+                    resizeMode="contain"
+                  />
                 </View>
               </View>
 
