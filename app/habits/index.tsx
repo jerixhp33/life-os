@@ -93,6 +93,7 @@ export default function HabitsScreen() {
 
   const totalCount = todayHabits.length;
   const pct = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
+  const realStreak = calculateStreak(logs ?? []);
 
   const filteredHabits = useMemo(() => {
     return todayHabits.filter((h) => {
@@ -286,7 +287,7 @@ export default function HabitsScreen() {
               <Ionicons name="flame" size={17} color="#EA580C" />
             </View>
             <Text style={[s.kpiNumber, { color: '#EA580C' }]}>
-              {allHabits.length > 0 ? '5d' : '0d'}
+              {`${realStreak}d`}
             </Text>
             <Text style={[s.kpiLabel, { color: isDark ? '#819BB3' : '#64748B' }]}>Streak</Text>
           </View>

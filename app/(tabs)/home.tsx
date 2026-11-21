@@ -13,6 +13,8 @@ import { useTheme } from '../../src/theme/ThemeContext';
 import { spacing, fontSize, fontWeight, radius, shadows } from '../../src/theme/tokens';
 import { useTodayTasks, useCompleteTask } from '../../src/features/tasks/hooks';
 import { useUpcomingEvents } from '../../src/features/calendar/hooks';
+import { useHabits, useTodayHabitLogs } from '../../src/features/habits/hooks';
+import { calculateStreak } from '../../src/features/habits/api';
 import { useAuthStore, isCleanAvatarUrl } from '../../src/stores/authStore';
 import { Card, TouchableCard } from '../../src/components/ui/Card';
 import { SkeletonCard, EmptyState } from '../../src/components/feedback';
@@ -64,11 +66,15 @@ export default function HomeScreen() {
 
   const { data: tasks, isLoading: tl } = useTodayTasks();
   const { data: events, isLoading: el } = useUpcomingEvents(3);
+  const { data: habits } = useHabits();
+  const { data: habitLogs } = useTodayHabitLogs();
   const complete = useCompleteTask();
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
-  const firstName = profile?.full_name?.split(' ')[0] ?? 'Alex';
+  const rawName = profile?.full_name?.trim();
+  const emailName = profile?.email ? profile.email.split('@')[0] : '';
+  const firstName = rawName ? rawName.split(' ')[0] : emailName || 'There';
 
   const onRefresh = useCallback(async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -77,13 +83,16 @@ export default function HomeScreen() {
 
   const completedCount = (tasks ?? []).filter((t) => t.status === 'completed').length;
   const totalCount = tasks?.length ?? 0;
-  const progressPct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 70;
+  const progressPct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
-  // Dynamic Focus Time estimate based on tasks done
-  const focusMinutes = 384; // 6h 24m baseline like the reference
+  // Real Focus Time: Each completed task represents actual productive focus time (25m session)
+  const focusMinutes = completedCount * 25;
   const focusHours = Math.floor(focusMinutes / 60);
   const focusRem = focusMinutes % 60;
-  const focusDisplay = `${focusHours}h ${focusRem}m`;
+  const focusDisplay = focusMinutes === 0 ? '0m' : focusHours > 0 ? `${focusHours}h ${focusRem}m` : `${focusRem}m`;
+
+  // Real Day Streak calculated strictly from actual habit logs
+  const dayStreak = habits?.length ? calculateStreak(habitLogs ?? []) : 0;
 
   return (
     <SafeAreaView style={[s.safe, { backgroundColor: theme.bg.primary }]} edges={['top', 'left', 'right']}>
@@ -220,7 +229,7 @@ export default function HomeScreen() {
               <Ionicons name="bar-chart-outline" size={18} color="#6366F1" />
             </View>
             <Text style={[s.kpiNumber, { color: theme.text.primary }]}>
-              {completedCount > 0 ? completedCount : 12}
+              {completedCount}
             </Text>
             <Text style={[s.kpiLabel, { color: isDark ? '#819BB3' : '#64748B' }]}>
               Tasks Done
@@ -273,7 +282,7 @@ export default function HomeScreen() {
             <View style={[s.kpiIconBox, { backgroundColor: isDark ? 'rgba(249, 115, 22, 0.20)' : 'rgba(255, 247, 237, 0.95)' }]}>
               <Ionicons name="flame" size={18} color="#EA580C" />
             </View>
-            <Text style={[s.kpiNumber, { color: theme.text.primary }]}>5</Text>
+            <Text style={[s.kpiNumber, { color: theme.text.primary }]}>{dayStreak}</Text>
             <Text style={[s.kpiLabel, { color: isDark ? '#819BB3' : '#64748B' }]}>
               Day Streak
             </Text>
@@ -326,15 +335,27 @@ export default function HomeScreen() {
                 </View>
               </View>
 
-              <Text style={s.goalHeadline}>Keep Going!</Text>
+              <Text style={s.goalHeadline}>
+                {totalCount === 0
+                  ? 'Plan Your Day'
+                  : completedCount === totalCount
+                  ? 'All Done!'
+                  : progressPct >= 50
+                  ? 'Keep Going!'
+                  : 'Start Strong!'}
+              </Text>
               <Text style={s.goalSubtitle}>
-                You're {progressPct}% closer to your goal.
+                {totalCount === 0
+                  ? 'Add your first task for today to track your progress.'
+                  : completedCount === totalCount
+                  ? 'All tasks for today completed! Excellent work.'
+                  : `You've completed ${completedCount} of ${totalCount} tasks (${progressPct}%).`}
               </Text>
 
               {/* White pill progress bar */}
               <View style={s.goalProgressRow}>
                 <View style={s.goalProgressTrack}>
-                  <View style={[s.goalProgressFill, { width: `${Math.max(14, progressPct)}%` }]} />
+                  <View style={[s.goalProgressFill, { width: `${progressPct}%` }]} />
                 </View>
                 <Text style={s.goalPctText}>{progressPct}%</Text>
               </View>

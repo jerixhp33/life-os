@@ -9,7 +9,7 @@ import { useTheme } from '../../theme/ThemeContext';
 import { spacing, fontSize, fontWeight, radius, shadows } from '../../theme/tokens';
 import { generateDailyBrief } from '../../lib/intelligence/dailyBrief';
 import { useTasks } from '../../features/tasks/hooks';
-import { useHabits } from '../../features/habits/hooks';
+import { useHabits, useTodayHabitLogs } from '../../features/habits/hooks';
 import { useAuthStore } from '../../stores/authStore';
 
 export function DailyBriefCard() {
@@ -17,21 +17,24 @@ export function DailyBriefCard() {
   const router = useRouter();
   const profile = useAuthStore((s) => s.profile);
   const currency = profile?.currency ?? 'INR';
-  const firstName = profile?.full_name?.split(' ')[0] ?? 'Alex';
+  const rawName = profile?.full_name?.trim();
+  const emailName = profile?.email ? profile.email.split('@')[0] : '';
+  const firstName = rawName ? rawName.split(' ')[0] : emailName || 'Friend';
 
   const { data: tasks } = useTasks();
   const { data: habits } = useHabits();
+  const { data: habitLogs } = useTodayHabitLogs();
 
   const brief = useMemo(() => {
     return generateDailyBrief({
       tasks: tasks ?? [],
       habits: habits ?? [],
-      habitLogs: [],
+      habitLogs: habitLogs ?? [],
       transactions: [],
       userName: firstName,
       currency,
     });
-  }, [tasks, habits, firstName, currency]);
+  }, [tasks, habits, habitLogs, firstName, currency]);
 
   return (
     <Animated.View entering={FadeInDown.duration(420)} style={s.container}>
