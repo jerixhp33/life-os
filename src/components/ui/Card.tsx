@@ -10,4 +10,4 @@ export function TouchableCard({ children, style, onPress, elevation='raised' }: 
   const { theme }=useTheme();
   return <TouchableOpacity onPress={onPress} activeOpacity={0.75} style={[styles.card,{backgroundColor:theme.surface.default,borderColor:theme.border.subtle},elevation!=='flat'&&shadows.sm,style]} accessibilityRole="button">{children}</TouchableOpacity>;
 }
-const styles=StyleSheet.create({ card:{ borderRadius:radius.lg, borderWidth:1, padding:16, overflow:'hidden' } });
+const styles=StyleSheet.create({ card:{ borderRadius:radius.xl, borderWidth:1.5, padding:18, overflow:'hidden' } });

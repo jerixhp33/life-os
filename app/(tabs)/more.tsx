@@ -8,17 +8,17 @@ import { spacing, fontSize, fontWeight, radius, shadows } from '../../src/theme/
 import { useAuthStore } from '../../src/stores/authStore';
 
 const MODULES = [
-  { icon: 'checkbox-outline' as const, label: 'Tasks', desc: 'Manage your to-dos', route: '/tasks', bg: '#F0EEFF' },
-  { icon: 'document-text-outline' as const, label: 'Notes', desc: 'Capture ideas', route: '/notes', bg: '#ECFDF5' },
-  { icon: 'wallet-outline' as const, label: 'Finance', desc: 'Indian Rupee tracking', route: '/finance', bg: '#EFF6FF' },
-  { icon: 'repeat-outline' as const, label: 'Habits', desc: 'Build daily routines', route: '/habits', bg: '#FFFBEB' },
-  { icon: 'folder-outline' as const, label: 'Documents', desc: 'Secure cloud vault', route: '/documents', bg: '#F5F3FF' },
-  { icon: 'people-outline' as const, label: 'Workspaces', desc: 'Collaborate & share', route: '/workspaces', bg: '#FDF2F8' },
-  { icon: 'sparkles-outline' as const, label: 'AI', desc: 'Autonomous assistant', route: '/ai/chat', bg: '#F0EEFF' }
+  { icon: 'checkbox-outline' as const, label: 'Tasks', desc: 'Manage your to-dos', route: '/tasks', bg: 'rgba(26,90,127,0.2)', iconColor: '#38BDF8' },
+  { icon: 'document-text-outline' as const, label: 'Notes', desc: 'Capture ideas', route: '/notes', bg: 'rgba(168,220,244,0.18)', iconColor: '#A8DCF4' },
+  { icon: 'wallet-outline' as const, label: 'Finance', desc: 'Indian Rupee tracking', route: '/finance', bg: 'rgba(56,189,248,0.18)', iconColor: '#38BDF8' },
+  { icon: 'repeat-outline' as const, label: 'Habits', desc: 'Build daily routines', route: '/habits', bg: 'rgba(245,158,11,0.18)', iconColor: '#F59E0B' },
+  { icon: 'folder-outline' as const, label: 'Documents', desc: 'Secure cloud vault', route: '/documents', bg: 'rgba(16,185,129,0.18)', iconColor: '#34D399' },
+  { icon: 'people-outline' as const, label: 'Workspaces', desc: 'Collaborate & share', route: '/workspaces', bg: 'rgba(236,72,153,0.18)', iconColor: '#F472B6' },
+  { icon: 'sparkles-outline' as const, label: 'AI', desc: 'Autonomous assistant', route: '/ai/chat', bg: 'rgba(168,220,244,0.25)', iconColor: '#A8DCF4' }
 ];
 
 export default function MoreScreen() {
-  const { theme, mode, setMode } = useTheme();
+  const { theme, mode, setMode, isDark } = useTheme();
   const router = useRouter();
   const profile = useAuthStore((s) => s.profile);
   const signOut = useAuthStore((s) => s.signOut);
@@ -42,10 +42,17 @@ export default function MoreScreen() {
   return (
     <SafeAreaView style={[s.safe, { backgroundColor: theme.bg.primary }]} edges={['top', 'left', 'right']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={s.scroll}>
-        {/* Top Profile Card with DP */}
+        {/* Top Profile Card with DP & Dark Ocean styling */}
         <TouchableOpacity
           onPress={() => router.push('/settings/profile')}
-          style={[s.profile, { backgroundColor: theme.brand.primary }]}
+          style={[
+            s.profile,
+            {
+              backgroundColor: isDark ? '#10324D' : '#1A5A7F',
+              borderWidth: 1.5,
+              borderColor: isDark ? 'rgba(168, 220, 244, 0.3)' : 'rgba(26, 90, 127, 0.25)'
+            }
+          ]}
           accessibilityRole="button"
           accessibilityLabel="Open profile settings"
         >
@@ -58,9 +65,14 @@ export default function MoreScreen() {
           )}
 
           <View style={{ flex: 1 }}>
-            <Text style={s.pName} numberOfLines={1}>
-              {profile?.full_name ?? 'Manikandan'}
-            </Text>
+            <View style={s.tagRow}>
+              <Text style={s.pName} numberOfLines={1}>
+                {profile?.full_name ?? 'Manikandan'}
+              </Text>
+              <View style={s.darkOceanTag}>
+                <Text style={s.darkOceanTagText}>Dark Ocean</Text>
+              </View>
+            </View>
             <Text style={s.pEmail} numberOfLines={1}>
               {profile?.email ?? 'manikandanjanani67@gmail.com'}
             </Text>
@@ -75,12 +87,20 @@ export default function MoreScreen() {
             <TouchableOpacity
               key={m.label}
               onPress={() => router.push(m.route as never)}
-              style={[s.mCard, { backgroundColor: theme.surface.default, ...shadows.sm }]}
+              style={[
+                s.mCard,
+                {
+                  backgroundColor: theme.surface.default,
+                  borderWidth: 1.5,
+                  borderColor: isDark ? 'rgba(168, 220, 244, 0.14)' : 'rgba(26, 90, 127, 0.1)',
+                  ...shadows.sm
+                }
+              ]}
               accessibilityRole="button"
               accessibilityLabel={`Open ${m.label}`}
             >
               <View style={[s.mIcon, { backgroundColor: m.bg }]}>
-                <Ionicons name={m.icon} size={22} color={theme.brand.primary} />
+                <Ionicons name={m.icon} size={22} color={m.iconColor} />
               </View>
               <Text style={[s.mLabel, { color: theme.text.primary }]}>{m.label}</Text>
               <Text style={[s.mDesc, { color: theme.text.tertiary }]} numberOfLines={1}>
@@ -234,6 +254,9 @@ const s = StyleSheet.create({
   avImage: { width: 56, height: 56, borderRadius: radius.full, borderWidth: 2, borderColor: '#ffffff' },
   avLetter: { fontSize: fontSize['2xl'], fontWeight: fontWeight.bold, color: '#fff' },
   pName: { fontSize: fontSize.md, fontWeight: fontWeight.bold, color: '#fff' },
+  tagRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  darkOceanTag: { backgroundColor: 'rgba(56,189,248,0.22)', paddingHorizontal: 7, paddingVertical: 2, borderRadius: radius.full, borderWidth: 1, borderColor: 'rgba(56,189,248,0.45)' },
+  darkOceanTagText: { color: '#38BDF8', fontSize: 10, fontWeight: '700' },
   pEmail: { fontSize: fontSize.xs, color: 'rgba(255,255,255,0.75)', marginTop: 2 },
   sTitle: { fontSize: fontSize.xs, fontWeight: fontWeight.bold, letterSpacing: 0.6, textTransform: 'uppercase' },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing[3] },
@@ -241,7 +264,7 @@ const s = StyleSheet.create({
   mIcon: { width: 44, height: 44, borderRadius: radius.md, alignItems: 'center', justifyContent: 'center' },
   mLabel: { fontSize: fontSize.base, fontWeight: fontWeight.semibold },
   mDesc: { fontSize: fontSize.xs },
-  settList: { borderRadius: radius.xl, overflow: 'hidden' },
+  settList: { borderRadius: radius.xl, overflow: 'hidden', borderWidth: 1.5, borderColor: 'rgba(168, 220, 244, 0.12)' },
   settRow: { flexDirection: 'row', alignItems: 'center', padding: spacing[4], gap: spacing[3] },
   settIcon: { width: 36, height: 36, borderRadius: radius.sm, alignItems: 'center', justifyContent: 'center' },
   settLabel: { fontSize: fontSize.base, fontWeight: fontWeight.medium },

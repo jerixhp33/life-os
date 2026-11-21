@@ -106,8 +106,16 @@ export default function ProfileSettingsScreen() {
     if (!uid) return;
     setUploadingAvatar(true);
     try {
-      const publicUrl = await uploadAvatarImage(uid, localUri);
-      await updateProfile({ avatar_url: publicUrl });
+      // 1. Immediately apply and persist locally so image is never lost on refresh
+      await updateProfile({ avatar_url: localUri });
+
+      // 2. Upload to Supabase cloud storage in background
+      try {
+        const publicUrl = await uploadAvatarImage(uid, localUri);
+        await updateProfile({ avatar_url: publicUrl });
+      } catch (cloudErr) {
+        console.warn('[Avatar upload cloud fallback]', cloudErr);
+      }
       Alert.alert('Success', 'Profile photo updated successfully.');
     } catch (err) {
       Alert.alert('Upload Failed', err instanceof Error ? err.message : 'Could not save profile picture.');

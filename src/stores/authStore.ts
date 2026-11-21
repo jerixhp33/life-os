@@ -1,7 +1,11 @@
 import { create } from 'zustand';
 import type { Session, User } from '@supabase/supabase-js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '../lib/supabase/client';
 import type { UserProfile } from '../types';
+
+const PROFILE_CACHE_KEY = 'lifeos_cached_user_profile';
+
 interface AuthState {
   session: Session|null; user: User|null; profile: UserProfile|null;
   isLoading: boolean; isInitialized: boolean; error: string|null;
@@ -32,6 +36,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   error: null,
   initialize: async () => {
     try {
+      // 1. Immediately read cached profile from AsyncStorage so UI displays avatar & name instantly
+      try {
+        const cached = await AsyncStorage.getItem(PROFILE_CACHE_KEY);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed && typeof parsed === 'object' && parsed.id) {
+            set({ profile: parsed as UserProfile });
+          }
+        }
+      } catch {}
+
       let { data: { session } } = await supabase.auth.getSession();
       
       // If no session exists, auto-authenticate with the user's registered account
@@ -50,7 +65,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       if (session?.user) {
         const { data } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
         if (data) {
-          set({ profile: data as UserProfile });
+          const loaded = data as UserProfile;
+          set({ profile: loaded });
+          AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(loaded)).catch(() => {});
         } else {
           // If profile row is missing, insert it
           const { data: created } = await supabase.from('profiles').upsert({
@@ -60,7 +77,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             currency: 'INR',
             timezone: 'Asia/Kolkata'
           }).select().single();
-          if (created) set({ profile: created as UserProfile });
+          if (created) {
+            const loaded = created as UserProfile;
+            set({ profile: loaded });
+            AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(loaded)).catch(() => {});
+          }
         }
       }
 
@@ -68,7 +89,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         set({ session: s, user: s?.user ?? null });
         if (s?.user) {
           const { data } = await supabase.from('profiles').select('*').eq('id', s.user.id).single();
-          if (data) set({ profile: data as UserProfile });
+          if (data) {
+            const loaded = data as UserProfile;
+            set({ profile: loaded });
+            AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(loaded)).catch(() => {});
+          }
         }
       });
     } catch (e) {
@@ -146,9 +171,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const { user, profile } = get();
     set({ isLoading: true, error: null });
     
-    // Always update local profile first
+    // Always update local profile and cache first so UI never loses avatar
     const updated = { ...(profile ?? DEFAULT_PROFILE), ...updates, updated_at: new Date().toISOString() };
     set({ profile: updated });
+    AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(updated)).catch(() => {});
 
     try {
       const targetId = user?.id ?? DEFAULT_PROFILE.id;
@@ -158,7 +184,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         .select()
         .single();
       if (!error && data) {
-        set({ profile: data as UserProfile });
+        const persisted = data as UserProfile;
+        set({ profile: persisted });
+        AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(persisted)).catch(() => {});
       }
     } catch (e) {
       console.warn('[Profile Sync]', e);

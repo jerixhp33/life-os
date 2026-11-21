@@ -12,9 +12,9 @@ import { SkeletonCard, EmptyState } from '../../src/components/feedback';
 import { TouchableCard } from '../../src/components/ui/Card';
 import type { Goal, GoalCategory } from '../../src/types';
 const CM: Record<GoalCategory,{ icon: keyof typeof Ionicons.glyphMap; color:string; bg:string }> = {
-  health:{icon:'fitness-outline',color:'#23865A',bg:'#ECFDF5'}, career:{icon:'briefcase-outline',color:'#6957E8',bg:'#F0EEFF'},
-  finance:{icon:'wallet-outline',color:'#3B82F6',bg:'#EFF6FF'}, learning:{icon:'book-outline',color:'#8B5CF6',bg:'#F5F3FF'},
-  personal:{icon:'person-outline',color:'#F59E0B',bg:'#FFFBEB'}, relationships:{icon:'people-outline',color:'#EC4899',bg:'#FDF2F8'}, other:{icon:'flag-outline',color:'#6B7280',bg:'#F3F4F6'}
+  health:{icon:'fitness-outline',color:'#10B981',bg:'rgba(16,185,129,0.15)'}, career:{icon:'briefcase-outline',color:'#38BDF8',bg:'rgba(56,189,248,0.18)'},
+  finance:{icon:'wallet-outline',color:'#1A5A7F',bg:'rgba(26,90,127,0.2)'}, learning:{icon:'book-outline',color:'#A8DCF4',bg:'rgba(168,220,244,0.18)'},
+  personal:{icon:'person-outline',color:'#F59E0B',bg:'rgba(245,158,11,0.15)'}, relationships:{icon:'people-outline',color:'#EC4899',bg:'rgba(236,72,153,0.15)'}, other:{icon:'flag-outline',color:'#6F9DB5',bg:'rgba(111,157,181,0.15)'}
 };
 export default function GoalsScreen() {
   const { theme }=useTheme(); const router=useRouter();
@@ -72,4 +72,4 @@ function GoalCard({ goal, onPress }: { goal:Goal; onPress:()=>void }) {
   );
 }
 const g=StyleSheet.create({ card:{gap:spacing[3]}, head:{flexDirection:'row',alignItems:'center',gap:spacing[3]}, icon:{width:48,height:48,borderRadius:radius.md,alignItems:'center',justifyContent:'center'}, title:{fontSize:fontSize.base,fontWeight:fontWeight.semibold}, cat:{fontSize:fontSize.xs,marginTop:2}, pct:{fontSize:fontSize.md,fontWeight:fontWeight.bold}, bar:{height:6,borderRadius:radius.full,overflow:'hidden'}, fill:{height:'100%',borderRadius:radius.full}, ms:{fontSize:fontSize.xs} });
-const s=StyleSheet.create({ safe:{flex:1}, header:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',padding:spacing[5],borderBottomWidth:StyleSheet.hairlineWidth}, title:{fontSize:fontSize['2xl'],fontWeight:fontWeight.bold}, addBtn:{width:40,height:40,borderRadius:radius.full,alignItems:'center',justifyContent:'center'}, stats:{flexDirection:'row',gap:spacing[3],padding:spacing[5],paddingBottom:0}, statCard:{flex:1,alignItems:'center',padding:spacing[3],borderRadius:radius.lg,gap:spacing[1]}, statVal:{fontSize:fontSize.lg,fontWeight:fontWeight.bold}, statLbl:{fontSize:fontSize.xs,textAlign:'center'}, filters:{flexDirection:'row',gap:spacing[2],paddingHorizontal:spacing[5],paddingTop:spacing[4]}, chip:{paddingHorizontal:spacing[4],paddingVertical:spacing[2],borderRadius:radius.full}, list:{padding:spacing[5],gap:spacing[3]} });
+const s=StyleSheet.create({ safe:{flex:1}, header:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',padding:spacing[5],borderBottomWidth:StyleSheet.hairlineWidth}, title:{fontSize:fontSize['2xl'],fontWeight:fontWeight.bold}, addBtn:{width:40,height:40,borderRadius:radius.full,alignItems:'center',justifyContent:'center'}, stats:{flexDirection:'row',gap:spacing[3],padding:spacing[5],paddingBottom:0}, statCard:{flex:1,alignItems:'center',padding:spacing[3],borderRadius:radius.xl,gap:spacing[1],borderWidth:1.5,borderColor:'rgba(168,220,244,0.12)'}, statVal:{fontSize:fontSize.lg,fontWeight:fontWeight.bold}, statLbl:{fontSize:fontSize.xs,textAlign:'center'}, filters:{flexDirection:'row',gap:spacing[2],paddingHorizontal:spacing[5],paddingTop:spacing[4]}, chip:{paddingHorizontal:spacing[4],paddingVertical:spacing[2],borderRadius:radius.full}, list:{padding:spacing[5],gap:spacing[3]} });

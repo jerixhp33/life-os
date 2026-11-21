@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#6957E8"
+      "backgroundColor": "#0A2438"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -28,7 +28,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#6957E8"
+        "backgroundColor": "#0A2438"
       },
       "package": "com.lifeos.app",
       "versionCode": 1,
@@ -62,7 +62,7 @@
         "expo-notifications",
         {
           "icon": "./assets/icon.png",
-          "color": "#6957E8"
+          "color": "#1A5A7F"
         }
       ],
       "@react-native-community/datetimepicker"
