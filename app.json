@@ -71,8 +71,8 @@
       "typedRoutes": false
     },
     "extra": {
-      "supabaseUrl": "",
-      "supabaseAnonKey": "",
+      "supabaseUrl": "https://fnjvyogwandgbqrnahld.supabase.co",
+      "supabaseAnonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZuanZ5b2d3YW5kZ2Jxcm5haGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ2NTQ5MTAsImV4cCI6MjExMDIzMDkxMH0.-dpiCIVl3L4REjcB-ZYoElFszoQHug4xVCp4h9NZHhI",
       "router": {
         "asyncRoutes": {
           "web": true
