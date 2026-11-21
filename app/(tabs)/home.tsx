@@ -12,7 +12,7 @@ import { useTheme } from '../../src/theme/ThemeContext';
 import { spacing, fontSize, fontWeight, radius, shadows } from '../../src/theme/tokens';
 import { useTodayTasks, useCompleteTask } from '../../src/features/tasks/hooks';
 import { useUpcomingEvents } from '../../src/features/calendar/hooks';
-import { useAuthStore } from '../../src/stores/authStore';
+import { useAuthStore, isCleanAvatarUrl } from '../../src/stores/authStore';
 import { Card, TouchableCard } from '../../src/components/ui/Card';
 import { SkeletonCard, EmptyState } from '../../src/components/feedback';
 
@@ -35,11 +35,17 @@ const EC: Record<string, string> = {
   orange: '#F97316',
 };
 
-const QA = [
-  { icon: 'checkbox-outline' as const, emoji: '⚡', label: 'Tasks', bg: 'rgba(56, 189, 248, 0.18)', color: '#38BDF8', route: '/tasks' },
-  { icon: 'document-text-outline' as const, emoji: '📝', label: 'Notes', bg: 'rgba(16, 185, 129, 0.18)', color: '#10B981', route: '/notes' },
-  { icon: 'wallet-outline' as const, emoji: '💳', label: 'Finance', bg: 'rgba(245, 158, 11, 0.18)', color: '#F59E0B', route: '/finance' },
-  { icon: 'sparkles' as const, emoji: '✨', label: 'AI', bg: 'rgba(168, 85, 247, 0.20)', color: '#C084FC', route: '/ai/chat' },
+const QA: Array<{
+  icon: keyof typeof Ionicons.glyphMap;
+  label: string;
+  bg: string;
+  color: string;
+  route: string;
+}> = [
+  { icon: 'checkbox-outline', label: 'Tasks', bg: 'rgba(56, 189, 248, 0.16)', color: '#38BDF8', route: '/tasks' },
+  { icon: 'document-text-outline', label: 'Notes', bg: 'rgba(16, 185, 129, 0.16)', color: '#10B981', route: '/notes' },
+  { icon: 'wallet-outline', label: 'Finance', bg: 'rgba(245, 158, 11, 0.16)', color: '#F59E0B', route: '/finance' },
+  { icon: 'sparkles', label: 'AI', bg: 'rgba(168, 220, 244, 0.20)', color: '#38BDF8', route: '/ai/chat' },
 ];
 
 export default function HomeScreen() {
@@ -51,11 +57,14 @@ export default function HomeScreen() {
 
   useEffect(() => {
     AsyncStorage.getItem(AVATAR_CACHE_KEY).then((stored) => {
-      if (stored) setCachedAvatar(stored);
+      if (isCleanAvatarUrl(stored)) {
+        setCachedAvatar(stored);
+      }
     }).catch(() => {});
   }, []);
 
-  const activeAvatar = profile?.avatar_url || cachedAvatar;
+  const rawAvatar = profile?.avatar_url || cachedAvatar;
+  const activeAvatar = isCleanAvatarUrl(rawAvatar) ? rawAvatar : null;
 
   const { data: tasks, isLoading: tl } = useTodayTasks();
   const { data: events, isLoading: el } = useUpcomingEvents(4);
@@ -84,7 +93,7 @@ export default function HomeScreen() {
           <View style={{ flex: 1 }}>
             <View style={[s.pillBadge, {
               backgroundColor: isDark ? 'rgba(56, 189, 248, 0.12)' : 'rgba(2, 132, 199, 0.10)',
-              borderColor: isDark ? 'rgba(56, 189, 248, 0.3)' : 'rgba(2, 132, 199, 0.25)',
+              borderColor: isDark ? 'rgba(168, 220, 244, 0.28)' : 'rgba(2, 132, 199, 0.25)',
             }]}>
               <View style={[s.pillDot, { backgroundColor: theme.brand.primary }]} />
               <Text style={[s.pillText, { color: theme.brand.primary }]}>LifeOS Cloud Active</Text>
@@ -104,11 +113,15 @@ export default function HomeScreen() {
             accessibilityLabel="Open profile settings"
           >
             <View style={[s.avatar, {
-              backgroundColor: isDark ? 'rgba(14, 38, 64, 0.9)' : '#FFFFFF',
-              borderColor: isDark ? 'rgba(56, 189, 248, 0.45)' : 'rgba(2, 132, 199, 0.35)',
+              backgroundColor: isDark ? 'rgba(10, 36, 56, 0.9)' : '#FFFFFF',
+              borderColor: isDark ? 'rgba(168, 220, 244, 0.40)' : 'rgba(2, 132, 199, 0.35)',
             }]}>
               {activeAvatar ? (
-                <Image source={{ uri: activeAvatar }} style={s.avatarImg} />
+                <Image
+                  source={{ uri: activeAvatar }}
+                  style={s.avatarImg}
+                  onError={() => setCachedAvatar(null)}
+                />
               ) : (
                 <Text style={[s.avatarText, { color: theme.brand.primary }]}>
                   {profile?.full_name?.[0]?.toUpperCase() ?? 'M'}
@@ -144,9 +157,9 @@ export default function HomeScreen() {
           </Animated.View>
         )}
 
-        {/* Quick Actions (4 Apple Frosted Pills) */}
+        {/* Quick Actions (Apple Frosted Vector Pills - strictly no emojis) */}
         <Animated.View entering={FadeInUp.duration(400).delay(100)} style={s.qa}>
-          {QA.map((a, i) => (
+          {QA.map((a) => (
             <TouchableOpacity
               key={a.label}
               onPress={() => {
@@ -157,15 +170,15 @@ export default function HomeScreen() {
               style={[
                 s.qaItem,
                 {
-                  backgroundColor: isDark ? 'rgba(14, 38, 64, 0.85)' : '#FFFFFF',
-                  borderColor: isDark ? 'rgba(56, 189, 248, 0.14)' : 'rgba(15, 23, 42, 0.08)',
+                  backgroundColor: isDark ? 'rgba(10, 36, 56, 0.88)' : '#FFFFFF',
+                  borderColor: isDark ? 'rgba(168, 220, 244, 0.22)' : 'rgba(15, 23, 42, 0.08)',
                   ...shadows.sm,
                 },
               ]}
               accessibilityRole="button"
             >
               <View style={[s.qaIconBox, { backgroundColor: a.bg }]}>
-                <Text style={s.qaEmoji}>{a.emoji}</Text>
+                <Ionicons name={a.icon} size={22} color={a.color} />
               </View>
               <Text style={[s.qaLabel, { color: theme.text.primary }]}>{a.label}</Text>
             </TouchableOpacity>
@@ -173,7 +186,7 @@ export default function HomeScreen() {
         </Animated.View>
 
         {/* Today's Tasks Section */}
-        <SH title="Today's Tasks" emoji="⚡" count={tasks?.length} onMore={() => router.push('/tasks')} />
+        <SH title="Today's Tasks" icon="checkbox-outline" count={tasks?.length} onMore={() => router.push('/tasks')} />
         {tl ? (
           [1, 2].map((i) => <SkeletonCard key={i} />)
         ) : !tasks?.length ? (
@@ -240,7 +253,7 @@ export default function HomeScreen() {
         )}
 
         {/* Coming Up Section */}
-        <SH title="Coming Up" emoji="📅" count={events?.length} onMore={() => router.push('/(tabs)/calendar')} />
+        <SH title="Coming Up" icon="calendar-outline" count={events?.length} onMore={() => router.push('/(tabs)/calendar')} />
         {el ? (
           <SkeletonCard />
         ) : !events?.length ? (
@@ -279,18 +292,35 @@ export default function HomeScreen() {
           })
         )}
 
-        <View style={{ height: spacing[16] }} />
+        <View style={{ height: 110 }} />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-function SH({ title, emoji, count, onMore }: { title: string; emoji?: string; count?: number; onMore: () => void }) {
-  const { theme } = useTheme();
+function SH({
+  title,
+  icon,
+  count,
+  onMore,
+}: {
+  title: string;
+  icon?: keyof typeof Ionicons.glyphMap;
+  count?: number;
+  onMore: () => void;
+}) {
+  const { theme, isDark } = useTheme();
   return (
     <View style={sh.row}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-        {emoji && <Text style={{ fontSize: 16 }}>{emoji}</Text>}
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+        {icon && (
+          <View style={[sh.iconCircle, {
+            backgroundColor: isDark ? 'rgba(56, 189, 248, 0.16)' : 'rgba(2, 132, 199, 0.12)',
+            borderColor: isDark ? 'rgba(168, 220, 244, 0.25)' : 'transparent',
+          }]}>
+            <Ionicons name={icon} size={15} color={theme.brand.primary} />
+          </View>
+        )}
         <Text style={[sh.title, { color: theme.text.primary }]}>
           {title}
           {count != null && count > 0 && <Text style={{ color: theme.text.tertiary, fontWeight: '500' }}> ({count})</Text>}
@@ -313,6 +343,14 @@ const sh = StyleSheet.create({
     marginTop: spacing[6],
     marginBottom: spacing[3],
     paddingHorizontal: spacing[1],
+  },
+  iconCircle: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
   },
   title: { fontSize: fontSize.md, fontWeight: fontWeight.bold },
 });
@@ -339,104 +377,65 @@ const s = StyleSheet.create({
   date: { fontSize: fontSize.sm, marginTop: spacing[1] },
   avatarWrap: { position: 'relative', alignItems: 'center', justifyContent: 'center' },
   avatar: {
-    width: 54,
-    height: 54,
-    borderRadius: radius.full,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 2.5,
     overflow: 'hidden',
-    ...shadows.sm,
   },
-  avatarImg: { width: 54, height: 54, borderRadius: radius.full },
+  avatarImg: { width: '100%', height: '100%' },
   avatarText: { fontSize: fontSize.xl, fontWeight: fontWeight.bold },
   onlineBadge: {
     position: 'absolute',
     bottom: -1,
     right: -1,
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: '#FFFFFF',
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: '#071524',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1.5,
-    borderColor: '#FFFFFF',
   },
   onlineDot: { width: 10, height: 10, borderRadius: 5 },
-  focusCard: {
-    padding: spacing[4],
-    marginBottom: spacing[4],
-    gap: spacing[3],
-  },
-  focusHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  focusLabel: { fontSize: fontSize.xs, fontWeight: fontWeight.bold, textTransform: 'uppercase', letterSpacing: 0.6 },
-  focusTitle: { fontSize: fontSize.base, fontWeight: fontWeight.semibold, marginTop: 2 },
-  pctBadge: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: radius.full,
-  },
+  focusCard: { marginBottom: spacing[4] },
+  focusHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing[3] },
+  focusLabel: { fontSize: fontSize.xs, fontWeight: fontWeight.semibold, textTransform: 'uppercase', letterSpacing: 0.5 },
+  focusTitle: { fontSize: fontSize.md, fontWeight: fontWeight.bold, marginTop: 2 },
+  pctBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: radius.full },
   pctText: { fontSize: fontSize.sm, fontWeight: fontWeight.bold },
-  progressBarBg: {
-    height: 7,
-    borderRadius: radius.full,
-    overflow: 'hidden',
-  },
-  progressBarFill: {
-    height: '100%',
-    borderRadius: radius.full,
-  },
-  qa: { flexDirection: 'row', gap: spacing[3], marginBottom: spacing[2] },
+  progressBarBg: { height: 7, borderRadius: 4, overflow: 'hidden' },
+  progressBarFill: { height: '100%', borderRadius: 4 },
+  qa: { flexDirection: 'row', justifyContent: 'space-between', gap: spacing[2], marginBottom: spacing[4] },
   qaItem: {
     flex: 1,
-    alignItems: 'center',
     paddingVertical: spacing[3],
-    borderRadius: radius.xl,
+    paddingHorizontal: spacing[1],
+    borderRadius: 18,
+    borderWidth: 1.2,
+    alignItems: 'center',
     gap: spacing[2],
-    borderWidth: 1,
   },
   qaIconBox: {
     width: 44,
     height: 44,
-    borderRadius: radius.lg,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  qaEmoji: { fontSize: 20 },
   qaLabel: { fontSize: fontSize.xs, fontWeight: fontWeight.semibold },
-  taskCard: { marginBottom: spacing[2], borderRadius: radius.xl },
+  taskCard: { marginBottom: spacing[2] },
   taskRow: { flexDirection: 'row', alignItems: 'center', gap: spacing[3] },
-  check: {
-    width: 24,
-    height: 24,
-    borderRadius: radius.full,
-    borderWidth: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  check: { width: 22, height: 22, borderRadius: 11, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
   taskBody: { flex: 1 },
   taskTitle: { fontSize: fontSize.base, fontWeight: fontWeight.medium },
-  strike: { textDecorationLine: 'line-through', opacity: 0.45 },
   taskMeta: { fontSize: fontSize.xs, marginTop: 2 },
-  priorityBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: radius.sm,
-  },
-  priorityText: { fontSize: 10, fontWeight: '700' },
-  evCard: {
-    marginBottom: spacing[2],
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: radius.xl,
-    gap: spacing[3],
-  },
-  evAccent: { width: 4, height: 38, borderRadius: radius.full },
+  strike: { textDecorationLine: 'line-through', opacity: 0.5 },
+  priorityBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: radius.sm },
+  priorityText: { fontSize: fontSize.xs, fontWeight: fontWeight.bold },
+  evCard: { marginBottom: spacing[2], flexDirection: 'row', alignItems: 'center', gap: spacing[3] },
+  evAccent: { width: 4, height: 38, borderRadius: 2 },
   evTitle: { fontSize: fontSize.base, fontWeight: fontWeight.medium },
   evTime: { fontSize: fontSize.xs, marginTop: 2 },
 });

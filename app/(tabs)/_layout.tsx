@@ -12,10 +12,13 @@ import { radius } from '../../src/theme/tokens';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function TabsLayout() {
-  const { theme, isDark } = useTheme();
+  const { isDark } = useTheme();
   const insets = useSafeAreaInsets();
-  const bottomPadding = Math.max(insets.bottom, Platform.OS === 'android' ? 14 : 10);
-  const tabHeight = 60 + bottomPadding;
+  
+  // Safe clearance above Android 3-button bar / gestures and iOS home indicator
+  const bottomOffset = Platform.OS === 'android'
+    ? Math.max(insets.bottom, 16) + 12
+    : Math.max(insets.bottom, 12);
 
   return (
     <Tabs
@@ -24,29 +27,33 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarStyle: {
           position: 'absolute',
-          borderTopWidth: 0.5,
-          borderTopColor: isDark ? 'rgba(56, 189, 248, 0.16)' : 'rgba(15, 23, 42, 0.08)',
-          backgroundColor: isDark ? 'rgba(7, 21, 36, 0.88)' : 'rgba(255, 255, 255, 0.90)',
-          height: tabHeight,
-          paddingBottom: bottomPadding,
-          paddingTop: 8,
-          elevation: 14,
-          shadowColor: isDark ? '#000000' : '#0F172A',
-          shadowOffset: { width: 0, height: -4 },
-          shadowOpacity: isDark ? 0.35 : 0.06,
-          shadowRadius: 12,
+          left: 16,
+          right: 16,
+          bottom: bottomOffset,
+          height: 64,
+          borderRadius: 32,
+          borderWidth: 1.2,
+          borderColor: isDark ? 'rgba(168, 220, 244, 0.28)' : 'rgba(255, 255, 255, 0.88)',
+          backgroundColor: isDark ? 'rgba(10, 36, 56, 0.94)' : 'rgba(255, 255, 255, 0.94)',
+          paddingBottom: 6,
+          paddingTop: 6,
+          elevation: 16,
+          shadowColor: '#000000',
+          shadowOffset: { width: 0, height: 6 },
+          shadowOpacity: isDark ? 0.40 : 0.12,
+          shadowRadius: 16,
         },
         tabBarBackground: () =>
           Platform.OS === 'ios' ? (
             <BlurView
               tint={isDark ? 'dark' : 'light'}
               intensity={80}
-              style={StyleSheet.absoluteFill}
+              style={[StyleSheet.absoluteFill, { borderRadius: 32, overflow: 'hidden' }]}
             />
           ) : null,
         tabBarActiveTintColor: isDark ? '#38BDF8' : '#0284C7',
-        tabBarInactiveTintColor: isDark ? '#7FA0BA' : '#94A3B8',
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '700', marginTop: 2 },
+        tabBarInactiveTintColor: isDark ? '#6F9DB5' : '#94A3B8',
+        tabBarLabelStyle: { fontSize: 10, fontWeight: '700', marginTop: 1 },
       }}
     >
       <Tabs.Screen
@@ -54,7 +61,7 @@ export default function TabsLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color, focused, size }) => (
-            <Ionicons name={focused ? 'home' : 'home-outline'} size={size} color={color as any} />
+            <Ionicons name={focused ? 'home' : 'home-outline'} size={size - 2} color={color as any} />
           ),
         }}
       />
@@ -63,7 +70,7 @@ export default function TabsLayout() {
         options={{
           title: 'Calendar',
           tabBarIcon: ({ color, focused, size }) => (
-            <Ionicons name={focused ? 'calendar' : 'calendar-outline'} size={size} color={color as any} />
+            <Ionicons name={focused ? 'calendar' : 'calendar-outline'} size={size - 2} color={color as any} />
           ),
         }}
       />
@@ -80,7 +87,7 @@ export default function TabsLayout() {
         options={{
           title: 'Goals',
           tabBarIcon: ({ color, focused, size }) => (
-            <Ionicons name={focused ? 'flag' : 'flag-outline'} size={size} color={color as any} />
+            <Ionicons name={focused ? 'flag' : 'flag-outline'} size={size - 2} color={color as any} />
           ),
         }}
       />
@@ -89,7 +96,7 @@ export default function TabsLayout() {
         options={{
           title: 'More',
           tabBarIcon: ({ color, focused, size }) => (
-            <Ionicons name={focused ? 'grid' : 'grid-outline'} size={size} color={color as any} />
+            <Ionicons name={focused ? 'grid' : 'grid-outline'} size={size - 2} color={color as any} />
           ),
         }}
       />
@@ -134,7 +141,7 @@ function CreateTabButton({ onPress, isDark }: { onPress?: () => void; isDark: bo
         accessibilityLabel="Create item"
         accessibilityRole="button"
       >
-        <Ionicons name="add" size={30} color="#FFFFFF" />
+        <Ionicons name="add" size={28} color="#FFFFFF" />
       </AnimatedPressable>
     </View>
   );
@@ -142,18 +149,21 @@ function CreateTabButton({ onPress, isDark }: { onPress?: () => void; isDark: bo
 
 const cS = StyleSheet.create({
   btn: {
-    width: 52,
-    height: 52,
+    width: 48,
+    height: 48,
     borderRadius: radius.full,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: Platform.OS === 'ios' ? 12 : 8,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.38,
     shadowRadius: 10,
     elevation: 10,
     borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderColor: 'rgba(255, 255, 255, 0.45)',
   },
-  wrap: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingBottom: 6 },
+  wrap: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

@@ -14,20 +14,20 @@ import { SkeletonCard, EmptyState } from '../../src/components/feedback';
 import { Card, TouchableCard } from '../../src/components/ui/Card';
 import type { Goal, GoalCategory } from '../../src/types';
 
-const CM: Record<GoalCategory, { emoji: string; color: string; bg: string }> = {
-  health:        { emoji: '💪', color: '#10B981', bg: 'rgba(16, 185, 129, 0.16)' },
-  career:        { emoji: '💼', color: '#38BDF8', bg: 'rgba(56, 189, 248, 0.16)' },
-  finance:       { emoji: '💰', color: '#F59E0B', bg: 'rgba(245, 158, 11, 0.16)' },
-  learning:      { emoji: '📚', color: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.16)' },
-  personal:      { emoji: '🌱', color: '#06B6D4', bg: 'rgba(6, 182, 212, 0.16)' },
-  relationships: { emoji: '❤️', color: '#EC4899', bg: 'rgba(236, 72, 153, 0.16)' },
-  other:         { emoji: '🎯', color: '#64748B', bg: 'rgba(100, 116, 139, 0.16)' },
+const CM: Record<GoalCategory, { icon: keyof typeof Ionicons.glyphMap; color: string; bg: string }> = {
+  health:        { icon: 'fitness-outline', color: '#10B981', bg: 'rgba(16, 185, 129, 0.16)' },
+  career:        { icon: 'briefcase-outline', color: '#38BDF8', bg: 'rgba(56, 189, 248, 0.16)' },
+  finance:       { icon: 'wallet-outline', color: '#F59E0B', bg: 'rgba(245, 158, 11, 0.16)' },
+  learning:      { icon: 'book-outline', color: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.16)' },
+  personal:      { icon: 'person-outline', color: '#06B6D4', bg: 'rgba(6, 182, 212, 0.16)' },
+  relationships: { icon: 'heart-outline', color: '#EC4899', bg: 'rgba(236, 72, 153, 0.16)' },
+  other:         { icon: 'flag-outline', color: '#64748B', bg: 'rgba(100, 116, 139, 0.16)' },
 };
 
 export default function GoalsScreen() {
   const { theme, isDark } = useTheme();
   const router = useRouter();
-  const uid = useAuthStore((s) => s.user?.id);
+  const uid = useAuthStore((s) => s.user?.id ?? s.profile?.id);
   const [filter, setFilter] = useState<'active' | 'completed' | 'all'>('active');
 
   const { data: goals, isLoading } = useQuery({
@@ -63,16 +63,18 @@ export default function GoalsScreen() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: spacing[16] }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 110 }}>
         {/* KPI Stats Cards */}
         <Animated.View entering={FadeInDown.duration(400)} style={s.stats}>
           {[
-            { l: 'Active', v: activeCount, emoji: '🎯', color: '#38BDF8' },
-            { l: 'Completed', v: completedCount, emoji: '🏆', color: '#10B981' },
-            { l: 'Avg Progress', v: `${avg}%`, emoji: '📈', color: '#F59E0B' },
+            { l: 'Active', v: activeCount, icon: 'flash-outline' as const, color: '#38BDF8' },
+            { l: 'Completed', v: completedCount, icon: 'checkmark-done-circle-outline' as const, color: '#10B981' },
+            { l: 'Avg Progress', v: `${avg}%`, icon: 'trending-up-outline' as const, color: '#F59E0B' },
           ].map((c) => (
             <Card key={c.l} style={s.statCard}>
-              <Text style={{ fontSize: 20 }}>{c.emoji}</Text>
+              <View style={[s.kpiIconBox, { backgroundColor: isDark ? 'rgba(56, 189, 248, 0.14)' : 'rgba(2, 132, 199, 0.10)' }]}>
+                <Ionicons name={c.icon} size={20} color={c.color} />
+              </View>
               <Text style={[s.statVal, { color: theme.text.primary }]}>{c.v}</Text>
               <Text style={[s.statLbl, { color: theme.text.tertiary }]}>{c.l}</Text>
             </Card>
@@ -94,8 +96,8 @@ export default function GoalsScreen() {
                 style={[
                   s.chip,
                   {
-                    backgroundColor: selected ? theme.brand.primary : isDark ? 'rgba(14, 38, 64, 0.85)' : '#FFFFFF',
-                    borderColor: selected ? theme.brand.primary : theme.border.subtle,
+                    backgroundColor: selected ? theme.brand.primary : isDark ? 'rgba(10, 36, 56, 0.88)' : '#FFFFFF',
+                    borderColor: selected ? theme.brand.primary : isDark ? 'rgba(168, 220, 244, 0.22)' : theme.border.subtle,
                   },
                 ]}
               >
@@ -106,7 +108,7 @@ export default function GoalsScreen() {
                     fontWeight: selected ? fontWeight.bold : fontWeight.medium,
                   }}
                 >
-                  {f === 'active' ? '⚡ Active' : f === 'completed' ? '✓ Completed' : '🌐 All'}
+                  {f === 'active' ? 'Active' : f === 'completed' ? 'Completed' : 'All Goals'}
                 </Text>
               </TouchableOpacity>
             );
@@ -154,7 +156,7 @@ function GoalCard({ goal, index, onPress }: { goal: Goal; index: number; onPress
     <TouchableCard index={index} onPress={onPress} style={g.card}>
       <View style={g.head}>
         <View style={[g.iconBox, { backgroundColor: m.bg }]}>
-          <Text style={g.emoji}>{m.emoji}</Text>
+          <Ionicons name={m.icon} size={22} color={m.color} />
         </View>
         <View style={{ flex: 1 }}>
           <Text style={[g.title, { color: theme.text.primary }]} numberOfLines={1}>
@@ -168,69 +170,66 @@ function GoalCard({ goal, index, onPress }: { goal: Goal; index: number; onPress
           </Text>
         </View>
         <View style={[g.pctPill, { backgroundColor: isDark ? 'rgba(56, 189, 248, 0.14)' : 'rgba(2, 132, 199, 0.10)' }]}>
-          <Text style={[g.pct, { color: m.color }]}>{goal.progress}%</Text>
+          <Text style={[g.pctTxt, { color: theme.brand.primary }]}>{goal.progress}%</Text>
         </View>
       </View>
 
-      {/* Progress Bar inside Card */}
+      {/* Progress Bar */}
       <View style={[g.barBg, { backgroundColor: theme.surface.inset }]}>
-        <View style={[g.fill, { width: `${goal.progress}%`, backgroundColor: m.color }]} />
+        <View style={[g.barFill, { width: `${goal.progress}%`, backgroundColor: m.color }]} />
       </View>
 
-      <View style={g.footer}>
-        {totalMs > 0 ? (
-          <Text style={[g.ms, { color: theme.text.tertiary }]}>
-            {done}/{totalMs} milestones finished
+      {/* Milestones info */}
+      {totalMs > 0 && (
+        <View style={g.msRow}>
+          <Ionicons name="checkbox-outline" size={13} color={theme.text.tertiary} />
+          <Text style={[g.msTxt, { color: theme.text.tertiary }]}>
+            {done} of {totalMs} milestones completed
           </Text>
-        ) : (
-          <Text style={[g.ms, { color: theme.text.tertiary }]}>
-            Status: {goal.status === 'completed' ? 'Completed' : 'In Progress'}
-          </Text>
-        )}
-        <Ionicons name="chevron-forward" size={14} color={theme.text.tertiary} />
-      </View>
+        </View>
+      )}
     </TouchableCard>
   );
 }
-
-const g = StyleSheet.create({
-  card: { gap: spacing[3], marginBottom: spacing[2] },
-  head: { flexDirection: 'row', alignItems: 'center', gap: spacing[3] },
-  iconBox: { width: 44, height: 44, borderRadius: radius.md, alignItems: 'center', justifyContent: 'center' },
-  emoji: { fontSize: 20 },
-  title: { fontSize: fontSize.base, fontWeight: fontWeight.bold },
-  cat: { fontSize: fontSize.xs, marginTop: 2, textTransform: 'capitalize' },
-  pctPill: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: radius.full },
-  pct: { fontSize: fontSize.sm, fontWeight: fontWeight.bold },
-  barBg: { height: 7, borderRadius: radius.full, overflow: 'hidden' },
-  fill: { height: '100%', borderRadius: radius.full },
-  footer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  ms: { fontSize: fontSize.xs, fontWeight: '500' },
-});
 
 const s = StyleSheet.create({
   safe: { flex: 1 },
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: spacing[5],
-    paddingVertical: spacing[3],
+    paddingVertical: spacing[4],
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   title: { fontSize: fontSize['2xl'], fontWeight: fontWeight.bold },
-  subtitle: { fontSize: fontSize.xs, marginTop: 1 },
-  addBtn: { width: 40, height: 40, borderRadius: radius.full, alignItems: 'center', justifyContent: 'center' },
-  stats: { flexDirection: 'row', gap: spacing[3], padding: spacing[5], paddingBottom: 0 },
-  statCard: { flex: 1, alignItems: 'center', padding: spacing[3], gap: 2 },
-  statVal: { fontSize: fontSize.lg, fontWeight: fontWeight.bold, marginTop: 2 },
-  statLbl: { fontSize: fontSize.xs, textAlign: 'center' },
-  filters: { flexDirection: 'row', gap: spacing[2], paddingHorizontal: spacing[5], paddingTop: spacing[4] },
+  subtitle: { fontSize: fontSize.xs, marginTop: 2 },
+  addBtn: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center' },
+  stats: { flexDirection: 'row', gap: spacing[3], paddingHorizontal: spacing[5], marginTop: spacing[4] },
+  statCard: { flex: 1, alignItems: 'center', padding: spacing[3], gap: spacing[1] },
+  kpiIconBox: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center', marginBottom: 2 },
+  statVal: { fontSize: fontSize.lg, fontWeight: fontWeight.bold },
+  statLbl: { fontSize: fontSize.xs },
+  filters: { flexDirection: 'row', gap: spacing[2], paddingHorizontal: spacing[5], marginTop: spacing[4] },
   chip: {
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[2],
     borderRadius: radius.full,
-    borderWidth: 1,
+    borderWidth: 1.2,
   },
-  list: { padding: spacing[5], gap: spacing[2] },
+  list: { paddingHorizontal: spacing[5], marginTop: spacing[4], gap: spacing[3] },
+});
+
+const g = StyleSheet.create({
+  card: { gap: spacing[3] },
+  head: { flexDirection: 'row', alignItems: 'center', gap: spacing[3] },
+  iconBox: { width: 42, height: 42, borderRadius: radius.md, alignItems: 'center', justifyContent: 'center' },
+  title: { fontSize: fontSize.base, fontWeight: fontWeight.semibold },
+  cat: { fontSize: fontSize.xs, textTransform: 'capitalize', marginTop: 2 },
+  pctPill: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: radius.full },
+  pctTxt: { fontSize: fontSize.xs, fontWeight: fontWeight.bold },
+  barBg: { height: 6, borderRadius: 3, overflow: 'hidden' },
+  barFill: { height: '100%', borderRadius: 3 },
+  msRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  msTxt: { fontSize: fontSize.xs },
 });

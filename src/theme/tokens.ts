@@ -114,9 +114,9 @@ export const darkTheme = {
     primaryBg: '#0E2E44',
   },
   border: {
-    subtle: 'rgba(56, 189, 248, 0.14)',
-    default: 'rgba(56, 189, 248, 0.26)',
-    strong: 'rgba(56, 189, 248, 0.42)',
+    subtle: 'rgba(168, 220, 244, 0.18)',
+    default: 'rgba(168, 220, 244, 0.30)',
+    strong: 'rgba(168, 220, 244, 0.50)',
     focus: '#38BDF8',
   },
   frostedGlass: {

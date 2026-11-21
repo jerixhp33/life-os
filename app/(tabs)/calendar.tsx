@@ -159,8 +159,17 @@ export default function CalendarScreen() {
       {/* Selected Day Agenda */}
       <Animated.View entering={FadeInUp.duration(400).delay(120)} style={[s.detail, { backgroundColor: theme.bg.secondary, borderTopColor: theme.border.subtle }]}>
         <View style={s.detHead}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-            <Text style={{ fontSize: 16 }}>📅</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <View style={{
+              width: 28,
+              height: 28,
+              borderRadius: 14,
+              backgroundColor: isDark ? 'rgba(56, 189, 248, 0.16)' : 'rgba(2, 132, 199, 0.12)',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <Ionicons name="calendar-outline" size={16} color={theme.brand.primary} />
+            </View>
             <Text style={[s.detTitle, { color: theme.text.primary }]}>
               {isToday(sel) ? 'Today · ' : ''}
               {format(sel, 'EEEE, MMMM d')}
@@ -193,7 +202,7 @@ export default function CalendarScreen() {
             data={selEvents}
             keyExtractor={(e) => e.id}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ gap: spacing[2], padding: spacing[4], paddingTop: 0, paddingBottom: spacing[16] }}
+            contentContainerStyle={{ gap: spacing[2], padding: spacing[4], paddingTop: 0, paddingBottom: 120 }}
             renderItem={({ item, index }) => (
               <TouchableCard
                 index={index}

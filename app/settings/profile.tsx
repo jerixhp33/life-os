@@ -13,7 +13,7 @@ import { Input } from '../../src/components/ui/Input';
 import { Button } from '../../src/components/ui/Button';
 import { Card } from '../../src/components/ui/Card';
 import { spacing, fontSize, fontWeight, radius, shadows } from '../../src/theme/tokens';
-import { useAuthStore } from '../../src/stores/authStore';
+import { useAuthStore, isCleanAvatarUrl } from '../../src/stores/authStore';
 import { uploadAvatarImage } from '../../src/features/documents/api';
 
 const AVATAR_CACHE_KEY = 'lifeos_cached_avatar_url';
@@ -45,18 +45,20 @@ export default function ProfileSettingsScreen() {
   const [currency, setCurrency] = useState(profile?.currency ?? 'INR');
   const [notifs, setNotifs] = useState(profile?.notification_enabled ?? true);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
-  const [localAvatar, setLocalAvatar] = useState<string | null>(profile?.avatar_url ?? null);
+  const [localAvatar, setLocalAvatar] = useState<string | null>(
+    isCleanAvatarUrl(profile?.avatar_url) ? profile!.avatar_url : null
+  );
 
   useEffect(() => {
     if (profile?.full_name) setName(profile.full_name);
     if (profile?.currency) setCurrency(profile.currency);
-    if (profile?.avatar_url) setLocalAvatar(profile.avatar_url);
+    if (isCleanAvatarUrl(profile?.avatar_url)) setLocalAvatar(profile!.avatar_url);
   }, [profile]);
 
   useEffect(() => {
     // Check fallback avatar from AsyncStorage on mount
     AsyncStorage.getItem(AVATAR_CACHE_KEY).then((cached) => {
-      if (cached && !localAvatar) {
+      if (isCleanAvatarUrl(cached)) {
         setLocalAvatar(cached);
       }
     }).catch(() => {});
@@ -207,7 +209,7 @@ export default function ProfileSettingsScreen() {
       }
     ]);
 
-  const activeAvatar = localAvatar || profile?.avatar_url;
+  const activeAvatar = (isCleanAvatarUrl(localAvatar) ? localAvatar : null) || (isCleanAvatarUrl(profile?.avatar_url) ? profile?.avatar_url : null);
 
   return (
     <ScreenLayout title="Profile & Account" showBack keyboardAvoid>
@@ -218,12 +220,16 @@ export default function ProfileSettingsScreen() {
             <View style={[
               s.avatarGlow,
               {
-                borderColor: isDark ? 'rgba(56, 189, 248, 0.4)' : 'rgba(2, 132, 199, 0.25)',
-                backgroundColor: isDark ? 'rgba(14, 38, 64, 0.8)' : '#FFFFFF'
+                borderColor: isDark ? 'rgba(168, 220, 244, 0.45)' : 'rgba(2, 132, 199, 0.25)',
+                backgroundColor: isDark ? 'rgba(10, 36, 56, 0.85)' : '#FFFFFF'
               }
             ]}>
               {activeAvatar ? (
-                <Image source={{ uri: activeAvatar }} style={s.avImage} />
+                <Image
+                  source={{ uri: activeAvatar }}
+                  style={s.avImage}
+                  onError={() => setLocalAvatar(null)}
+                />
               ) : (
                 <View style={[s.avCircle, { backgroundColor: theme.brand.primaryBg }]}>
                   <Text style={[s.avLetter, { color: theme.brand.primary }]}>

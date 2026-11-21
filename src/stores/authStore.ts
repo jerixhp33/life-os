@@ -4,17 +4,34 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '../lib/supabase/client';
 import type { UserProfile } from '../types';
 
-const PROFILE_CACHE_KEY = 'lifeos_cached_user_profile';
-const AVATAR_CACHE_KEY = 'lifeos_cached_avatar_url';
+export const PROFILE_CACHE_KEY = 'lifeos_cached_user_profile';
+export const AVATAR_CACHE_KEY = 'lifeos_cached_avatar_url';
+
+export function isCleanAvatarUrl(url: string | null | undefined): boolean {
+  if (!url || typeof url !== 'string') return false;
+  const trimmed = url.trim();
+  if (trimmed.length < 5) return false;
+  if (trimmed.includes('avatar_test.jpg')) return false; // Corrupt placeholder string
+  return true;
+}
 
 interface AuthState {
-  session: Session|null; user: User|null; profile: UserProfile|null;
-  isLoading: boolean; isInitialized: boolean; error: string|null;
-  initialize:()=>Promise<void>; signUp:(email:string,password:string,fullName:string)=>Promise<void>;
-  signIn:(email:string,password:string)=>Promise<void>; signOut:()=>Promise<void>;
-  resetPassword:(email:string)=>Promise<void>; updateProfile:(updates:Partial<UserProfile>)=>Promise<void>;
-  deleteAccount:()=>Promise<void>; clearError:()=>void;
+  session: Session | null;
+  user: User | null;
+  profile: UserProfile | null;
+  isLoading: boolean;
+  isInitialized: boolean;
+  error: string | null;
+  initialize: () => Promise<void>;
+  signUp: (email: string, password: string, fullName: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
+  updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
+  deleteAccount: () => Promise<void>;
+  clearError: () => void;
 }
+
 const DEFAULT_PROFILE: UserProfile = {
   id: '72174898-5ffa-49b2-a5fa-5c85972e819f',
   email: 'manikandanjanani67@gmail.com',
@@ -25,7 +42,7 @@ const DEFAULT_PROFILE: UserProfile = {
   theme: 'system',
   notification_enabled: true,
   created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString()
+  updated_at: new Date().toISOString(),
 };
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -35,120 +52,124 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isLoading: false,
   isInitialized: false,
   error: null,
+
   initialize: async () => {
     try {
+      // 1. Load persistent local avatar first
       let cachedAvatarUrl: string | null = null;
       try {
         const storedAvatar = await AsyncStorage.getItem(AVATAR_CACHE_KEY);
-        if (storedAvatar && storedAvatar.length > 5) {
+        if (isCleanAvatarUrl(storedAvatar)) {
           cachedAvatarUrl = storedAvatar;
+        } else if (storedAvatar && storedAvatar.includes('avatar_test.jpg')) {
+          // Clear legacy corrupt URL
+          await AsyncStorage.removeItem(AVATAR_CACHE_KEY);
         }
       } catch {}
 
+      // 2. Load cached profile immediately for instant 0ms UI load
       try {
         const cached = await AsyncStorage.getItem(PROFILE_CACHE_KEY);
         if (cached) {
           const parsed = JSON.parse(cached);
           if (parsed && typeof parsed === 'object' && parsed.id) {
-            const initialProfile = {
-              ...parsed,
-              avatar_url: parsed.avatar_url || cachedAvatarUrl
-            };
-            set({ profile: initialProfile as UserProfile });
+            const cleanUrl = isCleanAvatarUrl(parsed.avatar_url) ? parsed.avatar_url : cachedAvatarUrl;
+            set({
+              profile: {
+                ...parsed,
+                avatar_url: cleanUrl,
+              } as UserProfile,
+            });
           }
         } else if (cachedAvatarUrl) {
           set({ profile: { ...DEFAULT_PROFILE, avatar_url: cachedAvatarUrl } });
         }
       } catch {}
 
-      let { data: { session } } = await supabase.auth.getSession();
-      
-      // If no session exists, auto-authenticate with registered account
-      if (!session) {
-        const { data: signInData } = await supabase.auth.signInWithPassword({
-          email: 'manikandanjanani67@gmail.com',
-          password: 'nabikandan@17'
-        }).catch(() => ({ data: { session: null } }));
-        if (signInData?.session) {
-          session = signInData.session;
-        }
+      // 3. Check Supabase session with 3.5s timeout guard so it never hangs offline
+      const sessionPromise = supabase.auth.getSession();
+      const timeoutPromise = new Promise<{ data: { session: null } }>((resolve) =>
+        setTimeout(() => resolve({ data: { session: null } }), 3500)
+      );
+
+      let session: Session | null = null;
+      try {
+        const raceResult = await Promise.race([sessionPromise, timeoutPromise]);
+        session = raceResult.data.session;
+      } catch (sessErr) {
+        console.warn('[Auth] Session check timed out or offline:', sessErr);
       }
 
       set({ session, user: session?.user ?? null });
 
+      // 4. If session active, sync remote profile
       if (session?.user) {
-        const { data } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
-        if (data) {
-          let loaded = data as UserProfile;
-          if (!loaded.avatar_url && cachedAvatarUrl) {
-            loaded = { ...loaded, avatar_url: cachedAvatarUrl };
-          }
-          set({ profile: loaded });
-          AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(loaded)).catch(() => {});
-          if (loaded.avatar_url) {
-            AsyncStorage.setItem(AVATAR_CACHE_KEY, loaded.avatar_url).catch(() => {});
-          }
-        } else {
-          const { data: created } = await supabase.from('profiles').upsert({
-            id: session.user.id,
-            email: session.user.email ?? 'manikandanjanani67@gmail.com',
-            full_name: 'Manikandan',
-            currency: 'INR',
-            timezone: 'Asia/Kolkata',
-            avatar_url: cachedAvatarUrl
-          }).select().single();
-          if (created) {
-            let loaded = created as UserProfile;
-            if (!loaded.avatar_url && cachedAvatarUrl) {
-              loaded = { ...loaded, avatar_url: cachedAvatarUrl };
-            }
+        try {
+          const { data } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+
+          if (data) {
+            let loaded = data as UserProfile;
+            // Never overwrite with corrupt avatar URL
+            const bestAvatar = isCleanAvatarUrl(cachedAvatarUrl)
+              ? cachedAvatarUrl
+              : isCleanAvatarUrl(loaded.avatar_url)
+              ? loaded.avatar_url
+              : null;
+
+            loaded = { ...loaded, avatar_url: bestAvatar };
             set({ profile: loaded });
             AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(loaded)).catch(() => {});
-            if (loaded.avatar_url) {
-              AsyncStorage.setItem(AVATAR_CACHE_KEY, loaded.avatar_url).catch(() => {});
+            if (bestAvatar) {
+              AsyncStorage.setItem(AVATAR_CACHE_KEY, bestAvatar).catch(() => {});
             }
           }
+        } catch (fetchErr) {
+          console.warn('[Auth] Remote profile fetch deferred:', fetchErr);
         }
       }
 
+      // 5. Setup auth state listener
       supabase.auth.onAuthStateChange(async (_e, s) => {
         set({ session: s, user: s?.user ?? null });
         if (s?.user) {
-          let fallbackAvatar: string | null = null;
           try {
-            const storedAvatar = await AsyncStorage.getItem(AVATAR_CACHE_KEY);
-            if (storedAvatar && storedAvatar.length > 5) {
-              fallbackAvatar = storedAvatar;
-            }
-          } catch {}
+            const stored = await AsyncStorage.getItem(AVATAR_CACHE_KEY);
+            const cleanStored = isCleanAvatarUrl(stored) ? stored : null;
 
-          const { data } = await supabase.from('profiles').select('*').eq('id', s.user.id).single();
-          if (data) {
-            let loaded = data as UserProfile;
-            if (!loaded.avatar_url && fallbackAvatar) {
-              loaded = { ...loaded, avatar_url: fallbackAvatar };
+            const { data } = await supabase.from('profiles').select('*').eq('id', s.user.id).single();
+            if (data) {
+              let loaded = data as UserProfile;
+              const bestAvatar = cleanStored || (isCleanAvatarUrl(loaded.avatar_url) ? loaded.avatar_url : null);
+              loaded = { ...loaded, avatar_url: bestAvatar };
+              set({ profile: loaded });
+              AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(loaded)).catch(() => {});
+              if (bestAvatar) {
+                AsyncStorage.setItem(AVATAR_CACHE_KEY, bestAvatar).catch(() => {});
+              }
             }
-            set({ profile: loaded });
-            AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(loaded)).catch(() => {});
-            if (loaded.avatar_url) {
-              AsyncStorage.setItem(AVATAR_CACHE_KEY, loaded.avatar_url).catch(() => {});
-            }
+          } catch (profileErr) {
+            console.warn('[Auth] State change profile fetch deferred:', profileErr);
           }
         }
       });
     } catch (e) {
-      console.error('[Auth]', e);
+      console.warn('[Auth Init Error]', e);
     } finally {
       set({ isInitialized: true });
     }
   },
+
   signUp: async (email, password, fullName) => {
     set({ isLoading: true, error: null });
     try {
       const { data, error } = await supabase.auth.signUp({
         email: email.trim().toLowerCase(),
         password,
-        options: { data: { full_name: fullName.trim() } }
+        options: { data: { full_name: fullName.trim() } },
       });
       if (error) throw error;
       if (data.session) {
@@ -156,12 +177,27 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       } else {
         const { data: sData } = await supabase.auth.signInWithPassword({
           email: email.trim().toLowerCase(),
-          password
+          password,
         });
         if (sData?.session) {
           set({ session: sData.session, user: sData.user });
         }
       }
+      // Create initial local profile
+      const newProfile: UserProfile = {
+        id: data.user?.id || `user_${Date.now()}`,
+        email: email.trim().toLowerCase(),
+        full_name: fullName.trim(),
+        avatar_url: null,
+        timezone: 'Asia/Kolkata',
+        currency: 'INR',
+        theme: 'system',
+        notification_enabled: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+      set({ profile: newProfile });
+      AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(newProfile)).catch(() => {});
     } catch (e: unknown) {
       set({ error: e instanceof Error ? e.message : 'Sign up failed' });
       throw e;
@@ -169,15 +205,25 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ isLoading: false });
     }
   },
+
   signIn: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim().toLowerCase(),
-        password
+        password,
       });
       if (error) throw error;
       set({ session: data.session, user: data.user });
+      
+      // Fetch or initialize profile
+      if (data.user) {
+        const { data: pData } = await supabase.from('profiles').select('*').eq('id', data.user.id).single();
+        if (pData) {
+          set({ profile: pData as UserProfile });
+          AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(pData)).catch(() => {});
+        }
+      }
     } catch (e: unknown) {
       set({ error: e instanceof Error ? e.message : 'Sign in failed' });
       throw e;
@@ -185,15 +231,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ isLoading: false });
     }
   },
+
   signOut: async () => {
     set({ isLoading: true });
     try {
-      await supabase.auth.signOut();
+      await supabase.auth.signOut().catch(() => {});
       set({ session: null, user: null, profile: null });
+      await AsyncStorage.removeItem(PROFILE_CACHE_KEY).catch(() => {});
     } finally {
       set({ isLoading: false });
     }
   },
+
   resetPassword: async (email) => {
     set({ isLoading: true, error: null });
     try {
@@ -206,46 +255,46 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ isLoading: false });
     }
   },
+
   updateProfile: async (updates) => {
     const { user, profile } = get();
     set({ isLoading: true, error: null });
-    
-    // Always update local profile and cache first so UI never loses avatar
-    const updated = { ...(profile ?? DEFAULT_PROFILE), ...updates, updated_at: new Date().toISOString() };
+
+    // 1. Immediately update local state and cache so UI never loses avatar
+    const updated = {
+      ...(profile ?? DEFAULT_PROFILE),
+      ...updates,
+      updated_at: new Date().toISOString(),
+    };
     set({ profile: updated });
     AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(updated)).catch(() => {});
 
     // Save or clear dedicated avatar cache
     if (updates.avatar_url !== undefined) {
-      if (updates.avatar_url && updates.avatar_url.length > 5) {
-        AsyncStorage.setItem(AVATAR_CACHE_KEY, updates.avatar_url).catch(() => {});
+      if (isCleanAvatarUrl(updates.avatar_url)) {
+        AsyncStorage.setItem(AVATAR_CACHE_KEY, updates.avatar_url!).catch(() => {});
       } else if (updates.avatar_url === null) {
         AsyncStorage.removeItem(AVATAR_CACHE_KEY).catch(() => {});
       }
     }
 
+    // 2. Sync to Supabase in background
     try {
-      const targetId = user?.id ?? DEFAULT_PROFILE.id;
+      const targetId = user?.id ?? profile?.id ?? DEFAULT_PROFILE.id;
       const { data, error } = await supabase
         .from('profiles')
         .upsert({ id: targetId, ...updates, updated_at: new Date().toISOString() })
         .select()
         .single();
+
       if (!error && data) {
         let persisted = data as UserProfile;
-        if (!persisted.avatar_url) {
-          try {
-            const storedAvatar = await AsyncStorage.getItem(AVATAR_CACHE_KEY);
-            if (storedAvatar && storedAvatar.length > 5) {
-              persisted = { ...persisted, avatar_url: storedAvatar };
-            }
-          } catch {}
+        const storedAvatar = await AsyncStorage.getItem(AVATAR_CACHE_KEY);
+        if (isCleanAvatarUrl(storedAvatar)) {
+          persisted = { ...persisted, avatar_url: storedAvatar };
         }
         set({ profile: persisted });
         AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(persisted)).catch(() => {});
-        if (persisted.avatar_url) {
-          AsyncStorage.setItem(AVATAR_CACHE_KEY, persisted.avatar_url).catch(() => {});
-        }
       }
     } catch (e) {
       console.warn('[Profile Sync]', e);
@@ -253,11 +302,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ isLoading: false });
     }
   },
+
   deleteAccount: async () => {
-    const { user } = get(); if (!user) throw new Error('Not authenticated');
-    set({ isLoading:true });
-    try { const { error } = await supabase.functions.invoke('delete-account',{ body:{ user_id:user.id } }); if (error) throw error; await supabase.auth.signOut(); set({ session:null, user:null, profile:null }); }
-    finally { set({ isLoading:false }); }
+    const { user } = get();
+    if (!user) throw new Error('Not authenticated');
+    set({ isLoading: true });
+    try {
+      const { error } = await supabase.functions.invoke('delete-account', { body: { user_id: user.id } });
+      if (error) throw error;
+      await supabase.auth.signOut().catch(() => {});
+      set({ session: null, user: null, profile: null });
+      await AsyncStorage.removeItem(PROFILE_CACHE_KEY).catch(() => {});
+      await AsyncStorage.removeItem(AVATAR_CACHE_KEY).catch(() => {});
+    } finally {
+      set({ isLoading: false });
+    }
   },
-  clearError: () => set({ error:null }),
+
+  clearError: () => set({ error: null }),
 }));
