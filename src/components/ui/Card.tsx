@@ -23,7 +23,7 @@ interface TouchableCardProps extends CardProps {
 }
 
 const BORDER_RADIUS = 22;
-const BORDER_WIDTH = 1.2;
+const BORDER_WIDTH = 1.0;
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -37,11 +37,11 @@ function elevationShadow(elevation: CardProps['elevation']) {
   return shadows.md;
 }
 
-// Full glass cards without inner color - pure frosted translucent glass (Matches Image 3)
+// Full glass cards without inner color - pure frosted translucent glass
 const DARK_GRADIENT: readonly [string, string, ...string[]] = [
-  'rgba(255, 255, 255, 0.08)',
-  'rgba(255, 255, 255, 0.03)',
-  'rgba(255, 255, 255, 0.01)',
+  'rgba(255, 255, 255, 0.05)',
+  'rgba(255, 255, 255, 0.02)',
+  'transparent',
 ];
 
 const LIGHT_GRADIENT: readonly [string, string, ...string[]] = [
@@ -59,8 +59,8 @@ export function Card({
   const { isDark } = useTheme();
 
   const borderColor = isDark
-    ? 'rgba(255, 255, 255, 0.15)'
-    : 'rgba(255, 255, 255, 0.90)';
+    ? 'rgba(255, 255, 255, 0.10)'
+    : 'rgba(255, 255, 255, 0.85)';
 
   return (
     <Animated.View
@@ -84,17 +84,6 @@ export function Card({
         end={{ x: 0.85, y: 1 }}
         style={StyleSheet.absoluteFill}
       />
-      {/* Specular hairline top reflection */}
-      <View
-        style={[
-          styles.specularShine,
-          {
-            backgroundColor: isDark
-              ? 'rgba(255, 255, 255, 0.38)'
-              : 'rgba(255, 255, 255, 0.95)',
-          },
-        ]}
-      />
       <View style={styles.content}>{children}</View>
     </Animated.View>
   );
@@ -115,8 +104,8 @@ export function TouchableCard({
   }));
 
   const borderColor = isDark
-    ? 'rgba(255, 255, 255, 0.16)'
-    : 'rgba(255, 255, 255, 0.90)';
+    ? 'rgba(255, 255, 255, 0.10)'
+    : 'rgba(255, 255, 255, 0.85)';
 
   return (
     <AnimatedPressable
@@ -149,17 +138,6 @@ export function TouchableCard({
         end={{ x: 0.85, y: 1 }}
         style={StyleSheet.absoluteFill}
       />
-      {/* Specular hairline top reflection */}
-      <View
-        style={[
-          styles.specularShine,
-          {
-            backgroundColor: isDark
-              ? 'rgba(255, 255, 255, 0.38)'
-              : 'rgba(255, 255, 255, 0.95)',
-          },
-        ]}
-      />
       <View style={styles.content}>{children}</View>
     </AnimatedPressable>
   );
@@ -171,13 +149,6 @@ const styles = StyleSheet.create({
     borderWidth: BORDER_WIDTH,
     overflow: 'hidden',
     position: 'relative',
-  },
-  specularShine: {
-    position: 'absolute',
-    top: 0,
-    left: 24,
-    right: 24,
-    height: 1,
   },
   content: {
     padding: 16,

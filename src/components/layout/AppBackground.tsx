@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
+import Svg, { Defs, RadialGradient, Stop, Circle as SvgCircle, Rect } from 'react-native-svg';
 import { useTheme } from '../../theme/ThemeContext';
 import {
   useWallpaperStore,
@@ -99,7 +100,7 @@ export function AppBackground({
       )}
 
       {/* ============================================================== */}
-      {/* 2. ORGANIC U-SHAPE TOP-TO-MIDDLE SHAPES LAYER                   */}
+      {/* 2. NOVA AI SHAPES & ATMOSPHERIC BLUR LAYER (Step 1 & Step 2)   */}
       {/* ============================================================== */}
       <View
         style={[
@@ -111,45 +112,82 @@ export function AppBackground({
         ]}
         pointerEvents="none"
       >
-        {/* Circle 1: Left upper circle */}
-        <View
-          style={[
-            styles.circle,
-            styles.circle1,
-            { backgroundColor: presetMeta.circles[0] },
-            isFullIntensity && { transform: [{ scale: 1.15 }] },
-          ]}
-        />
+        {/* Feathered Radial SVG Orbs: Guarantees soft atmospheric blur on every device */}
+        <Svg
+          width={SCREEN_WIDTH}
+          height={SHAPE_HEIGHT}
+          style={StyleSheet.absoluteFill}
+        >
+          <Defs>
+            {/* Orb 0: Left upper lavender/periwinkle */}
+            <RadialGradient id="grad0" cx="50%" cy="50%" rx="50%" ry="50%" fx="50%" fy="50%">
+              <Stop offset="0%" stopColor={presetMeta.circles[0]} stopOpacity="0.95" />
+              <Stop offset="30%" stopColor={presetMeta.circles[0]} stopOpacity="0.80" />
+              <Stop offset="65%" stopColor={presetMeta.circles[0]} stopOpacity="0.38" />
+              <Stop offset="90%" stopColor={presetMeta.circles[0]} stopOpacity="0.08" />
+              <Stop offset="100%" stopColor={presetMeta.circles[0]} stopOpacity="0" />
+            </RadialGradient>
 
-        {/* Circle 2: Large center-top luminous sphere */}
-        <View
-          style={[
-            styles.circle,
-            styles.circle2,
-            { backgroundColor: presetMeta.circles[1] },
-            isFullIntensity && { transform: [{ scale: 1.12 }] },
-          ]}
-        />
+            {/* Orb 1: Center-Right large luminous ice-blue core sphere */}
+            <RadialGradient id="grad1" cx="50%" cy="50%" rx="50%" ry="50%" fx="50%" fy="50%">
+              <Stop offset="0%" stopColor={presetMeta.circles[1]} stopOpacity="0.95" />
+              <Stop offset="35%" stopColor={presetMeta.circles[1]} stopOpacity="0.82" />
+              <Stop offset="70%" stopColor={presetMeta.circles[1]} stopOpacity="0.40" />
+              <Stop offset="92%" stopColor={presetMeta.circles[1]} stopOpacity="0.10" />
+              <Stop offset="100%" stopColor={presetMeta.circles[1]} stopOpacity="0" />
+            </RadialGradient>
 
-        {/* Circle 3: Right upper sphere */}
-        <View
-          style={[
-            styles.circle,
-            styles.circle3,
-            { backgroundColor: presetMeta.circles[2] },
-            isFullIntensity && { transform: [{ scale: 1.15 }] },
-          ]}
-        />
+            {/* Orb 2: Lower-Center dip vibrant azure blue */}
+            <RadialGradient id="grad2" cx="50%" cy="50%" rx="50%" ry="50%" fx="50%" fy="50%">
+              <Stop offset="0%" stopColor={presetMeta.circles[2]} stopOpacity="0.92" />
+              <Stop offset="32%" stopColor={presetMeta.circles[2]} stopOpacity="0.75" />
+              <Stop offset="68%" stopColor={presetMeta.circles[2]} stopOpacity="0.35" />
+              <Stop offset="90%" stopColor={presetMeta.circles[2]} stopOpacity="0.08" />
+              <Stop offset="100%" stopColor={presetMeta.circles[2]} stopOpacity="0" />
+            </RadialGradient>
 
-        {/* Circle 4: Center-right downward dip - creates the iconic U-shape blend! */}
-        <View
-          style={[
-            styles.circle,
-            styles.circle4,
-            { backgroundColor: presetMeta.circles[3] },
-            isFullIntensity && { transform: [{ scale: 1.20 }] },
-          ]}
-        />
+            {/* Orb 3: Right edge deep cobalt sphere */}
+            <RadialGradient id="grad3" cx="50%" cy="50%" rx="50%" ry="50%" fx="50%" fy="50%">
+              <Stop offset="0%" stopColor={presetMeta.circles[3]} stopOpacity="0.90" />
+              <Stop offset="35%" stopColor={presetMeta.circles[3]} stopOpacity="0.70" />
+              <Stop offset="70%" stopColor={presetMeta.circles[3]} stopOpacity="0.30" />
+              <Stop offset="92%" stopColor={presetMeta.circles[3]} stopOpacity="0.05" />
+              <Stop offset="100%" stopColor={presetMeta.circles[3]} stopOpacity="0" />
+            </RadialGradient>
+          </Defs>
+
+          {/* Orb 0: Top left periwinkle */}
+          <SvgCircle
+            cx={SCREEN_WIDTH * 0.18}
+            cy={SHAPE_HEIGHT * 0.28}
+            r={SCREEN_WIDTH * 0.44}
+            fill="url(#grad0)"
+          />
+
+          {/* Orb 1: Center-top large luminous sphere */}
+          <SvgCircle
+            cx={SCREEN_WIDTH * 0.68}
+            cy={SHAPE_HEIGHT * 0.36}
+            r={SCREEN_WIDTH * 0.56}
+            fill="url(#grad1)"
+          />
+
+          {/* Orb 2: Center downward dip (iconic Nova AI curve) */}
+          <SvgCircle
+            cx={SCREEN_WIDTH * 0.42}
+            cy={SHAPE_HEIGHT * 0.62}
+            r={SCREEN_WIDTH * 0.46}
+            fill="url(#grad2)"
+          />
+
+          {/* Orb 3: Right upper sphere */}
+          <SvgCircle
+            cx={SCREEN_WIDTH * 0.88}
+            cy={SHAPE_HEIGHT * 0.20}
+            r={SCREEN_WIDTH * 0.38}
+            fill="url(#grad3)"
+          />
+        </Svg>
 
         {/* Supplementary Soft Core Glow */}
         <LinearGradient
@@ -161,17 +199,17 @@ export function AppBackground({
           end={{ x: 0.5, y: 1 }}
           style={[
             styles.coreGlowGradient,
-            { opacity: isFullIntensity ? 0.65 : 0.35 },
+            { opacity: isFullIntensity ? 0.60 : 0.30 },
           ]}
         />
       </View>
 
       {/* ============================================================== */}
-      {/* 3. BLUR DIFFUSION EFFECT (Matches Reference Panel 2)            */}
+      {/* 3. HARDWARE BLUR DIFFUSION EFFECT (Matches Reference Panel 2)   */}
       {/* ============================================================== */}
       {blurIntensity > 0 && (
         <BlurView
-          intensity={Platform.OS === 'android' ? Math.max(blurIntensity, 75) : blurIntensity}
+          intensity={Platform.OS === 'android' ? Math.max(blurIntensity, 70) : blurIntensity}
           tint={isDark ? 'dark' : 'light'}
           experimentalBlurMethod="dimezisBlurView"
           style={styles.blurLayer}
@@ -180,17 +218,17 @@ export function AppBackground({
       )}
 
       {/* ============================================================== */}
-      {/* 4. SOFT U-SHAPE DOWNWARD GRADIENT FALLOFF                       */}
+      {/* 4. SEAMLESS DOWNWARD GRADIENT FALLOFF (Step 3: Final Design)   */}
       {/* ============================================================== */}
       <LinearGradient
         colors={[
           'transparent',
-          isDark ? 'rgba(12, 11, 10, 0.25)' : 'rgba(250, 247, 242, 0.25)',
-          isDark ? 'rgba(12, 11, 10, 0.75)' : 'rgba(250, 247, 242, 0.75)',
+          isDark ? 'rgba(0, 0, 0, 0.18)' : 'rgba(240, 244, 255, 0.18)',
+          isDark ? 'rgba(0, 0, 0, 0.65)' : 'rgba(240, 244, 255, 0.65)',
           baseBg,
           baseBg,
         ]}
-        locations={[0, 0.32, 0.5, 0.65, 1]}
+        locations={[0, 0.30, 0.46, 0.62, 1]}
         style={styles.bottomFadeGradient}
         pointerEvents="none"
       />

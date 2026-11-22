@@ -58,8 +58,8 @@ const MODULES: ModuleItem[] = [
     label: 'Finance',
     desc: 'Income & expenses',
     route: '/finance',
-    gradient: ['#D97706', '#F59E0B'],
-    accent: '#F59E0B',
+    gradient: ['#2563EB', '#38BDF8'],
+    accent: '#38BDF8',
   },
   {
     icon: 'repeat',
@@ -90,8 +90,8 @@ const MODULES: ModuleItem[] = [
     label: 'AI Assistant',
     desc: 'Autonomous intelligence',
     route: '/ai/chat',
-    gradient: ['#F59E0B', '#D97706'],
-    accent: '#F59E0B',
+    gradient: ['#3B82F6', '#818CF8'],
+    accent: '#60A5FA',
     badge: 'AI PRO',
   },
   {
@@ -99,8 +99,8 @@ const MODULES: ModuleItem[] = [
     label: 'Focus Studio',
     desc: 'Deep work & soundscapes',
     route: '/focus',
-    gradient: ['#F59E0B', '#EA580C'],
-    accent: '#F59E0B',
+    gradient: ['#2563EB', '#38BDF8'],
+    accent: '#38BDF8',
     badge: 'NEW',
   },
 ];
@@ -196,7 +196,7 @@ export default function MoreScreen() {
           <Ionicons
             name={isDark ? 'moon' : 'sunny'}
             size={18}
-            color={isDark ? '#C084FC' : '#F59E0B'}
+            color={isDark ? '#818CF8' : '#2563EB'}
           />
         </TouchableOpacity>
       </Animated.View>
@@ -491,7 +491,7 @@ export default function MoreScreen() {
               activeOpacity={0.7}
             >
               <LinearGradient
-                colors={['#F59E0B', '#EA580C']}
+                colors={['#3B82F6', '#818CF8']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={s.settSquircle}
@@ -519,7 +519,7 @@ export default function MoreScreen() {
               activeOpacity={0.7}
             >
               <LinearGradient
-                colors={['#F59E0B', '#EF4444']}
+                colors={['#3B82F6', '#818CF8']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={s.settSquircle}

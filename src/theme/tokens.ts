@@ -1,63 +1,29 @@
 import { Platform } from 'react-native';
 
 export const palette = {
-  amber: {
-    50: '#FFFBEB',
-    100: '#FEF3C7',
-    200: '#FDE68A',
-    300: '#FCD34D',
-    400: '#FBBF24',
-    500: '#F59E0B',
-    600: '#D97706',
-    700: '#B45309',
-    800: '#92400E',
-    900: '#78350F',
-  },
-  ember: {
-    50: '#FFF7ED',
-    100: '#FFEDD5',
-    200: '#FED7AA',
-    300: '#FDBA74',
-    400: '#FB923C',
-    500: '#F97316',
-    600: '#EA580C',
-    700: '#C2410C',
-    800: '#9A3412',
-    900: '#7C2D12',
-  },
-  charcoal: {
-    50: '#F9F8F6',
-    100: '#F2EFE9',
-    200: '#E4DFD6',
-    300: '#C8C1B5',
-    400: '#9B9284',
-    500: '#6E6659',
-    600: '#4A4338',
-    700: '#2C2720',
-    800: '#1A1713',
-    900: '#0C0B0A',
-  },
-  // Legacy aliases for backward compatibility
-  ocean: {
-    50: '#FFFBEB',
-    100: '#FEF3C7',
-    200: '#FDE68A',
-    300: '#FCD34D',
-    400: '#FBBF24',
-    500: '#F59E0B',
-    600: '#D97706',
-    700: '#B45309',
-    800: '#92400E',
-    900: '#0C0B0A',
+  azure: {
+    50: '#EFF6FF',
+    100: '#DBEAFE',
+    200: '#BFDBFE',
+    300: '#93C5FD',
+    400: '#60A5FA',
+    500: '#3B82F6',
+    600: '#2563EB',
+    700: '#1D4ED8',
+    800: '#1E40AF',
+    900: '#1E3A8A',
   },
   cyan: {
-    50: '#FFF7ED',
-    100: '#FFEDD5',
-    200: '#FED7AA',
-    300: '#FDBA74',
-    400: '#FB923C',
-    500: '#F59E0B',
-    600: '#EA580C',
+    50: '#F0F9FF',
+    100: '#E0F2FE',
+    200: '#BAE6FD',
+    300: '#7DD3FC',
+    400: '#38BDF8',
+    500: '#0EA5E9',
+    600: '#0284C7',
+    700: '#0369A1',
+    800: '#075985',
+    900: '#0C4A6E',
   },
   slate: {
     50: '#F8FAFC',
@@ -70,6 +36,55 @@ export const palette = {
     700: '#334155',
     800: '#1E293B',
     900: '#0F172A',
+  },
+  // Aliases for compatibility
+  ocean: {
+    50: '#EFF6FF',
+    100: '#DBEAFE',
+    200: '#BFDBFE',
+    300: '#93C5FD',
+    400: '#60A5FA',
+    500: '#3B82F6',
+    600: '#2563EB',
+    700: '#1D4ED8',
+    800: '#1E40AF',
+    900: '#1E3A8A',
+  },
+  amber: {
+    50: '#EFF6FF',
+    100: '#DBEAFE',
+    200: '#BFDBFE',
+    300: '#93C5FD',
+    400: '#60A5FA',
+    500: '#3B82F6',
+    600: '#2563EB',
+    700: '#1D4ED8',
+    800: '#1E40AF',
+    900: '#1E3A8A',
+  },
+  ember: {
+    50: '#F0F9FF',
+    100: '#E0F2FE',
+    200: '#BAE6FD',
+    300: '#7DD3FC',
+    400: '#38BDF8',
+    500: '#0EA5E9',
+    600: '#0284C7',
+    700: '#0369A1',
+    800: '#075985',
+    900: '#0C4A6E',
+  },
+  charcoal: {
+    50: '#F8FAFC',
+    100: '#F1F5F9',
+    200: '#E2E8F0',
+    300: '#CBD5E1',
+    400: '#94A3B8',
+    500: '#64748B',
+    600: '#475569',
+    700: '#334155',
+    800: '#1E293B',
+    900: '#000000',
   },
 };
 
@@ -88,24 +103,24 @@ export const lightTheme = {
     overlay: 'rgba(255, 255, 255, 0.95)',
   },
   text: {
-    primary: '#1A1612',
-    secondary: '#483E34',
-    tertiary: '#7A6E60',
-    disabled: '#A69B8D',
+    primary: '#0F172A',
+    secondary: '#334155',
+    tertiary: '#64748B',
+    disabled: '#94A3B8',
     inverse: '#FFFFFF',
-    placeholder: '#A69B8D',
-    link: '#D97706',
+    placeholder: '#94A3B8',
+    link: '#2563EB',
   },
   brand: {
-    primary: '#D97706',
-    primaryDim: '#F59E0B',
-    primaryBg: '#FEF3C7',
+    primary: '#2563EB',
+    primaryDim: '#1D4ED8',
+    primaryBg: '#EFF6FF',
   },
   border: {
-    subtle: 'rgba(26, 22, 18, 0.08)',
-    default: 'rgba(26, 22, 18, 0.14)',
-    strong: 'rgba(26, 22, 18, 0.26)',
-    focus: '#D97706',
+    subtle: 'rgba(15, 23, 42, 0.08)',
+    default: 'rgba(15, 23, 42, 0.14)',
+    strong: 'rgba(15, 23, 42, 0.26)',
+    focus: '#2563EB',
   },
   frostedGlass: {
     tint: 'rgba(255, 255, 255, 0.85)',
@@ -114,63 +129,63 @@ export const lightTheme = {
   },
   success: '#10B981',
   successBg: '#ECFDF5',
-  warning: '#F59E0B',
-  warningBg: '#FFFBEB',
+  warning: '#0284C7',
+  warningBg: '#F0F9FF',
   error: '#EF4444',
   errorBg: '#FEF2F2',
-  info: '#D97706',
-  infoBg: '#FFFBEB',
+  info: '#0284C7',
+  infoBg: '#F0F9FF',
 };
 
-// Warm Ambient Luxury Theme inspired by Projector Control App (Image 3)
-// Obsidian warm black base with luminous amber, copper, and pure transparent glass cards
+// Nova AI Theme inspired by Shapes -> Blur effect -> Final Design
+// Pitch-black base (#000000) with cool azure, periwinkle, and pure transparent glass cards
 export const darkTheme = {
   bg: {
-    primary: '#0C0B0A',       // Deep obsidian charcoal warm base
-    secondary: '#141210',     // Subtle warm charcoal elevated
-    tertiary: '#1B1815',      // Warm charcoal tier 3
-    elevated: '#24201C',      // Elevated surface
-    overlay: 'rgba(0, 0, 0, 0.75)',
+    primary: '#000000',       // True pitch black (Nova AI panel 3)
+    secondary: '#07090E',     // Deep obsidian with cool undertone
+    tertiary: '#0E111B',      // Deep navy-charcoal
+    elevated: '#151928',      // Elevated surface
+    overlay: 'rgba(0, 0, 0, 0.85)',
   },
   surface: {
-    default: 'rgba(255, 255, 255, 0.05)',  // Full glass card WITHOUT inner opaque color!
-    raised: 'rgba(255, 255, 255, 0.08)',   // Elevated glass card
-    inset: 'rgba(0, 0, 0, 0.35)',          // Deep glass inset
-    overlay: 'rgba(20, 18, 16, 0.88)',
+    default: 'rgba(255, 255, 255, 0.04)',  // Full transparent glass card WITHOUT inner opaque color!
+    raised: 'rgba(255, 255, 255, 0.07)',   // Elevated glass card
+    inset: 'rgba(0, 0, 0, 0.40)',          // Deep glass inset
+    overlay: 'rgba(10, 12, 18, 0.90)',
   },
   text: {
     primary: '#FFFFFF',       // Crisp pure white
-    secondary: '#E8DFD6',     // Warm ivory / soft bone
-    tertiary: '#A89F91',      // Warm sand / refined taupe
-    disabled: '#5E574D',      // Muted warm charcoal
-    inverse: '#0C0B0A',
-    placeholder: '#7A7266',
-    link: '#F59E0B',          // Warm amber gold
+    secondary: '#E2E8F0',     // Clean cool slate / white
+    tertiary: '#94A3B8',      // Muted cool slate
+    disabled: '#475569',      // Dimmed text
+    inverse: '#000000',
+    placeholder: '#64748B',
+    link: '#60A5FA',          // Bright electric sky
   },
   brand: {
-    primary: '#F59E0B',       // Warm luxury amber
-    primaryDim: '#B45309',    // Deep bronze
-    primaryBg: 'rgba(245, 158, 11, 0.15)', // Translucent amber glow
+    primary: '#3B82F6',       // Electric Azure Blue
+    primaryDim: '#2563EB',    // Deep Royal Blue
+    primaryBg: 'rgba(59, 130, 246, 0.15)', // Translucent blue glow
   },
   border: {
-    subtle: 'rgba(255, 255, 255, 0.10)',
-    default: 'rgba(255, 255, 255, 0.16)',
-    strong: 'rgba(255, 255, 255, 0.28)',
-    focus: '#F59E0B',
+    subtle: 'rgba(255, 255, 255, 0.08)',
+    default: 'rgba(255, 255, 255, 0.12)',
+    strong: 'rgba(255, 255, 255, 0.22)',
+    focus: '#3B82F6',
   },
   frostedGlass: {
-    tint: 'rgba(255, 255, 255, 0.06)',
-    intensity: 40,
-    fallbackBg: 'rgba(24, 21, 18, 0.85)',
+    tint: 'rgba(255, 255, 255, 0.05)',
+    intensity: 45,
+    fallbackBg: 'rgba(10, 12, 18, 0.88)',
   },
   success: '#10B981',
   successBg: 'rgba(16, 185, 129, 0.15)',
-  warning: '#F59E0B',
-  warningBg: 'rgba(245, 158, 11, 0.15)',
+  warning: '#38BDF8',
+  warningBg: 'rgba(56, 189, 248, 0.15)',
   error: '#EF4444',
   errorBg: 'rgba(239, 68, 68, 0.15)',
-  info: '#F59E0B',
-  infoBg: 'rgba(245, 158, 11, 0.12)',
+  info: '#38BDF8',
+  infoBg: 'rgba(56, 189, 248, 0.15)',
 };
 
 export type Theme = typeof lightTheme;
@@ -247,20 +262,20 @@ export const shadows = {
 };
 
 export const priorityColors = {
-  low:    { bg: 'rgba(255, 255, 255, 0.08)', text: '#A89F91', dot: '#A89F91' },
-  medium: { bg: 'rgba(245, 158, 11, 0.15)', text: '#F59E0B', dot: '#F59E0B' },
-  high:   { bg: 'rgba(234, 88, 12, 0.18)', text: '#EA580C', dot: '#F97316' },
+  low:    { bg: 'rgba(255, 255, 255, 0.08)', text: '#94A3B8', dot: '#94A3B8' },
+  medium: { bg: 'rgba(96, 165, 250, 0.16)', text: '#60A5FA', dot: '#60A5FA' },
+  high:   { bg: 'rgba(56, 189, 248, 0.18)', text: '#38BDF8', dot: '#38BDF8' },
   urgent: { bg: 'rgba(239, 68, 68, 0.20)', text: '#EF4444', dot: '#EF4444' },
 };
 
 export const eventColors = {
-  violet: '#F59E0B',
-  blue: '#FBBF24',
+  violet: '#818CF8',
+  blue: '#3B82F6',
   green: '#10B981',
-  yellow: '#FDE68A',
+  yellow: '#38BDF8',
   red: '#EF4444',
-  pink: '#EA580C',
-  orange: '#F97316',
+  pink: '#A5B4FC',
+  orange: '#60A5FA',
 };
 
 export const touchTarget = { min: 44, comfortable: 48, large: 56 };

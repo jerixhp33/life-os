@@ -80,37 +80,37 @@ function getVariant(v: Variant, theme: ReturnType<typeof useTheme>['theme'], isD
       return {
         container: {
           backgroundColor: theme.brand.primary,
-          borderWidth: 1,
-          borderColor: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(2,132,199,0.3)',
+          borderWidth: 0,
         },
         textColor: '#FFFFFF',
       };
     case 'secondary':
       return {
         container: {
-          backgroundColor: theme.brand.primaryBg,
-          borderWidth: 1,
-          borderColor: isDark ? 'rgba(56,189,248,0.2)' : 'rgba(2,132,199,0.15)',
+          backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(37, 99, 235, 0.10)',
+          borderWidth: 0,
         },
-        textColor: theme.brand.primary,
+        textColor: '#FFFFFF',
       };
     case 'outline':
       return {
         container: {
           backgroundColor: 'transparent',
-          borderWidth: 1.5,
-          borderColor: theme.brand.primary,
+          borderWidth: 1,
+          borderColor: isDark ? 'rgba(255, 255, 255, 0.16)' : theme.brand.primary,
         },
-        textColor: theme.brand.primary,
+        textColor: '#FFFFFF',
       };
     case 'ghost':
-      return { container: { backgroundColor: 'transparent' }, textColor: theme.brand.primary };
+      return {
+        container: { backgroundColor: 'transparent', borderWidth: 0 },
+        textColor: '#FFFFFF',
+      };
     case 'destructive':
       return {
         container: {
           backgroundColor: theme.error,
-          borderWidth: 1,
-          borderColor: 'rgba(255,255,255,0.2)',
+          borderWidth: 0,
         },
         textColor: '#FFFFFF',
       };

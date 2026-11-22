@@ -122,7 +122,7 @@ export default function SpotlightSearchScreen() {
             badge: tr.type === 'expense' ? `-Rs ${tr.amount}` : `+Rs ${tr.amount}`,
             route: '/finance',
             icon: 'wallet-outline',
-            gradient: ['#D97706', '#F59E0B'],
+            gradient: ['#2563EB', '#38BDF8'],
           });
         }
       });

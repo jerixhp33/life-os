@@ -254,11 +254,11 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
 
           {/* Soundwave Visualizer */}
           <View style={styles.visualizerContainer}>
-            <Animated.View style={[styles.soundwaveBar, bar1Style, { backgroundColor: '#F59E0B' }]} />
-            <Animated.View style={[styles.soundwaveBar, bar2Style, { backgroundColor: '#EA580C' }]} />
-            <Animated.View style={[styles.soundwaveBar, bar3Style, { backgroundColor: '#FDE68A' }]} />
-            <Animated.View style={[styles.soundwaveBar, bar4Style, { backgroundColor: '#F59E0B' }]} />
-            <Animated.View style={[styles.soundwaveBar, bar5Style, { backgroundColor: '#D97706' }]} />
+            <Animated.View style={[styles.soundwaveBar, bar1Style, { backgroundColor: '#38BDF8' }]} />
+            <Animated.View style={[styles.soundwaveBar, bar2Style, { backgroundColor: '#3B82F6' }]} />
+            <Animated.View style={[styles.soundwaveBar, bar3Style, { backgroundColor: '#818CF8' }]} />
+            <Animated.View style={[styles.soundwaveBar, bar4Style, { backgroundColor: '#60A5FA' }]} />
+            <Animated.View style={[styles.soundwaveBar, bar5Style, { backgroundColor: '#2563EB' }]} />
           </View>
 
           <Text style={[styles.listeningText, { color: theme.text.primary }]}>
@@ -270,17 +270,17 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
             value={spokenText}
             onChangeText={setSpokenText}
             placeholder="e.g. Add task: Prepare monthly report..."
-            placeholderTextColor={isDark ? '#A89F91' : '#94A3B8'}
+            placeholderTextColor={isDark ? '#94A3B8' : '#94A3B8'}
             multiline
             style={[
               styles.inputBox,
               {
                 color: theme.text.primary,
                 backgroundColor: isDark
-                  ? 'rgba(255, 255, 255, 0.06)'
+                  ? 'rgba(255, 255, 255, 0.04)'
                   : 'rgba(15, 23, 42, 0.05)',
                 borderColor: isDark
-                  ? 'rgba(255, 255, 255, 0.14)'
+                  ? 'rgba(255, 255, 255, 0.10)'
                   : 'rgba(15, 23, 42, 0.08)',
               },
             ]}
@@ -299,15 +299,15 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
                   styles.sampleChip,
                   {
                     backgroundColor: isDark
-                      ? 'rgba(245, 158, 11, 0.14)'
-                      : 'rgba(217, 119, 6, 0.08)',
+                      ? 'rgba(59, 130, 246, 0.16)'
+                      : 'rgba(37, 99, 235, 0.08)',
                   },
                 ]}
               >
                 <Text
                   style={[
                     styles.sampleText,
-                    { color: isDark ? '#F59E0B' : '#D97706' },
+                    { color: isDark ? '#60A5FA' : '#2563EB' },
                   ]}
                   numberOfLines={1}
                 >
@@ -324,11 +324,11 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
                 styles.intentCard,
                 {
                   backgroundColor: isDark
-                    ? 'rgba(245, 158, 11, 0.15)'
-                    : 'rgba(217, 119, 6, 0.10)',
+                    ? 'rgba(59, 130, 246, 0.12)'
+                    : 'rgba(37, 99, 235, 0.08)',
                   borderColor: isDark
-                    ? 'rgba(245, 158, 11, 0.35)'
-                    : 'rgba(217, 119, 6, 0.20)',
+                    ? 'rgba(59, 130, 246, 0.25)'
+                    : 'rgba(37, 99, 235, 0.15)',
                 },
               ]}
             >
@@ -341,13 +341,13 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
                     : 'document-text'
                 }
                 size={16}
-                color={isDark ? '#F59E0B' : '#D97706'}
+                color={isDark ? '#38BDF8' : '#2563EB'}
               />
               <View style={{ flex: 1 }}>
                 <Text
                   style={[
                     styles.intentTitle,
-                    { color: isDark ? '#E8DFD6' : '#1A1612' },
+                    { color: isDark ? '#E2E8F0' : '#1A1612' },
                   ]}
                 >
                   Identified as: {parsedIntent.type.toUpperCase()}
@@ -355,7 +355,7 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
                 <Text
                   style={[
                     styles.intentDetail,
-                    { color: isDark ? '#A89F91' : '#64748B' },
+                    { color: isDark ? '#94A3B8' : '#64748B' },
                   ]}
                   numberOfLines={1}
                 >
@@ -367,7 +367,7 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
             </View>
           )}
 
-          {/* Execute Command Button */}
+          {/* Execute Command Button - white text inside and borderless */}
           <TouchableOpacity
             disabled={!parsedIntent || isExecuting}
             onPress={handleExecute}
@@ -379,7 +379,7 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
             ]}
           >
             <LinearGradient
-              colors={['#F59E0B', '#EA580C']}
+              colors={['#3B82F6', '#2563EB']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
               style={styles.executeGradient}

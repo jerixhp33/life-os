@@ -35,7 +35,7 @@ const CATEGORY_MAP: Record<
 > = {
   health: { icon: 'fitness', gradient: ['#059669', '#10B981'], accent: '#10B981' },
   career: { icon: 'briefcase', gradient: ['#4F46E5', '#6366F1'], accent: '#6366F1' },
-  finance: { icon: 'wallet', gradient: ['#D97706', '#F59E0B'], accent: '#F59E0B' },
+  finance: { icon: 'wallet', gradient: ['#2563EB', '#38BDF8'], accent: '#38BDF8' },
   learning: { icon: 'book', gradient: ['#7C3AED', '#8B5CF6'], accent: '#8B5CF6' },
   personal: { icon: 'compass', gradient: ['#0891B2', '#06B6D4'], accent: '#06B6D4' },
   relationships: { icon: 'heart', gradient: ['#E11D48', '#F43F5E'], accent: '#F43F5E' },

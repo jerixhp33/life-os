@@ -22,7 +22,7 @@ const TIMES: Array<{ k: HabitTimeOfDay; l: string; icon: keyof typeof Ionicons.g
   { k: 'anytime', l: 'Anytime', icon: 'time-outline' }
 ];
 
-const COLORS = ['#6957E8', '#3B82F6', '#23865A', '#F59E0B', '#C53B45', '#EC4899', '#8B5CF6'];
+const COLORS = ['#818CF8', '#3B82F6', '#10B981', '#38BDF8', '#EF4444', '#A5B4FC', '#60A5FA'];
 
 export default function NewHabitScreen() {
   const router = useRouter();

@@ -41,7 +41,7 @@ export function DailyBriefCard() {
       <LinearGradient
         colors={
           isDark
-            ? ['rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.03)']
+            ? ['rgba(255, 255, 255, 0.05)', 'rgba(255, 255, 255, 0.02)']
             : ['rgba(255, 255, 255, 0.95)', 'rgba(255, 255, 255, 0.85)']
         }
         start={{ x: 0, y: 0 }}
@@ -49,7 +49,7 @@ export function DailyBriefCard() {
         style={[
           s.card,
           {
-            borderColor: isDark ? 'rgba(255, 255, 255, 0.16)' : 'rgba(255, 255, 255, 0.95)',
+            borderColor: isDark ? 'rgba(255, 255, 255, 0.10)' : 'rgba(255, 255, 255, 0.95)',
             ...shadows.sm,
           },
         ]}
@@ -60,17 +60,17 @@ export function DailyBriefCard() {
             style={[
               s.tagBadge,
               {
-                backgroundColor: isDark ? 'rgba(245, 158, 11, 0.20)' : 'rgba(217, 119, 6, 0.12)',
+                backgroundColor: isDark ? 'rgba(59, 130, 246, 0.18)' : 'rgba(37, 99, 235, 0.12)',
               },
             ]}
           >
-            <Ionicons name="sparkles" size={11} color={isDark ? '#F59E0B' : '#D97706'} />
-            <Text style={[s.tagText, { color: isDark ? '#F59E0B' : '#D97706' }]}>
+            <Ionicons name="sparkles" size={11} color={isDark ? '#60A5FA' : '#2563EB'} />
+            <Text style={[s.tagText, { color: isDark ? '#60A5FA' : '#2563EB' }]}>
               Autonomous Life Brief
             </Text>
           </View>
 
-          <Text style={[s.greetingText, { color: isDark ? '#E8DFD6' : '#7A6E60' }]}>
+          <Text style={[s.greetingText, { color: isDark ? '#E2E8F0' : '#7A6E60' }]}>
             {brief.greeting}
           </Text>
         </View>
@@ -84,15 +84,15 @@ export function DailyBriefCard() {
         <View style={s.bulletsList}>
           {brief.bulletPoints.map((b, idx) => (
             <View key={idx} style={s.bulletRow}>
-              <View style={[s.bulletDot, { backgroundColor: isDark ? '#F59E0B' : '#D97706' }]} />
-              <Text style={[s.bulletText, { color: isDark ? '#E8DFD6' : '#483E34' }]}>
+              <View style={[s.bulletDot, { backgroundColor: isDark ? '#38BDF8' : '#2563EB' }]} />
+              <Text style={[s.bulletText, { color: isDark ? '#E2E8F0' : '#483E34' }]}>
                 {b}
               </Text>
             </View>
           ))}
         </View>
 
-        {/* Suggested Action */}
+        {/* Suggested Action - Clean button with white text inside and no border inside border */}
         {brief.suggestedAction && (
           <TouchableOpacity
             activeOpacity={0.8}
@@ -103,16 +103,16 @@ export function DailyBriefCard() {
             style={[
               s.actionBtn,
               {
-                backgroundColor: isDark ? 'rgba(245, 158, 11, 0.18)' : '#FFFFFF',
-                borderColor: isDark ? 'rgba(245, 158, 11, 0.35)' : '#FDE68A',
+                backgroundColor: '#3B82F6',
+                borderWidth: 0,
                 ...shadows.sm,
               },
             ]}
           >
-            <Text style={[s.actionBtnText, { color: isDark ? '#FFFFFF' : '#D97706' }]}>
+            <Text style={[s.actionBtnText, { color: '#FFFFFF' }]}>
               {brief.suggestedAction.label}
             </Text>
-            <Ionicons name="arrow-forward" size={13} color={isDark ? '#FFFFFF' : '#D97706'} />
+            <Ionicons name="arrow-forward" size={13} color="#FFFFFF" />
           </TouchableOpacity>
         )}
       </LinearGradient>

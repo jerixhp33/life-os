@@ -43,7 +43,7 @@ import { AppBackground } from '../../src/components/layout/AppBackground';
 import type { Transaction } from '../../src/types';
 
 const CATEGORY_ICONS: Record<string, { icon: keyof typeof Ionicons.glyphMap; gradient: [string, string] }> = {
-  'Food & Dining': { icon: 'restaurant', gradient: ['#F59E0B', '#F97316'] },
+  'Food & Dining': { icon: 'restaurant', gradient: ['#2563EB', '#38BDF8'] },
   Transportation:  { icon: 'car', gradient: ['#0284C7', '#38BDF8'] },
   Groceries:       { icon: 'cart', gradient: ['#10B981', '#34D399'] },
   Entertainment:   { icon: 'film', gradient: ['#8B5CF6', '#A855F7'] },
@@ -153,13 +153,13 @@ export default function FinanceScreen() {
               style={[
                 s.headerBadge,
                 {
-                  backgroundColor: isDark ? 'rgba(245, 158, 11, 0.16)' : 'rgba(217, 119, 6, 0.10)',
-                  borderColor: isDark ? 'rgba(245, 158, 11, 0.30)' : 'rgba(217, 119, 6, 0.20)',
+                  backgroundColor: isDark ? 'rgba(56, 189, 248, 0.16)' : 'rgba(2, 132, 199, 0.10)',
+                  borderColor: isDark ? 'rgba(56, 189, 248, 0.30)' : 'rgba(2, 132, 199, 0.20)',
                 },
               ]}
             >
-              <Ionicons name="wallet" size={11} color={isDark ? '#F59E0B' : '#D97706'} />
-              <Text style={[s.headerBadgeText, { color: isDark ? '#F59E0B' : '#D97706' }]}>
+              <Ionicons name="wallet" size={11} color={isDark ? '#38BDF8' : '#0284C7'} />
+              <Text style={[s.headerBadgeText, { color: isDark ? '#38BDF8' : '#0284C7' }]}>
                 Wealth & Expenses
               </Text>
             </View>
@@ -224,7 +224,7 @@ export default function FinanceScreen() {
             activeOpacity={0.85}
           >
             <LinearGradient
-              colors={['#D97706', '#F59E0B']}
+              colors={['#2563EB', '#38BDF8']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={s.addBtnGradient}
@@ -423,7 +423,7 @@ export default function FinanceScreen() {
                     isSelected && [
                       s.segmentBtnActive,
                       {
-                        backgroundColor: isDark ? '#F59E0B' : '#FFFFFF',
+                        backgroundColor: isDark ? '#3B82F6' : '#FFFFFF',
                         ...shadows.sm,
                       },
                     ],

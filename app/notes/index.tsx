@@ -175,17 +175,17 @@ export default function NotesScreen() {
           style={[
             s.kpiCard,
             {
-              backgroundColor: isDark ? 'rgba(10, 36, 56, 0.85)' : 'rgba(255, 255, 255, 0.88)',
-              borderColor: filter === 'pinned' ? '#F59E0B' : isDark ? 'rgba(168, 220, 244, 0.28)' : 'rgba(255, 255, 255, 0.95)',
+              backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.88)',
+              borderColor: filter === 'pinned' ? '#38BDF8' : isDark ? 'rgba(255, 255, 255, 0.10)' : 'rgba(255, 255, 255, 0.95)',
               ...shadows.sm,
             },
           ]}
         >
-          <View style={[s.kpiIconBox, { backgroundColor: isDark ? 'rgba(245, 158, 11, 0.20)' : 'rgba(254, 243, 199, 0.95)' }]}>
-            <Ionicons name="pin" size={17} color="#F59E0B" />
+          <View style={[s.kpiIconBox, { backgroundColor: isDark ? 'rgba(56, 189, 248, 0.18)' : 'rgba(224, 242, 254, 0.95)' }]}>
+            <Ionicons name="pin" size={17} color="#38BDF8" />
           </View>
           <Text style={[s.kpiNumber, { color: theme.text.primary }]}>{pinnedCount}</Text>
-          <Text style={[s.kpiLabel, { color: isDark ? '#819BB3' : '#64748B' }]}>Pinned</Text>
+          <Text style={[s.kpiLabel, { color: isDark ? '#94A3B8' : '#64748B' }]}>Pinned</Text>
         </TouchableOpacity>
 
         {/* Card 3: Favorites */}
@@ -315,12 +315,12 @@ export default function NotesScreen() {
                   style={[
                     s.noteCard,
                     {
-                      backgroundColor: isDark ? 'rgba(10, 36, 56, 0.88)' : 'rgba(255, 255, 255, 0.92)',
+                      backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.85)',
                       borderColor: n.pinned
-                        ? '#F59E0B'
+                        ? '#38BDF8'
                         : isDark
-                        ? 'rgba(168, 220, 244, 0.28)'
-                        : 'rgba(255, 255, 255, 0.95)',
+                        ? 'rgba(255, 255, 255, 0.10)'
+                        : 'rgba(255, 255, 255, 0.90)',
                       ...shadows.sm,
                     },
                   ]}
@@ -330,7 +330,7 @@ export default function NotesScreen() {
                     <View style={s.titleRow}>
                       {n.pinned && (
                         <View style={s.pinnedIconBox}>
-                          <Ionicons name="pin" size={13} color="#F59E0B" />
+                          <Ionicons name="pin" size={13} color="#38BDF8" />
                         </View>
                       )}
                       <Text
@@ -350,7 +350,7 @@ export default function NotesScreen() {
                         <Ionicons
                           name={n.pinned ? 'pin' : 'pin-outline'}
                           size={16}
-                          color={n.pinned ? '#F59E0B' : isDark ? '#819BB3' : '#94A3B8'}
+                          color={n.pinned ? '#38BDF8' : isDark ? '#94A3B8' : '#64748B'}
                         />
                       </TouchableOpacity>
 

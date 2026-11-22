@@ -191,7 +191,7 @@ export default function FocusStudioScreen() {
             <Text style={[s.headerTitle, { color: theme.text.primary }]}>
               Focus Studio
             </Text>
-            <Text style={[s.headerSubtitle, { color: isDark ? '#A89F91' : '#64748B' }]}>
+            <Text style={[s.headerSubtitle, { color: isDark ? '#94A3B8' : '#64748B' }]}>
               {completedSessions} {completedSessions === 1 ? 'block' : 'blocks'} completed today
             </Text>
           </View>
@@ -203,13 +203,13 @@ export default function FocusStudioScreen() {
               {
                 backgroundColor: activeTaskId
                   ? isDark
-                    ? 'rgba(245, 158, 11, 0.20)'
-                    : 'rgba(217, 119, 6, 0.15)'
+                    ? 'rgba(56, 189, 248, 0.20)'
+                    : 'rgba(2, 132, 199, 0.15)'
                   : isDark
                   ? 'rgba(255, 255, 255, 0.08)'
                   : 'rgba(255, 255, 255, 0.85)',
                 borderColor: isDark
-                  ? 'rgba(245, 158, 11, 0.35)'
+                  ? (activeTaskId ? 'rgba(56, 189, 248, 0.35)' : 'rgba(255, 255, 255, 0.12)')
                   : 'rgba(15, 23, 42, 0.12)',
               },
             ]}
@@ -217,7 +217,7 @@ export default function FocusStudioScreen() {
             <Ionicons
               name={activeTaskId ? 'checkbox' : 'checkbox-outline'}
               size={20}
-              color={activeTaskId ? '#F59E0B' : theme.text.primary}
+              color={activeTaskId ? '#38BDF8' : theme.text.primary}
             />
           </TouchableOpacity>
         </Animated.View>
@@ -240,9 +240,9 @@ export default function FocusStudioScreen() {
                     s.modeTab,
                     active && {
                       backgroundColor: isDark
-                        ? 'rgba(245, 158, 11, 0.22)'
-                        : 'rgba(217, 119, 6, 0.14)',
-                      borderColor: isDark ? '#F59E0B' : '#D97706',
+                        ? 'rgba(59, 130, 246, 0.22)'
+                        : 'rgba(37, 99, 235, 0.14)',
+                      borderColor: isDark ? '#3B82F6' : '#2563EB',
                     },
                   ]}
                 >
@@ -251,11 +251,9 @@ export default function FocusStudioScreen() {
                       s.modeTabText,
                       {
                         color: active
-                          ? isDark
-                            ? '#F59E0B'
-                            : '#D97706'
+                          ? '#FFFFFF'
                           : isDark
-                          ? '#A89F91'
+                          ? '#94A3B8'
                           : '#64748B',
                         fontWeight: active ? '700' : '500',
                       },
@@ -277,7 +275,7 @@ export default function FocusStudioScreen() {
                   s.taskPill,
                   {
                     backgroundColor: isDark
-                      ? 'rgba(10, 36, 56, 0.85)'
+                      ? 'rgba(255, 255, 255, 0.04)'
                       : 'rgba(255, 255, 255, 0.85)',
                     borderColor: isDark
                       ? 'rgba(56, 189, 248, 0.35)'
@@ -285,7 +283,7 @@ export default function FocusStudioScreen() {
                   },
                 ]}
               >
-                <Ionicons name="flame" size={16} color="#F59E0B" />
+                <Ionicons name="flame" size={16} color="#38BDF8" />
                 <Text
                   style={[s.taskPillText, { color: theme.text.primary }]}
                   numberOfLines={1}
@@ -295,7 +293,7 @@ export default function FocusStudioScreen() {
                 <Ionicons
                   name="chevron-forward"
                   size={14}
-                  color={isDark ? '#819BB3' : '#64748B'}
+                  color={isDark ? '#94A3B8' : '#64748B'}
                 />
               </TouchableOpacity>
             </Animated.View>
@@ -307,9 +305,9 @@ export default function FocusStudioScreen() {
               <Ionicons
                 name="add-circle-outline"
                 size={15}
-                color={isDark ? '#819BB3' : '#64748B'}
+                color={isDark ? '#94A3B8' : '#64748B'}
               />
-              <Text style={[s.attachTaskPromptText, { color: isDark ? '#819BB3' : '#64748B' }]}>
+              <Text style={[s.attachTaskPromptText, { color: isDark ? '#94A3B8' : '#64748B' }]}>
                 Attach a task to track productivity
               </Text>
             </TouchableOpacity>
@@ -323,10 +321,10 @@ export default function FocusStudioScreen() {
                 s.pickerCard,
                 {
                   backgroundColor: isDark
-                    ? 'rgba(10, 36, 56, 0.95)'
+                    ? 'rgba(10, 15, 26, 0.95)'
                     : 'rgba(255, 255, 255, 0.95)',
                   borderColor: isDark
-                    ? 'rgba(168, 220, 244, 0.3)'
+                    ? 'rgba(255, 255, 255, 0.12)'
                     : 'rgba(15, 23, 42, 0.12)',
                 },
               ]}
@@ -384,8 +382,8 @@ export default function FocusStudioScreen() {
             <Svg width={CIRCLE_SIZE} height={CIRCLE_SIZE} style={s.svgRing}>
               <Defs>
                 <SvgGradient id="focusGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <Stop offset="0%" stopColor="#F59E0B" />
-                  <Stop offset="100%" stopColor="#EA580C" />
+                  <Stop offset="0%" stopColor="#38BDF8" />
+                  <Stop offset="100%" stopColor="#2563EB" />
                 </SvgGradient>
               </Defs>
 
@@ -425,11 +423,11 @@ export default function FocusStudioScreen() {
                   {
                     color:
                       status === 'running'
-                        ? '#F59E0B'
+                        ? '#38BDF8'
                         : status === 'paused'
-                        ? '#EAB308'
+                        ? '#60A5FA'
                         : isDark
-                        ? '#A89F91'
+                        ? '#94A3B8'
                         : '#64748B',
                   },
                 ]}
@@ -464,7 +462,7 @@ export default function FocusStudioScreen() {
               <Ionicons
                 name="refresh"
                 size={22}
-                color={isDark ? '#E8DFD6' : '#64748B'}
+                color={isDark ? '#FFFFFF' : '#64748B'}
               />
             </TouchableOpacity>
 
@@ -477,18 +475,18 @@ export default function FocusStudioScreen() {
                 {
                   backgroundColor:
                     status === 'running'
-                      ? '#F59E0B'
+                      ? '#3B82F6'
                       : isDark
                       ? '#FFFFFF'
-                      : '#1A1612',
-                  shadowColor: status === 'running' ? '#F59E0B' : '#000000',
+                      : '#0F172A',
+                  shadowColor: status === 'running' ? '#3B82F6' : '#000000',
                 },
               ]}
             >
               <Ionicons
                 name={status === 'running' ? 'pause' : 'play'}
                 size={32}
-                color={status === 'running' ? '#FFFFFF' : (isDark ? '#0C0B0A' : '#FFFFFF')}
+                color={status === 'running' ? '#FFFFFF' : (isDark ? '#000000' : '#FFFFFF')}
                 style={{ marginLeft: status === 'running' ? 0 : 3 }}
               />
             </TouchableOpacity>
@@ -515,18 +513,16 @@ export default function FocusStudioScreen() {
                   backgroundColor:
                     soundscape !== 'none'
                       ? isDark
-                        ? 'rgba(245, 158, 11, 0.22)'
-                        : 'rgba(217, 119, 6, 0.15)'
+                        ? 'rgba(59, 130, 246, 0.22)'
+                        : 'rgba(37, 99, 235, 0.15)'
                       : isDark
                       ? 'rgba(255, 255, 255, 0.08)'
                       : 'rgba(255, 255, 255, 0.85)',
                   borderColor:
                     soundscape !== 'none'
-                      ? isDark
-                        ? '#F59E0B'
-                        : '#D97706'
+                      ? '#3B82F6'
                       : isDark
-                      ? 'rgba(255, 255, 255, 0.16)'
+                      ? 'rgba(255, 255, 255, 0.12)'
                       : 'rgba(15, 23, 42, 0.12)',
                 },
               ]}
@@ -538,14 +534,14 @@ export default function FocusStudioScreen() {
                     : 'volume-high-outline'
                 }
                 size={22}
-                color={soundscape !== 'none' ? '#F59E0B' : isDark ? '#A89F91' : '#64748B'}
+                color={soundscape !== 'none' ? '#38BDF8' : isDark ? '#94A3B8' : '#64748B'}
               />
             </TouchableOpacity>
           </Animated.View>
 
           {/* Soundscapes Selector */}
           <Animated.View entering={FadeInUp.duration(450).delay(200)} style={s.soundscapesSection}>
-            <Text style={[s.sectionTitle, { color: isDark ? '#A89F91' : '#64748B' }]}>
+            <Text style={[s.sectionTitle, { color: isDark ? '#94A3B8' : '#64748B' }]}>
               AMBIENT SOUNDSCAPE
             </Text>
             <ScrollView
@@ -567,17 +563,17 @@ export default function FocusStudioScreen() {
                       {
                         backgroundColor: active
                           ? isDark
-                            ? 'rgba(245, 158, 11, 0.24)'
-                            : 'rgba(217, 119, 6, 0.16)'
+                            ? 'rgba(59, 130, 246, 0.22)'
+                            : 'rgba(37, 99, 235, 0.14)'
                           : isDark
-                          ? 'rgba(255, 255, 255, 0.06)'
+                          ? 'rgba(255, 255, 255, 0.04)'
                           : 'rgba(255, 255, 255, 0.8)',
                         borderColor: active
                           ? isDark
-                            ? '#F59E0B'
-                            : '#D97706'
+                            ? '#3B82F6'
+                            : '#2563EB'
                           : isDark
-                          ? 'rgba(255, 255, 255, 0.14)'
+                          ? 'rgba(255, 255, 255, 0.10)'
                           : 'rgba(15, 23, 42, 0.08)',
                       },
                     ]}
@@ -587,11 +583,9 @@ export default function FocusStudioScreen() {
                       size={15}
                       color={
                         active
-                          ? isDark
-                            ? '#F59E0B'
-                            : '#D97706'
+                          ? '#38BDF8'
                           : isDark
-                          ? '#A89F91'
+                          ? '#94A3B8'
                           : '#64748B'
                       }
                     />
@@ -600,9 +594,7 @@ export default function FocusStudioScreen() {
                         s.soundscapeChipText,
                         {
                           color: active
-                            ? isDark
-                              ? '#F59E0B'
-                              : '#D97706'
+                            ? '#FFFFFF'
                             : theme.text.primary,
                           fontWeight: active ? '700' : '500',
                         },

@@ -40,19 +40,19 @@ const QA: Array<{
   route: string;
 }> = [
   { icon: 'document-text-outline', label: 'Notes', bg: 'rgba(16, 185, 129, 0.16)', color: '#10B981', route: '/notes' },
-  { icon: 'wallet-outline', label: 'Finance', bg: 'rgba(245, 158, 11, 0.16)', color: '#F59E0B', route: '/finance' },
+  { icon: 'wallet-outline', label: 'Finance', bg: 'rgba(56, 189, 248, 0.16)', color: '#38BDF8', route: '/finance' },
   { icon: 'repeat-outline', label: 'Habits', bg: 'rgba(236, 72, 153, 0.16)', color: '#EC4899', route: '/habits' },
   { icon: 'sparkles', label: 'AI Assistant', bg: 'rgba(129, 140, 248, 0.20)', color: '#6366F1', route: '/ai/chat' },
 ];
 
 const EC: Record<string, string> = {
-  violet: '#6366F1',
-  blue:   '#38BDF8',
+  violet: '#818CF8',
+  blue:   '#3B82F6',
   green:  '#10B981',
-  yellow: '#F59E0B',
+  yellow: '#38BDF8',
   red:    '#EF4444',
-  pink:   '#EC4899',
-  orange: '#F97316',
+  pink:   '#A5B4FC',
+  orange: '#60A5FA',
 };
 
 export default function HomeScreen() {
@@ -190,14 +190,14 @@ export default function HomeScreen() {
                 style={[
                   s.topGlassBtn,
                   {
-                    backgroundColor: isDark ? 'rgba(245, 158, 11, 0.16)' : 'rgba(217, 119, 6, 0.10)',
-                    borderColor: isDark ? 'rgba(245, 158, 11, 0.35)' : 'rgba(217, 119, 6, 0.20)',
+                    backgroundColor: isDark ? 'rgba(56, 189, 248, 0.16)' : 'rgba(2, 132, 199, 0.10)',
+                    borderColor: isDark ? 'rgba(56, 189, 248, 0.35)' : 'rgba(2, 132, 199, 0.20)',
                   },
                 ]}
                 activeOpacity={0.8}
                 accessibilityLabel="Voice Copilot"
               >
-                <Ionicons name="mic" size={17} color={isDark ? '#F59E0B' : '#D97706'} />
+                <Ionicons name="mic" size={17} color={isDark ? '#38BDF8' : '#0284C7'} />
               </TouchableOpacity>
 
               {/* Notification Glass Button with unread dot */}
@@ -221,7 +221,7 @@ export default function HomeScreen() {
               </TouchableOpacity>
             </View>
 
-            {/* Glowing Avatar Frame with Soft Amber Glow */}
+            {/* Glowing Avatar Frame with Soft Azure/Indigo Glow */}
             <TouchableOpacity
               onPress={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -231,9 +231,9 @@ export default function HomeScreen() {
               activeOpacity={0.85}
               accessibilityLabel="Open profile settings"
             >
-              {/* Soft warm amber/sunset glow aura */}
+              {/* Soft azure/periwinkle glow aura */}
               <LinearGradient
-                colors={['#F59E0B', '#EA580C', 'transparent']}
+                colors={['#3B82F6', '#818CF8', 'transparent']}
                 start={{ x: 0.2, y: 0.2 }}
                 end={{ x: 0.9, y: 0.9 }}
                 style={s.avatarGlowAura}
@@ -243,8 +243,8 @@ export default function HomeScreen() {
                 style={[
                   s.avatarInner,
                   {
-                    backgroundColor: isDark ? 'rgba(24, 21, 18, 0.95)' : '#FFFFFF',
-                    borderColor: isDark ? 'rgba(245, 158, 11, 0.35)' : 'rgba(255, 255, 255, 0.95)',
+                    backgroundColor: isDark ? '#000000' : '#FFFFFF',
+                    borderColor: isDark ? 'rgba(59, 130, 246, 0.35)' : 'rgba(255, 255, 255, 0.95)',
                   },
                 ]}
               >
@@ -255,7 +255,7 @@ export default function HomeScreen() {
                     onError={() => setCachedAvatar(null)}
                   />
                 ) : (
-                  <View style={[s.avatarPlaceholder, { backgroundColor: isDark ? '#2C2016' : '#FEF3C7' }]}>
+                  <View style={[s.avatarPlaceholder, { backgroundColor: isDark ? '#1E293B' : '#EFF6FF' }]}>
                     <Text style={s.avatarLetter}>{firstName[0]?.toUpperCase() ?? 'A'}</Text>
                   </View>
                 )}
@@ -285,19 +285,19 @@ export default function HomeScreen() {
             style={[
               s.kpiCard,
               {
-                backgroundColor: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(255, 255, 255, 0.88)',
-                borderColor: isDark ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.95)',
+                backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.88)',
+                borderColor: isDark ? 'rgba(255, 255, 255, 0.10)' : 'rgba(255, 255, 255, 0.90)',
                 ...shadows.sm,
               },
             ]}
           >
-            <View style={[s.kpiIconBox, { backgroundColor: isDark ? 'rgba(245, 158, 11, 0.18)' : 'rgba(254, 243, 199, 0.95)' }]}>
-              <Ionicons name="bar-chart-outline" size={18} color="#F59E0B" />
+            <View style={[s.kpiIconBox, { backgroundColor: isDark ? 'rgba(59, 130, 246, 0.18)' : 'rgba(219, 234, 254, 0.95)' }]}>
+              <Ionicons name="bar-chart-outline" size={18} color="#3B82F6" />
             </View>
             <Text style={[s.kpiNumber, { color: theme.text.primary }]}>
               {completedCount}
             </Text>
-            <Text style={[s.kpiLabel, { color: isDark ? '#A89F91' : '#64748B' }]}>
+            <Text style={[s.kpiLabel, { color: isDark ? '#94A3B8' : '#64748B' }]}>
               Tasks Done
             </Text>
           </TouchableOpacity>
@@ -312,19 +312,19 @@ export default function HomeScreen() {
             style={[
               s.kpiCard,
               {
-                backgroundColor: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(255, 255, 255, 0.88)',
-                borderColor: isDark ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.95)',
+                backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.88)',
+                borderColor: isDark ? 'rgba(255, 255, 255, 0.10)' : 'rgba(255, 255, 255, 0.90)',
                 ...shadows.sm,
               },
             ]}
           >
-            <View style={[s.kpiIconBox, { backgroundColor: isDark ? 'rgba(234, 88, 12, 0.18)' : 'rgba(255, 237, 213, 0.95)' }]}>
-              <Ionicons name="time-outline" size={18} color="#EA580C" />
+            <View style={[s.kpiIconBox, { backgroundColor: isDark ? 'rgba(56, 189, 248, 0.18)' : 'rgba(224, 242, 254, 0.95)' }]}>
+              <Ionicons name="time-outline" size={18} color="#38BDF8" />
             </View>
             <Text style={[s.kpiNumber, { color: theme.text.primary, fontSize: 18 }]}>
               {focusDisplay}
             </Text>
-            <Text style={[s.kpiLabel, { color: isDark ? '#A89F91' : '#64748B' }]}>
+            <Text style={[s.kpiLabel, { color: isDark ? '#94A3B8' : '#64748B' }]}>
               Focus Time
             </Text>
           </TouchableOpacity>
@@ -339,17 +339,17 @@ export default function HomeScreen() {
             style={[
               s.kpiCard,
               {
-                backgroundColor: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(255, 255, 255, 0.88)',
-                borderColor: isDark ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.95)',
+                backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.88)',
+                borderColor: isDark ? 'rgba(255, 255, 255, 0.10)' : 'rgba(255, 255, 255, 0.90)',
                 ...shadows.sm,
               },
             ]}
           >
-            <View style={[s.kpiIconBox, { backgroundColor: isDark ? 'rgba(251, 191, 36, 0.18)' : 'rgba(255, 251, 235, 0.95)' }]}>
-              <Ionicons name="flame" size={18} color="#FBBF24" />
+            <View style={[s.kpiIconBox, { backgroundColor: isDark ? 'rgba(129, 140, 248, 0.18)' : 'rgba(238, 242, 255, 0.95)' }]}>
+              <Ionicons name="flame" size={18} color="#818CF8" />
             </View>
             <Text style={[s.kpiNumber, { color: theme.text.primary }]}>{dayStreak}</Text>
-            <Text style={[s.kpiLabel, { color: isDark ? '#A89F91' : '#64748B' }]}>
+            <Text style={[s.kpiLabel, { color: isDark ? '#94A3B8' : '#64748B' }]}>
               Day Streak
             </Text>
           </TouchableOpacity>
@@ -383,7 +383,7 @@ export default function HomeScreen() {
             <LinearGradient
               colors={
                 isDark
-                  ? ['rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.03)']
+                  ? ['rgba(255, 255, 255, 0.06)', 'rgba(255, 255, 255, 0.02)']
                   : ['rgba(255, 255, 255, 0.95)', 'rgba(255, 255, 255, 0.88)']
               }
               start={{ x: 0, y: 0 }}
@@ -391,38 +391,26 @@ export default function HomeScreen() {
               style={[
                 s.goalBanner,
                 {
-                  borderColor: isDark ? 'rgba(255, 255, 255, 0.16)' : 'rgba(255, 255, 255, 0.95)',
+                  borderColor: isDark ? 'rgba(255, 255, 255, 0.10)' : 'rgba(255, 255, 255, 0.90)',
                 },
               ]}
             >
-              {/* Top Specular Hairline */}
-              <View
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 20,
-                  right: 20,
-                  height: 1,
-                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.35)' : 'rgba(255, 255, 255, 0.95)',
-                }}
-              />
-
               <View style={s.goalHeaderRow}>
                 <View
                   style={[
                     s.goalTag,
                     {
-                      backgroundColor: isDark ? 'rgba(245, 158, 11, 0.20)' : 'rgba(217, 119, 6, 0.12)',
+                      backgroundColor: isDark ? 'rgba(59, 130, 246, 0.20)' : 'rgba(37, 99, 235, 0.12)',
                     },
                   ]}
                 >
-                  <Ionicons name="disc-outline" size={14} color={isDark ? '#F59E0B' : '#D97706'} />
-                  <Text style={[s.goalTagText, { color: isDark ? '#F59E0B' : '#D97706' }]}>Today's Goal</Text>
+                  <Ionicons name="disc-outline" size={14} color={isDark ? '#60A5FA' : '#2563EB'} />
+                  <Text style={[s.goalTagText, { color: isDark ? '#60A5FA' : '#2563EB' }]}>Today's Goal</Text>
                 </View>
 
                 {/* Circular crisp white button with dark arrow */}
                 <View style={[s.goalArrowCircle, { backgroundColor: '#FFFFFF' }]}>
-                  <Ionicons name="chevron-forward" size={16} color="#0C0B0A" />
+                  <Ionicons name="chevron-forward" size={16} color="#000000" />
                 </View>
               </View>
 
@@ -435,7 +423,7 @@ export default function HomeScreen() {
                   ? 'Keep Going!'
                   : 'Start Strong!'}
               </Text>
-              <Text style={[s.goalSubtitle, { color: isDark ? '#E8DFD6' : '#483E34' }]}>
+              <Text style={[s.goalSubtitle, { color: isDark ? '#E2E8F0' : '#483E34' }]}>
                 {totalCount === 0
                   ? 'Add your first task for today to track your progress.'
                   : completedCount === totalCount
@@ -443,13 +431,13 @@ export default function HomeScreen() {
                   : `You've completed ${completedCount} of ${totalCount} tasks (${progressPct}%).`}
               </Text>
 
-              {/* Luminous warm amber progress bar */}
+              {/* Luminous azure progress bar */}
               <View style={s.goalProgressRow}>
                 <View
                   style={[
                     s.goalProgressTrack,
                     {
-                      backgroundColor: isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(15, 23, 42, 0.08)',
+                      backgroundColor: isDark ? 'rgba(255, 255, 255, 0.10)' : 'rgba(15, 23, 42, 0.08)',
                     },
                   ]}
                 >
@@ -458,12 +446,12 @@ export default function HomeScreen() {
                       s.goalProgressFill,
                       {
                         width: `${progressPct}%`,
-                        backgroundColor: '#F59E0B',
+                        backgroundColor: '#3B82F6',
                       },
                     ]}
                   />
                 </View>
-                <Text style={[s.goalPctText, { color: isDark ? '#F59E0B' : '#D97706' }]}>{progressPct}%</Text>
+                <Text style={[s.goalPctText, { color: isDark ? '#60A5FA' : '#2563EB' }]}>{progressPct}%</Text>
               </View>
             </LinearGradient>
           </TouchableOpacity>
@@ -482,8 +470,8 @@ export default function HomeScreen() {
             activeOpacity={0.7}
             style={s.seeAllBtn}
           >
-            <Text style={[s.seeAllText, { color: isDark ? '#F59E0B' : '#D97706' }]}>See All</Text>
-            <Ionicons name="chevron-forward" size={14} color={isDark ? '#F59E0B' : '#D97706'} />
+            <Text style={[s.seeAllText, { color: isDark ? '#60A5FA' : '#2563EB' }]}>See All</Text>
+            <Ionicons name="chevron-forward" size={14} color={isDark ? '#60A5FA' : '#2563EB'} />
           </TouchableOpacity>
         </View>
 
@@ -517,10 +505,10 @@ export default function HomeScreen() {
                       s.myTaskCard,
                       {
                         backgroundColor: isDark
-                          ? 'rgba(255, 255, 255, 0.06)'
+                          ? 'rgba(255, 255, 255, 0.04)'
                           : 'rgba(255, 255, 255, 0.88)',
                         borderColor: isDark
-                          ? 'rgba(255, 255, 255, 0.14)'
+                          ? 'rgba(255, 255, 255, 0.10)'
                           : 'rgba(255, 255, 255, 0.95)',
                         ...shadows.sm,
                       },
@@ -799,7 +787,7 @@ const s = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 12,
     borderRadius: 22,
-    borderWidth: 1.2,
+    borderWidth: 1.0,
     alignItems: 'flex-start',
     gap: 6,
   },
@@ -920,7 +908,7 @@ const s = StyleSheet.create({
     gap: 2,
   },
   seeAllText: {
-    color: '#6366F1',
+    color: '#60A5FA',
     fontSize: 13,
     fontWeight: '700',
   },
@@ -934,20 +922,20 @@ const s = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 16,
     borderRadius: 20,
-    borderWidth: 1.2,
+    borderWidth: 1.0,
     gap: 14,
   },
   taskCheckCircle: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    borderWidth: 1.8,
+    borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   taskCheckCircleDone: {
-    backgroundColor: '#6366F1',
-    borderColor: '#6366F1',
+    backgroundColor: '#3B82F6',
+    borderColor: '#3B82F6',
   },
   taskBody: {
     flex: 1,
@@ -979,7 +967,7 @@ const s = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 2,
     borderRadius: 18,
-    borderWidth: 1.2,
+    borderWidth: 1.0,
     alignItems: 'center',
     gap: 6,
   },

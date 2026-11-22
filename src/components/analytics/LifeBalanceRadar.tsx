@@ -122,7 +122,7 @@ export function LifeBalanceRadar() {
         label: 'Consistency',
         icon: 'flame-outline',
         score: habitScore,
-        color: '#F59E0B',
+        color: '#818CF8',
         detail: totalHabits > 0 ? `${completedHabitCount}/${totalHabits} habits logged` : 'No habits logged',
       },
       {
@@ -192,15 +192,15 @@ export function LifeBalanceRadar() {
           style={[
             s.badge,
             {
-              backgroundColor: isDark ? 'rgba(245, 158, 11, 0.18)' : 'rgba(217, 119, 6, 0.10)',
-              borderColor: isDark ? 'rgba(245, 158, 11, 0.35)' : 'rgba(217, 119, 6, 0.20)',
+              backgroundColor: isDark ? 'rgba(56, 189, 248, 0.16)' : 'rgba(2, 132, 199, 0.10)',
+              borderColor: isDark ? 'rgba(56, 189, 248, 0.35)' : 'rgba(2, 132, 199, 0.20)',
             },
           ]}
         >
-          <Text style={[s.badgeNumber, { color: isDark ? '#F59E0B' : '#D97706' }]}>
+          <Text style={[s.badgeNumber, { color: isDark ? '#38BDF8' : '#0284C7' }]}>
             {averageScore}
           </Text>
-          <Text style={[s.badgeLabel, { color: isDark ? '#A89F91' : '#64748B' }]}>/100</Text>
+          <Text style={[s.badgeLabel, { color: isDark ? '#94A3B8' : '#64748B' }]}>/100</Text>
         </View>
       </View>
 
@@ -209,8 +209,8 @@ export function LifeBalanceRadar() {
         <Svg width={CHART_SIZE} height={CHART_SIZE}>
           <Defs>
             <LinearGradient id="radarFill" x1="0%" y1="0%" x2="100%" y2="100%">
-              <Stop offset="0%" stopColor="#F59E0B" stopOpacity={0.45} />
-              <Stop offset="100%" stopColor="#EA580C" stopOpacity={0.25} />
+              <Stop offset="0%" stopColor="#38BDF8" stopOpacity={0.45} />
+              <Stop offset="100%" stopColor="#2563EB" stopOpacity={0.25} />
             </LinearGradient>
           </Defs>
 

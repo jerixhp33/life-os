@@ -32,17 +32,17 @@ const PRIORITY_META: Record<
   { label: string; color: string; gradient: [string, string]; bg: string }
 > = {
   urgent: { label: 'Urgent', color: '#EF4444', gradient: ['#DC2626', '#EF4444'], bg: 'rgba(239, 68, 68, 0.14)' },
-  high:   { label: 'High',   color: '#F97316', gradient: ['#EA580C', '#F97316'], bg: 'rgba(249, 115, 22, 0.14)' },
-  medium: { label: 'Medium', color: '#F59E0B', gradient: ['#D97706', '#F59E0B'], bg: 'rgba(245, 158, 11, 0.14)' },
-  low:    { label: 'Low',    color: '#0284C7', gradient: ['#0369A1', '#0284C7'], bg: 'rgba(2, 132, 199, 0.14)' },
+  high:   { label: 'High',   color: '#38BDF8', gradient: ['#2563EB', '#38BDF8'], bg: 'rgba(56, 189, 248, 0.14)' },
+  medium: { label: 'Medium', color: '#60A5FA', gradient: ['#1D4ED8', '#60A5FA'], bg: 'rgba(96, 165, 250, 0.14)' },
+  low:    { label: 'Low',    color: '#94A3B8', gradient: ['#64748B', '#94A3B8'], bg: 'rgba(148, 163, 184, 0.14)' },
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Work: '#6366F1',
-  Personal: '#06B6D4',
+  Work: '#3B82F6',
+  Personal: '#38BDF8',
   Health: '#10B981',
-  Learning: '#8B5CF6',
-  Finance: '#F59E0B',
+  Learning: '#818CF8',
+  Finance: '#60A5FA',
 };
 
 const FILTERS = [

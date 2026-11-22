@@ -104,20 +104,20 @@ export function OmniCaptureBar({
         style={[
           s.inputCard,
           {
-            backgroundColor: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(255, 255, 255, 0.90)',
+            backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.90)',
             borderColor: hasContent
               ? isDark
-                ? '#F59E0B'
-                : '#D97706'
+                ? '#3B82F6'
+                : '#2563EB'
               : isDark
-              ? 'rgba(255, 255, 255, 0.16)'
+              ? 'rgba(255, 255, 255, 0.10)'
               : 'rgba(255, 255, 255, 0.95)',
             ...shadows.sm,
           },
         ]}
       >
         <LinearGradient
-          colors={['#F59E0B', '#D97706']}
+          colors={['#3B82F6', '#2563EB']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={s.sparkleBox}
@@ -129,7 +129,7 @@ export function OmniCaptureBar({
           value={input}
           onChangeText={setInput}
           placeholder={placeholder}
-          placeholderTextColor={isDark ? '#A89F91' : '#94A3B8'}
+          placeholderTextColor={isDark ? '#94A3B8' : '#94A3B8'}
           style={[s.textInput, { color: theme.text.primary }]}
           returnKeyType="done"
           onSubmitEditing={handleSubmit}
@@ -143,7 +143,7 @@ export function OmniCaptureBar({
             style={s.submitBtn}
           >
             <LinearGradient
-              colors={['#F59E0B', '#EA580C']}
+              colors={['#3B82F6', '#2563EB']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={s.submitGradient}
@@ -168,10 +168,10 @@ export function OmniCaptureBar({
               {
                 backgroundColor:
                   parsed.type === 'finance'
-                    ? 'rgba(245, 158, 11, 0.16)'
+                    ? 'rgba(56, 189, 248, 0.16)'
                     : parsed.type === 'note'
                     ? 'rgba(16, 185, 129, 0.16)'
-                    : 'rgba(56, 189, 248, 0.16)',
+                    : 'rgba(59, 130, 246, 0.16)',
               },
             ]}
           >

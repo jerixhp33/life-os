@@ -13,7 +13,7 @@ import { Button } from '../../src/components/ui/Button';
 import { spacing, fontSize, fontWeight, radius } from '../../src/theme/tokens';
 import { taskSchema, type TaskFormValues } from '../../src/lib/validation/schemas';
 import { useCreateTask } from '../../src/features/tasks/hooks';
-const PRIORITIES=[{k:'low',l:'Low',c:'#3B82F6'},{k:'medium',l:'Medium',c:'#F59E0B'},{k:'high',l:'High',c:'#F97316'},{k:'urgent',l:'Urgent',c:'#EF4444'}] as const;
+const PRIORITIES=[{k:'low',l:'Low',c:'#94A3B8'},{k:'medium',l:'Medium',c:'#60A5FA'},{k:'high',l:'High',c:'#38BDF8'},{k:'urgent',l:'Urgent',c:'#EF4444'}] as const;
 const CATEGORIES=['Work','Personal','Health','Finance','Learning','Family','Other'];
 export default function NewTaskScreen() {
   const { theme }=useTheme(); const router=useRouter(); const create=useCreateTask();

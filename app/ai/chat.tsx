@@ -256,10 +256,10 @@ Always be concise, practical, and helpful. Strictly do not use any emojis in any
                   style={[
                     s.bubble,
                     isUser
-                      ? { backgroundColor: theme.brand.primary }
+                      ? { backgroundColor: '#3B82F6' }
                       : {
-                          backgroundColor: isDark ? 'rgba(255, 255, 255, 0.07)' : 'rgba(255, 255, 255, 0.85)',
-                          borderColor: isDark ? 'rgba(255, 255, 255, 0.16)' : theme.border.subtle,
+                          backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.85)',
+                          borderColor: isDark ? 'rgba(255, 255, 255, 0.10)' : theme.border.subtle,
                           borderWidth: 1,
                         }
                   ]}
@@ -273,7 +273,7 @@ Always be concise, practical, and helpful. Strictly do not use any emojis in any
                   <Text style={[s.msgText, { color: isUser ? '#ffffff' : (isDark ? '#FFFFFF' : theme.text.primary) }]}>
                     {item.content}
                   </Text>
-                  <Text style={[s.ts, { color: isUser ? 'rgba(255,255,255,0.7)' : (isDark ? '#A89F91' : theme.text.disabled) }]}>
+                  <Text style={[s.ts, { color: isUser ? 'rgba(255,255,255,0.7)' : (isDark ? '#94A3B8' : theme.text.disabled) }]}>
                     {format(new Date(item.ts), 'h:mm a')}
                   </Text>
                 </View>
@@ -289,17 +289,31 @@ Always be concise, practical, and helpful. Strictly do not use any emojis in any
               <TouchableOpacity
                 key={sug}
                 onPress={() => send(sug)}
-                style={[s.sugChip, { backgroundColor: theme.surface.inset, borderColor: theme.border.subtle }]}
+                style={[
+                  s.sugChip,
+                  {
+                    backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : theme.surface.inset,
+                    borderColor: isDark ? 'rgba(255, 255, 255, 0.10)' : theme.border.subtle,
+                  },
+                ]}
               >
-                <Ionicons name="flash-outline" size={14} color={theme.brand.primary} />
-                <Text style={[s.sugTxt, { color: theme.text.secondary }]}>{sug}</Text>
+                <Ionicons name="flash-outline" size={14} color="#38BDF8" />
+                <Text style={[s.sugTxt, { color: isDark ? '#FFFFFF' : theme.text.secondary }]}>{sug}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
 
         {/* Input Bar */}
-        <View style={[s.inputBar, { backgroundColor: theme.surface.default, borderTopColor: theme.border.subtle }]}>
+        <View
+          style={[
+            s.inputBar,
+            {
+              backgroundColor: isDark ? 'rgba(0, 0, 0, 0.50)' : theme.surface.default,
+              borderTopColor: isDark ? 'rgba(255, 255, 255, 0.08)' : theme.border.subtle,
+            },
+          ]}
+        >
           <View style={{ flex: 1 }}>
             <Input
               placeholder="Ask anything or record an expense..."
@@ -314,8 +328,9 @@ Always be concise, practical, and helpful. Strictly do not use any emojis in any
             style={[
               s.sendBtn,
               {
-                backgroundColor: input.trim() && !loading ? theme.brand.primary : theme.surface.inset
-              }
+                backgroundColor: input.trim() && !loading ? '#3B82F6' : theme.surface.inset,
+                borderWidth: 0,
+              },
             ]}
           >
             <Ionicons

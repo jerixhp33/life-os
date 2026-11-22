@@ -144,7 +144,7 @@ export function DynamicIsland() {
                       styles.pulsingDot,
                       {
                         backgroundColor:
-                          status === 'running' ? '#F59E0B' : '#64748B',
+                          status === 'running' ? '#38BDF8' : '#64748B',
                       },
                     ]}
                   />
@@ -162,7 +162,7 @@ export function DynamicIsland() {
                   <Text
                     style={[
                       styles.taskSnippet,
-                      { color: isDark ? '#F59E0B' : '#D97706' },
+                      { color: isDark ? '#38BDF8' : '#2563EB' },
                     ]}
                     numberOfLines={1}
                   >
@@ -194,7 +194,7 @@ export function DynamicIsland() {
                   <Ionicons
                     name="sparkles"
                     size={13}
-                    color={isDark ? '#F59E0B' : '#D97706'}
+                    color={isDark ? '#38BDF8' : '#2563EB'}
                   />
                 </View>
               </>
@@ -283,7 +283,7 @@ export function DynamicIsland() {
                     {
                       backgroundColor:
                         status === 'running'
-                          ? 'rgba(245, 158, 11, 0.2)'
+                          ? 'rgba(59, 130, 246, 0.2)'
                           : 'rgba(56, 189, 248, 0.2)',
                     },
                   ]}
@@ -291,7 +291,7 @@ export function DynamicIsland() {
                   <Ionicons
                     name={status === 'running' ? 'pause' : 'play'}
                     size={16}
-                    color={status === 'running' ? '#F59E0B' : '#38BDF8'}
+                    color={status === 'running' ? '#60A5FA' : '#38BDF8'}
                   />
                 </TouchableOpacity>
 

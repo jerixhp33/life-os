@@ -267,19 +267,19 @@ export default function HabitsScreen() {
             style={[
               s.kpiCard,
               {
-                backgroundColor: isDark ? 'rgba(10, 36, 56, 0.85)' : 'rgba(255, 255, 255, 0.88)',
-                borderColor: isDark ? 'rgba(168, 220, 244, 0.28)' : 'rgba(255, 255, 255, 0.95)',
+                backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.88)',
+                borderColor: isDark ? 'rgba(255, 255, 255, 0.10)' : 'rgba(255, 255, 255, 0.95)',
                 ...shadows.sm,
               },
             ]}
           >
-            <View style={[s.kpiIconBox, { backgroundColor: 'rgba(249, 115, 22, 0.18)' }]}>
-              <Ionicons name="flame" size={17} color="#EA580C" />
+            <View style={[s.kpiIconBox, { backgroundColor: isDark ? 'rgba(56, 189, 248, 0.18)' : 'rgba(224, 242, 254, 0.95)' }]}>
+              <Ionicons name="flame" size={17} color="#38BDF8" />
             </View>
-            <Text style={[s.kpiNumber, { color: '#EA580C' }]}>
+            <Text style={[s.kpiNumber, { color: isDark ? '#FFFFFF' : '#0F172A' }]}>
               {`${realStreak}d`}
             </Text>
-            <Text style={[s.kpiLabel, { color: isDark ? '#819BB3' : '#64748B' }]}>Streak</Text>
+            <Text style={[s.kpiLabel, { color: isDark ? '#94A3B8' : '#64748B' }]}>Streak</Text>
           </View>
         </Animated.View>
 

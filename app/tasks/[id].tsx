@@ -15,9 +15,9 @@ import { SkeletonCard, ErrorState } from '../../src/components/feedback';
 import type { TaskPriority, TaskStatus } from '../../src/types';
 
 const PRIORITIES: Array<{ k: TaskPriority; l: string; c: string }> = [
-  { k: 'low', l: 'Low', c: '#3B82F6' },
-  { k: 'medium', l: 'Medium', c: '#F59E0B' },
-  { k: 'high', l: 'High', c: '#F97316' },
+  { k: 'low', l: 'Low', c: '#94A3B8' },
+  { k: 'medium', l: 'Medium', c: '#60A5FA' },
+  { k: 'high', l: 'High', c: '#38BDF8' },
   { k: 'urgent', l: 'Urgent', c: '#EF4444' }
 ];
 

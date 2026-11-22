@@ -55,9 +55,9 @@ const CATEGORY_MAP: Record<GoalCategory, CategoryMeta> = {
   },
   finance: {
     icon: 'wallet',
-    gradient: ['#D97706', '#F59E0B'],
-    accent: '#F59E0B',
-    bgLight: 'rgba(245, 158, 11, 0.14)',
+    gradient: ['#2563EB', '#38BDF8'],
+    accent: '#38BDF8',
+    bgLight: 'rgba(56, 189, 248, 0.14)',
     label: 'Finance & Wealth',
   },
   learning: {
@@ -329,14 +329,14 @@ export default function GoalsScreen() {
             style={[
               s.kpiCard,
               {
-                backgroundColor: isDark ? 'rgba(10, 36, 56, 0.85)' : 'rgba(255, 255, 255, 0.88)',
-                borderColor: filter === 'all' ? '#EA580C' : isDark ? 'rgba(168, 220, 244, 0.28)' : 'rgba(255, 255, 255, 0.95)',
+                backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.88)',
+                borderColor: filter === 'all' ? '#3B82F6' : isDark ? 'rgba(255, 255, 255, 0.10)' : 'rgba(255, 255, 255, 0.95)',
                 ...shadows.sm,
               },
             ]}
           >
-            <View style={[s.kpiIconBox, { backgroundColor: isDark ? 'rgba(249, 115, 22, 0.20)' : 'rgba(255, 247, 237, 0.95)' }]}>
-              <Ionicons name="trending-up-outline" size={18} color="#EA580C" />
+            <View style={[s.kpiIconBox, { backgroundColor: isDark ? 'rgba(56, 189, 248, 0.18)' : 'rgba(224, 242, 254, 0.95)' }]}>
+              <Ionicons name="trending-up-outline" size={18} color="#38BDF8" />
             </View>
             <Text style={[s.kpiNumber, { color: theme.text.primary }]}>{avg}%</Text>
             <Text style={[s.kpiLabel, { color: isDark ? '#819BB3' : '#64748B' }]}>Avg Velocity</Text>

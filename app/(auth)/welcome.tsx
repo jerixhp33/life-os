@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../src/theme/ThemeContext';
 import { spacing, fontSize, fontWeight, radius } from '../../src/theme/tokens';
 import { Button } from '../../src/components/ui/Button';
+import { AppBackground } from '../../src/components/layout/AppBackground';
 
 const FEATURES = [
   { icon: 'checkbox-outline' as const, t: 'Tasks & planning' },
@@ -20,17 +21,18 @@ export default function WelcomeScreen() {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={[s.safe, { backgroundColor: theme.bg.primary }]} edges={['top', 'left', 'right', 'bottom']}>
+    <SafeAreaView style={[s.safe, { backgroundColor: isDark ? '#000000' : theme.bg.primary }]} edges={['top', 'left', 'right', 'bottom']}>
+      <AppBackground screenName="welcome" />
       <View style={s.container}>
         <View style={s.hero}>
           <LinearGradient
-            colors={isDark ? ['#38BDF8', '#1A5A7F'] : ['#0284C7', '#0369A1']}
+            colors={isDark ? ['#38BDF8', '#1D4ED8'] : ['#0284C7', '#0369A1']}
             style={s.logoMark}
           >
             <Ionicons name="flash" size={34} color="#ffffff" />
           </LinearGradient>
           <Text style={[s.appName, { color: theme.text.primary }]}>LifeOS</Text>
-          <Text style={[s.tagline, { color: theme.text.secondary }]}>One app. Your whole life.</Text>
+          <Text style={[s.tagline, { color: isDark ? '#94A3B8' : theme.text.secondary }]}>One app. Your whole life.</Text>
         </View>
 
         <View style={s.features}>
@@ -40,8 +42,8 @@ export default function WelcomeScreen() {
               style={[
                 s.feature,
                 {
-                  backgroundColor: theme.surface.default,
-                  borderColor: theme.border.subtle,
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : theme.surface.default,
+                  borderColor: isDark ? 'rgba(255, 255, 255, 0.10)' : theme.border.subtle,
                 },
               ]}
             >
@@ -67,7 +69,7 @@ export default function WelcomeScreen() {
             fullWidth
           />
           <TouchableOpacity onPress={() => router.push('/(auth)/login')} style={s.signInBtn}>
-            <Text style={[s.signInText, { color: theme.text.secondary }]}>
+            <Text style={[s.signInText, { color: isDark ? '#94A3B8' : theme.text.secondary }]}>
               Already have an account?{' '}
               <Text style={{ color: theme.brand.primary, fontWeight: fontWeight.semibold }}>
                 Sign in
@@ -103,7 +105,7 @@ const s = StyleSheet.create({
     width: '47%',
     padding: spacing[4],
     borderRadius: radius.lg,
-    borderWidth: 1.2,
+    borderWidth: 1.0,
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing[3],

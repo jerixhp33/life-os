@@ -55,7 +55,7 @@ export function SmartActionPills() {
         icon: 'sunny-outline',
         label: 'Morning Focus',
         actionText: 'Plan Daily Priorities',
-        gradient: ['#F59E0B', '#F97316'],
+        gradient: ['#3B82F6', '#60A5FA'],
         onPress: () => router.push('/tasks'),
       });
     } else if (hour >= 12 && hour < 17) {
@@ -65,7 +65,7 @@ export function SmartActionPills() {
           icon: 'timer-outline',
           label: 'Deep Work',
           actionText: `Focus on ${urgentTask.title.slice(0, 18)}...`,
-          gradient: ['#F59E0B', '#EA580C'],
+          gradient: ['#2563EB', '#38BDF8'],
           onPress: () => {
             startFocus({ id: urgentTask.id, title: urgentTask.title }, 25);
             router.push('/focus');
@@ -77,7 +77,7 @@ export function SmartActionPills() {
           icon: 'timer-outline',
           label: 'Sprint',
           actionText: 'Start 25m Focus Block',
-          gradient: ['#F59E0B', '#D97706'],
+          gradient: ['#1D4ED8', '#60A5FA'],
           onPress: () => {
             startFocus(undefined, 25);
             router.push('/focus');
@@ -166,26 +166,14 @@ export function SmartActionPills() {
               styles.pillCard,
               {
                 backgroundColor: isDark
-                  ? 'rgba(255, 255, 255, 0.06)'
+                  ? 'rgba(255, 255, 255, 0.04)'
                   : 'rgba(255, 255, 255, 0.85)',
                 borderColor: isDark
-                  ? 'rgba(255, 255, 255, 0.16)'
+                  ? 'rgba(255, 255, 255, 0.10)'
                   : 'rgba(15, 23, 42, 0.08)',
               },
             ]}
           >
-            {/* Top Specular Hairline */}
-            <View
-              style={[
-                styles.specularShine,
-                {
-                  backgroundColor: isDark
-                    ? 'rgba(255, 255, 255, 0.35)'
-                    : 'rgba(255, 255, 255, 0.95)',
-                },
-              ]}
-            />
-
             <LinearGradient
               colors={pill.gradient}
               start={{ x: 0, y: 0 }}
@@ -199,7 +187,7 @@ export function SmartActionPills() {
               <Text
                 style={[
                   styles.pillLabel,
-                  { color: isDark ? '#A89F91' : '#64748B' },
+                  { color: isDark ? '#94A3B8' : '#64748B' },
                 ]}
               >
                 {pill.label}
@@ -207,7 +195,7 @@ export function SmartActionPills() {
               <Text
                 style={[
                   styles.pillAction,
-                  { color: theme.text.primary },
+                  { color: isDark ? '#FFFFFF' : theme.text.primary },
                 ]}
                 numberOfLines={1}
               >

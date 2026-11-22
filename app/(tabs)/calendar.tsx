@@ -32,13 +32,13 @@ import { AppBackground } from '../../src/components/layout/AppBackground';
 import type { CalendarEvent } from '../../src/types';
 
 const EC: Record<string, string> = {
-  violet: '#0284C7',
-  blue:   '#38BDF8',
+  violet: '#818CF8',
+  blue:   '#3B82F6',
   green:  '#10B981',
-  yellow: '#F59E0B',
+  yellow: '#38BDF8',
   red:    '#EF4444',
-  pink:   '#EC4899',
-  orange: '#F97316',
+  pink:   '#A5B4FC',
+  orange: '#60A5FA',
 };
 
 export default function CalendarScreen() {
@@ -362,7 +362,7 @@ export default function CalendarScreen() {
 
                           {selected ? (
                             <LinearGradient
-                              colors={['#D91B62', '#FB7185', '#F97316']}
+                              colors={['#3B82F6', '#2563EB', '#1D4ED8']}
                               start={{ x: 0.15, y: 0.15 }}
                               end={{ x: 0.85, y: 0.85 }}
                               style={s.activeBadge}
@@ -450,7 +450,7 @@ export default function CalendarScreen() {
                         >
                           {selected ? (
                             <LinearGradient
-                              colors={['#D91B62', '#FB7185', '#F97316']}
+                              colors={['#3B82F6', '#2563EB', '#1D4ED8']}
                               start={{ x: 0.15, y: 0.15 }}
                               end={{ x: 0.85, y: 0.85 }}
                               style={s.monthActiveBadge}

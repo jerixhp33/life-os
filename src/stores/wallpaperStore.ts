@@ -24,13 +24,13 @@ export interface WallpaperPresetMeta {
 export const WALLPAPER_PRESETS: Record<WallpaperPresetId, WallpaperPresetMeta> = {
   nova: {
     id: 'nova',
-    name: 'Ambient Amber Glow',
-    subtitle: 'Warm luxury amber, copper & obsidian atmospheric blend',
+    name: 'Nova AI Nebula',
+    subtitle: 'Cool azure, periwinkle & pitch-black atmospheric blend',
     badge: 'SIGNATURE',
-    circles: ['#C2410C', '#FDE68A', '#EA580C', '#F59E0B'],
-    gradientBase: ['#9A3412', '#0C0B0A'],
-    darkBg: '#0C0B0A',
-    lightBg: '#FAF7F2',
+    circles: ['#A5B4FC', '#C7D2FE', '#2563EB', '#1D4ED8'],
+    gradientBase: ['#1E3A8A', '#000000'],
+    darkBg: '#000000',
+    lightBg: '#F0F4FF',
   },
   starlight: {
     id: 'starlight',
@@ -54,12 +54,12 @@ export const WALLPAPER_PRESETS: Record<WallpaperPresetId, WallpaperPresetMeta> =
   },
   sunset: {
     id: 'sunset',
-    name: 'Sunset Twilight',
-    subtitle: 'Warm amber, coral & magenta dusk',
-    circles: ['#BE185D', '#FDBA74', '#E11D48', '#F59E0B'],
-    gradientBase: ['#881337', '#10080E'],
-    darkBg: '#10080E',
-    lightBg: '#FFF8F6',
+    name: 'Celestial Azure',
+    subtitle: 'Deep navy, sky cyan & electric azure bloom',
+    circles: ['#1E3A8A', '#38BDF8', '#2563EB', '#818CF8'],
+    gradientBase: ['#1E3A8A', '#000000'],
+    darkBg: '#000000',
+    lightBg: '#F0F4FF',
   },
   aurora: {
     id: 'aurora',
@@ -75,10 +75,10 @@ export const WALLPAPER_PRESETS: Record<WallpaperPresetId, WallpaperPresetMeta> =
     name: 'Custom Photo',
     subtitle: 'Your personal gallery photo or artwork',
     badge: 'PHOTO',
-    circles: ['#C2410C', '#FDE68A', '#EA580C', '#F59E0B'],
-    gradientBase: ['#9A3412', '#0C0B0A'],
-    darkBg: '#0C0B0A',
-    lightBg: '#FAF7F2',
+    circles: ['#A5B4FC', '#C7D2FE', '#2563EB', '#1D4ED8'],
+    gradientBase: ['#1E3A8A', '#000000'],
+    darkBg: '#000000',
+    lightBg: '#F0F4FF',
   },
 };
 

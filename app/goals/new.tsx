@@ -31,7 +31,7 @@ const CATEGORIES: Array<{
 }> = [
   { k: 'health', l: 'Health', icon: 'fitness', gradient: ['#059669', '#10B981'], color: '#10B981' },
   { k: 'career', l: 'Career', icon: 'briefcase', gradient: ['#4F46E5', '#6366F1'], color: '#6366F1' },
-  { k: 'finance', l: 'Finance', icon: 'wallet', gradient: ['#D97706', '#F59E0B'], color: '#F59E0B' },
+  { k: 'finance', l: 'Finance', icon: 'wallet', gradient: ['#2563EB', '#38BDF8'], color: '#38BDF8' },
   { k: 'learning', l: 'Learning', icon: 'book', gradient: ['#7C3AED', '#8B5CF6'], color: '#8B5CF6' },
   { k: 'personal', l: 'Personal', icon: 'compass', gradient: ['#0891B2', '#06B6D4'], color: '#06B6D4' },
   { k: 'relationships', l: 'Relationships', icon: 'heart', gradient: ['#E11D48', '#F43F5E'], color: '#F43F5E' },

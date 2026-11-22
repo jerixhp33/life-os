@@ -15,13 +15,13 @@ import { SkeletonCard, ErrorState } from '../../src/components/feedback';
 import type { CalendarEvent, EventColor } from '../../src/types';
 
 const COLORS: Record<EventColor, string> = {
-  violet: '#6957E8',
+  violet: '#818CF8',
   blue: '#3B82F6',
-  green: '#23865A',
-  yellow: '#F59E0B',
-  red: '#C53B45',
-  pink: '#EC4899',
-  orange: '#F97316'
+  green: '#10B981',
+  yellow: '#38BDF8',
+  red: '#EF4444',
+  pink: '#A5B4FC',
+  orange: '#60A5FA'
 };
 
 export default function EventDetailScreen() {

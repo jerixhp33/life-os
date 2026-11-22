@@ -40,26 +40,22 @@ export default function TabsLayout() {
             bottom: bottomOffset,
             height: 66,
             borderRadius: 33,
-            borderWidth: 1.5,
+            borderWidth: 1,
             borderColor: isDark
-              ? 'rgba(255, 255, 255, 0.35)'
-              : 'rgba(255, 255, 255, 0.95)',
-            backgroundColor: isDark
-              ? 'rgba(255, 255, 255, 0.08)'
-              : 'rgba(255, 255, 255, 0.82)',
+              ? 'rgba(255, 255, 255, 0.12)'
+              : 'rgba(255, 255, 255, 0.85)',
+            backgroundColor: 'transparent',
             paddingBottom: 6,
             paddingTop: 6,
-            elevation: 20,
-            shadowColor: '#000000',
-            shadowOffset: { width: 0, height: 8 },
-            shadowOpacity: isDark ? 0.45 : 0.15,
-            shadowRadius: 18,
+            elevation: 0,
+            shadowColor: 'transparent',
+            shadowOpacity: 0,
           },
           tabBarBackground: () => (
             <View style={[StyleSheet.absoluteFill, { borderRadius: 33, overflow: 'hidden' }]}>
               <BlurView
                 tint={isDark ? 'dark' : 'light'}
-                intensity={Platform.OS === 'ios' ? 80 : 60}
+                intensity={Platform.OS === 'ios' ? 70 : 50}
                 experimentalBlurMethod="dimezisBlurView"
                 style={StyleSheet.absoluteFill}
               />
@@ -68,27 +64,15 @@ export default function TabsLayout() {
                   StyleSheet.absoluteFill,
                   {
                     backgroundColor: isDark
-                      ? 'rgba(255, 255, 255, 0.08)'
-                      : 'rgba(255, 255, 255, 0.82)',
+                      ? 'rgba(255, 255, 255, 0.04)'
+                      : 'rgba(255, 255, 255, 0.75)',
                   },
                 ]}
               />
-              <View
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 24,
-                  right: 24,
-                  height: 1.2,
-                  backgroundColor: isDark
-                    ? 'rgba(255, 255, 255, 0.45)'
-                    : 'rgba(255, 255, 255, 0.95)',
-                }}
-              />
             </View>
           ),
-          tabBarActiveTintColor: isDark ? '#F59E0B' : '#D97706',
-          tabBarInactiveTintColor: isDark ? '#A89F91' : '#64748B',
+          tabBarActiveTintColor: isDark ? '#FFFFFF' : '#2563EB',
+          tabBarInactiveTintColor: isDark ? '#94A3B8' : '#64748B',
           tabBarLabelStyle: { fontSize: 10, fontWeight: '700', marginTop: 1 },
         }}
       >
@@ -202,17 +186,14 @@ function TabIconWithSpring({
 
   return (
     <View style={iconStyles.container}>
-      {/* Animated active glowing pill */}
+      {/* Animated active glowing pill - borderless clean glow */}
       <Animated.View
         style={[
           iconStyles.indicatorPill,
           {
             backgroundColor: isDark
-              ? 'rgba(245, 158, 11, 0.20)'
-              : 'rgba(217, 119, 6, 0.12)',
-            borderColor: isDark
-              ? 'rgba(245, 158, 11, 0.40)'
-              : 'rgba(217, 119, 6, 0.25)',
+              ? 'rgba(59, 130, 246, 0.22)'
+              : 'rgba(37, 99, 235, 0.12)',
           },
           pillStyle,
         ]}
@@ -240,7 +221,7 @@ const iconStyles = StyleSheet.create({
     width: 34,
     height: 26,
     borderRadius: 13,
-    borderWidth: 1,
+    borderWidth: 0,
   },
 });
 
@@ -276,8 +257,8 @@ function CreateTabButton({ onPress, isDark }: { onPress?: () => void; isDark: bo
         style={[
           cS.btn,
           {
-            backgroundColor: isDark ? '#F59E0B' : '#D97706',
-            shadowColor: isDark ? '#F59E0B' : '#D97706',
+            backgroundColor: '#3B82F6',
+            shadowColor: '#3B82F6',
           },
           animStyle,
         ]}
@@ -298,11 +279,10 @@ const cS = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.38,
+    shadowOpacity: 0.35,
     shadowRadius: 10,
-    elevation: 10,
-    borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.45)',
+    elevation: 8,
+    borderWidth: 0,
   },
   wrap: {
     flex: 1,

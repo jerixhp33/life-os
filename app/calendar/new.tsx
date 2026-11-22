@@ -15,13 +15,13 @@ import { Button } from '../../src/components/ui/Button';
 import type { EventColor } from '../../src/types';
 
 const COLORS: Array<{ k: EventColor; c: string; label: string }> = [
-  { k: 'violet', c: '#6957E8', label: 'Violet' },
-  { k: 'blue', c: '#3B82F6', label: 'Blue' },
-  { k: 'green', c: '#23865A', label: 'Green' },
-  { k: 'yellow', c: '#F59E0B', label: 'Yellow' },
-  { k: 'red', c: '#C53B45', label: 'Red' },
-  { k: 'pink', c: '#EC4899', label: 'Pink' },
-  { k: 'orange', c: '#F97316', label: 'Orange' }
+  { k: 'violet', c: '#818CF8', label: 'Indigo' },
+  { k: 'blue', c: '#3B82F6', label: 'Azure' },
+  { k: 'green', c: '#10B981', label: 'Emerald' },
+  { k: 'yellow', c: '#38BDF8', label: 'Sky' },
+  { k: 'red', c: '#EF4444', label: 'Red' },
+  { k: 'pink', c: '#A5B4FC', label: 'Periwinkle' },
+  { k: 'orange', c: '#60A5FA', label: 'Cobalt' }
 ];
 
 const REMINDERS = [
