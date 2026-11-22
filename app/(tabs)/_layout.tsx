@@ -8,6 +8,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../src/theme/ThemeContext';
 import { radius } from '../../src/theme/tokens';
+import { DynamicIsland } from '../../src/components/layout/DynamicIsland';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -21,8 +22,10 @@ export default function TabsLayout() {
     : Math.max(insets.bottom, 12);
 
   return (
-    <Tabs
-      id="main-tabs"
+    <View style={{ flex: 1 }}>
+      <DynamicIsland />
+      <Tabs
+        id="main-tabs"
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
@@ -101,7 +104,8 @@ export default function TabsLayout() {
         }}
       />
     </Tabs>
-  );
+  </View>
+);
 }
 
 function CreateTabButton({ onPress, isDark }: { onPress?: () => void; isDark: boolean }) {

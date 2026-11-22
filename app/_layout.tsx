@@ -80,7 +80,10 @@ function Inner() {
         <Stack.Screen name="settings/profile" options={{ presentation: 'card', animation: 'slide_from_right', gestureEnabled: true }} />
         <Stack.Screen name="settings/security" options={{ presentation: 'card', animation: 'slide_from_right', gestureEnabled: true }} />
         <Stack.Screen name="settings/wallpaper" options={{ presentation: 'card', animation: 'slide_from_right', gestureEnabled: true }} />
+        <Stack.Screen name="settings/sound" options={{ presentation: 'card', animation: 'slide_from_right', gestureEnabled: true }} />
         <Stack.Screen name="settings/export" options={{ presentation: 'card', animation: 'slide_from_right', gestureEnabled: true }} />
+        <Stack.Screen name="search/index" options={{ presentation: 'modal', animation: 'fade_from_bottom', gestureEnabled: true }} />
+        <Stack.Screen name="focus/index" options={{ presentation: 'fullScreenModal', animation: 'slide_from_bottom', gestureEnabled: true }} />
       </Stack>
       <BiometricLockModal />
     </>

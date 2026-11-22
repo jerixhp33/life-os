@@ -5,6 +5,7 @@ export interface ParsedOmniResult {
   raw: string;
   type: 'task' | 'finance' | 'note';
   title: string;
+  description?: string;
   // Task specific
   dueDate?: string;
   dueTime?: string;
@@ -18,6 +19,8 @@ export interface ParsedOmniResult {
   // Note specific
   content?: string;
 }
+
+export type OmniIntent = ParsedOmniResult;
 
 export function parseOmniInput(input: string, defaultCurrency = 'INR'): ParsedOmniResult {
   const text = input.trim();
@@ -81,6 +84,7 @@ export function parseOmniInput(input: string, defaultCurrency = 'INR'): ParsedOm
       raw: text,
       type: 'finance',
       title,
+      description: title,
       amount,
       currency: defaultCurrency,
       transactionType: transType,

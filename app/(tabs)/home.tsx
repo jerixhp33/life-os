@@ -20,6 +20,8 @@ import { Card, TouchableCard } from '../../src/components/ui/Card';
 import { SkeletonCard, EmptyState } from '../../src/components/feedback';
 import { OmniCaptureBar } from '../../src/components/intelligence/OmniCaptureBar';
 import { DailyBriefCard } from '../../src/components/intelligence/DailyBriefCard';
+import { SmartActionPills } from '../../src/components/intelligence/SmartActionPills';
+import { VoiceAssistantModal } from '../../src/components/intelligence/VoiceAssistantModal';
 import { AppBackground } from '../../src/components/layout/AppBackground';
 
 const AVATAR_CACHE_KEY = 'lifeos_cached_avatar_url';
@@ -53,6 +55,7 @@ export default function HomeScreen() {
   const qc = useQueryClient();
   const profile = useAuthStore((s) => s.profile);
   const [cachedAvatar, setCachedAvatar] = useState<string | null>(null);
+  const [voiceModalVisible, setVoiceModalVisible] = useState(false);
 
   useEffect(() => {
     AsyncStorage.getItem(AVATAR_CACHE_KEY).then((stored) => {
@@ -137,7 +140,7 @@ export default function HomeScreen() {
               <TouchableOpacity
                 onPress={() => {
                   Haptics.selectionAsync();
-                  router.push('/tasks');
+                  router.push('/search');
                 }}
                 style={[
                   s.topGlassBtn,
@@ -150,6 +153,25 @@ export default function HomeScreen() {
                 accessibilityLabel="Search"
               >
                 <Ionicons name="search-outline" size={17} color={theme.text.primary} />
+              </TouchableOpacity>
+
+              {/* Voice Copilot Glass Button */}
+              <TouchableOpacity
+                onPress={() => {
+                  Haptics.selectionAsync();
+                  setVoiceModalVisible(true);
+                }}
+                style={[
+                  s.topGlassBtn,
+                  {
+                    backgroundColor: isDark ? 'rgba(56, 189, 248, 0.16)' : 'rgba(2, 132, 199, 0.1)',
+                    borderColor: isDark ? 'rgba(56, 189, 248, 0.3)' : 'rgba(2, 132, 199, 0.2)',
+                  },
+                ]}
+                activeOpacity={0.8}
+                accessibilityLabel="Voice Copilot"
+              >
+                <Ionicons name="mic" size={17} color={isDark ? '#38BDF8' : '#0284C7'} />
               </TouchableOpacity>
 
               {/* Notification Glass Button with unread dot */}
@@ -214,6 +236,13 @@ export default function HomeScreen() {
               </View>
             </TouchableOpacity>
           </View>
+        </Animated.View>
+
+        {/* ============================================================== */}
+        {/* 1.5. CONTEXT-AWARE PREDICTIVE ACTION PILLS                     */}
+        {/* ============================================================== */}
+        <Animated.View entering={FadeInUp.duration(400).delay(50)} style={{ marginBottom: 12 }}>
+          <SmartActionPills />
         </Animated.View>
 
         {/* ============================================================== */}
@@ -574,6 +603,12 @@ export default function HomeScreen() {
 
         <View style={{ height: 120 }} />
       </ScrollView>
+
+      {/* Autonomous Hands-Free Voice Copilot Modal */}
+      <VoiceAssistantModal
+        visible={voiceModalVisible}
+        onClose={() => setVoiceModalVisible(false)}
+      />
     </SafeAreaView>
   );
 }

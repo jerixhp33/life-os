@@ -21,6 +21,8 @@ import { useTheme } from '../../src/theme/ThemeContext';
 import { spacing, fontSize, fontWeight, radius, shadows } from '../../src/theme/tokens';
 import { useAuthStore, isCleanAvatarUrl } from '../../src/stores/authStore';
 import { AppBackground } from '../../src/components/layout/AppBackground';
+import { LifeBalanceRadar } from '../../src/components/analytics/LifeBalanceRadar';
+import { ContributionMatrix } from '../../src/components/analytics/ContributionMatrix';
 
 const AVATAR_CACHE_KEY = 'lifeos_cached_avatar_url';
 
@@ -91,6 +93,15 @@ const MODULES: ModuleItem[] = [
     gradient: ['#4F46E5', '#818CF8'],
     accent: '#6366F1',
     badge: 'AI PRO',
+  },
+  {
+    icon: 'timer',
+    label: 'Focus Studio',
+    desc: 'Deep work & soundscapes',
+    route: '/focus',
+    gradient: ['#0284C7', '#6366F1'],
+    accent: '#38BDF8',
+    badge: 'NEW',
   },
 ];
 
@@ -297,6 +308,20 @@ export default function MoreScreen() {
         </Animated.View>
 
         {/* ============================================================== */}
+        {/* 2.5. LIFE BALANCE MULTI-DIMENSIONAL RADAR                     */}
+        {/* ============================================================== */}
+        <Animated.View entering={FadeInUp.duration(420).delay(80)}>
+          <LifeBalanceRadar />
+        </Animated.View>
+
+        {/* ============================================================== */}
+        {/* 2.6. 365-DAY / 16-WEEK PRODUCTIVITY CONTRIBUTION MATRIX       */}
+        {/* ============================================================== */}
+        <Animated.View entering={FadeInUp.duration(420).delay(100)}>
+          <ContributionMatrix />
+        </Animated.View>
+
+        {/* ============================================================== */}
         {/* 3. APPS & MODULES GRID ("ECOSYSTEM APPS")                      */}
         {/* ============================================================== */}
         <Animated.View entering={FadeInUp.duration(420).delay(120)}>
@@ -477,6 +502,34 @@ export default function MoreScreen() {
                 <Text style={[s.settLabel, { color: theme.text.primary }]}>Wallpaper & Visuals</Text>
                 <Text style={[s.settSub, { color: isDark ? '#819BB3' : '#64748B' }]}>
                   Organic U-shape blend, blur & per-page setup
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={16} color={isDark ? '#819BB3' : '#94A3B8'} />
+            </TouchableOpacity>
+
+            <View style={[s.rowDivider, { backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : '#F1F5F9' }]} />
+
+            {/* 3.5. Sound & Tactile Haptics */}
+            <TouchableOpacity
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                router.push('/settings/sound' as never);
+              }}
+              style={s.settRow}
+              activeOpacity={0.7}
+            >
+              <LinearGradient
+                colors={['#F59E0B', '#EF4444']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={s.settSquircle}
+              >
+                <Ionicons name="volume-high" size={17} color="#FFFFFF" />
+              </LinearGradient>
+              <View style={{ flex: 1 }}>
+                <Text style={[s.settLabel, { color: theme.text.primary }]}>Sound & Haptics</Text>
+                <Text style={[s.settSub, { color: isDark ? '#819BB3' : '#64748B' }]}>
+                  Tactile feedback, vibration & audio profile
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={16} color={isDark ? '#819BB3' : '#94A3B8'} />
