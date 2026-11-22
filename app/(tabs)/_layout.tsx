@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Tabs } from 'expo-router';
 import { View, Pressable, StyleSheet, Platform } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../src/theme/ThemeContext';
 import { radius } from '../../src/theme/tokens';
@@ -26,87 +31,217 @@ export default function TabsLayout() {
       <DynamicIsland />
       <Tabs
         id="main-tabs"
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: {
-          position: 'absolute',
-          left: 16,
-          right: 16,
-          bottom: bottomOffset,
-          height: 64,
-          borderRadius: 32,
-          borderWidth: 1.2,
-          borderColor: isDark ? 'rgba(168, 220, 244, 0.28)' : 'rgba(255, 255, 255, 0.88)',
-          backgroundColor: isDark ? 'rgba(10, 36, 56, 0.94)' : 'rgba(255, 255, 255, 0.94)',
-          paddingBottom: 6,
-          paddingTop: 6,
-          elevation: 16,
-          shadowColor: '#000000',
-          shadowOffset: { width: 0, height: 6 },
-          shadowOpacity: isDark ? 0.40 : 0.12,
-          shadowRadius: 16,
-        },
-        tabBarBackground: () =>
-          Platform.OS === 'ios' ? (
-            <BlurView
-              tint={isDark ? 'dark' : 'light'}
-              intensity={80}
-              style={[StyleSheet.absoluteFill, { borderRadius: 32, overflow: 'hidden' }]}
-            />
-          ) : null,
-        tabBarActiveTintColor: isDark ? '#38BDF8' : '#0284C7',
-        tabBarInactiveTintColor: isDark ? '#6F9DB5' : '#94A3B8',
-        tabBarLabelStyle: { fontSize: 10, fontWeight: '700', marginTop: 1 },
-      }}
-    >
-      <Tabs.Screen
-        name="home"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused, size }) => (
-            <Ionicons name={focused ? 'home' : 'home-outline'} size={size - 2} color={color as any} />
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: {
+            position: 'absolute',
+            left: 18,
+            right: 18,
+            bottom: bottomOffset,
+            height: 66,
+            borderRadius: 33,
+            borderWidth: 1.5,
+            borderColor: isDark
+              ? 'rgba(255, 255, 255, 0.35)'
+              : 'rgba(255, 255, 255, 0.95)',
+            backgroundColor: isDark
+              ? 'rgba(10, 24, 40, 0.72)'
+              : 'rgba(255, 255, 255, 0.75)',
+            paddingBottom: 6,
+            paddingTop: 6,
+            elevation: 20,
+            shadowColor: '#000000',
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: isDark ? 0.45 : 0.15,
+            shadowRadius: 18,
+          },
+          tabBarBackground: () => (
+            <View style={[StyleSheet.absoluteFill, { borderRadius: 33, overflow: 'hidden' }]}>
+              <BlurView
+                tint={isDark ? 'dark' : 'light'}
+                intensity={Platform.OS === 'ios' ? 80 : 60}
+                style={StyleSheet.absoluteFill}
+              />
+              <View
+                style={[
+                  StyleSheet.absoluteFill,
+                  {
+                    backgroundColor: isDark
+                      ? 'rgba(255, 255, 255, 0.10)'
+                      : 'rgba(255, 255, 255, 0.82)',
+                  },
+                ]}
+              />
+              <View
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 24,
+                  right: 24,
+                  height: 1.2,
+                  backgroundColor: isDark
+                    ? 'rgba(255, 255, 255, 0.45)'
+                    : 'rgba(255, 255, 255, 0.95)',
+                }}
+              />
+            </View>
           ),
+          tabBarActiveTintColor: isDark ? '#38BDF8' : '#0284C7',
+          tabBarInactiveTintColor: isDark ? '#6F9DB5' : '#94A3B8',
+          tabBarLabelStyle: { fontSize: 10, fontWeight: '700', marginTop: 1 },
         }}
-      />
-      <Tabs.Screen
-        name="calendar"
-        options={{
-          title: 'Calendar',
-          tabBarIcon: ({ color, focused, size }) => (
-            <Ionicons name={focused ? 'calendar' : 'calendar-outline'} size={size - 2} color={color as any} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="create"
-        options={{
-          title: '',
-          tabBarIcon: () => null,
-          tabBarButton: (props: any) => <CreateTabButton {...props} isDark={isDark} />,
-        }}
-      />
-      <Tabs.Screen
-        name="goals"
-        options={{
-          title: 'Goals',
-          tabBarIcon: ({ color, focused, size }) => (
-            <Ionicons name={focused ? 'flag' : 'flag-outline'} size={size - 2} color={color as any} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="more"
-        options={{
-          title: 'More',
-          tabBarIcon: ({ color, focused, size }) => (
-            <Ionicons name={focused ? 'grid' : 'grid-outline'} size={size - 2} color={color as any} />
-          ),
-        }}
-      />
-    </Tabs>
-  </View>
-);
+      >
+        <Tabs.Screen
+          name="home"
+          options={{
+            title: 'Home',
+            tabBarIcon: ({ color, focused, size }) => (
+              <TabIconWithSpring
+                name="home"
+                outlineName="home-outline"
+                focused={focused}
+                color={color}
+                size={size}
+                isDark={isDark}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="calendar"
+          options={{
+            title: 'Calendar',
+            tabBarIcon: ({ color, focused, size }) => (
+              <TabIconWithSpring
+                name="calendar"
+                outlineName="calendar-outline"
+                focused={focused}
+                color={color}
+                size={size}
+                isDark={isDark}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="create"
+          options={{
+            title: '',
+            tabBarIcon: () => null,
+            tabBarButton: (props: any) => <CreateTabButton {...props} isDark={isDark} />,
+          }}
+        />
+        <Tabs.Screen
+          name="goals"
+          options={{
+            title: 'Goals',
+            tabBarIcon: ({ color, focused, size }) => (
+              <TabIconWithSpring
+                name="flag"
+                outlineName="flag-outline"
+                focused={focused}
+                color={color}
+                size={size}
+                isDark={isDark}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="more"
+          options={{
+            title: 'More',
+            tabBarIcon: ({ color, focused, size }) => (
+              <TabIconWithSpring
+                name="grid"
+                outlineName="grid-outline"
+                focused={focused}
+                color={color}
+                size={size}
+                isDark={isDark}
+              />
+            ),
+          }}
+        />
+      </Tabs>
+    </View>
+  );
 }
+
+function TabIconWithSpring({
+  name,
+  outlineName,
+  focused,
+  color,
+  size,
+  isDark,
+}: {
+  name: keyof typeof Ionicons.glyphMap;
+  outlineName: keyof typeof Ionicons.glyphMap;
+  focused: boolean;
+  color: any;
+  size: number;
+  isDark: boolean;
+}) {
+  const scale = useSharedValue(focused ? 1.15 : 1.0);
+  const pillOpacity = useSharedValue(focused ? 1 : 0);
+
+  useEffect(() => {
+    scale.value = withSpring(focused ? 1.18 : 1.0, { damping: 14, stiffness: 280 });
+    pillOpacity.value = withTiming(focused ? 1 : 0, { duration: 180 });
+  }, [focused]);
+
+  const animStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const pillStyle = useAnimatedStyle(() => ({
+    opacity: pillOpacity.value,
+  }));
+
+  return (
+    <View style={iconStyles.container}>
+      {/* Animated active glowing pill */}
+      <Animated.View
+        style={[
+          iconStyles.indicatorPill,
+          {
+            backgroundColor: isDark
+              ? 'rgba(56, 189, 248, 0.20)'
+              : 'rgba(2, 132, 199, 0.12)',
+            borderColor: isDark
+              ? 'rgba(56, 189, 248, 0.35)'
+              : 'rgba(2, 132, 199, 0.20)',
+          },
+          pillStyle,
+        ]}
+      />
+      <Animated.View style={animStyle}>
+        <Ionicons
+          name={focused ? name : outlineName}
+          size={size - 2}
+          color={color as any}
+        />
+      </Animated.View>
+    </View>
+  );
+}
+
+const iconStyles = StyleSheet.create({
+  container: {
+    width: 38,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  indicatorPill: {
+    position: 'absolute',
+    width: 34,
+    height: 26,
+    borderRadius: 13,
+    borderWidth: 1,
+  },
+});
 
 function CreateTabButton({ onPress, isDark }: { onPress?: () => void; isDark: boolean }) {
   const scale = useSharedValue(1);
@@ -116,11 +251,14 @@ function CreateTabButton({ onPress, isDark }: { onPress?: () => void; isDark: bo
   }));
 
   const handlePressIn = () => {
-    scale.value = withSpring(0.90, { damping: 15, stiffness: 350 });
+    scale.value = withSpring(0.88, { damping: 15, stiffness: 380 });
   };
 
   const handlePressOut = () => {
-    scale.value = withSpring(1, { damping: 15, stiffness: 350 });
+    scale.value = withSpring(1.06, { damping: 12, stiffness: 320 });
+    setTimeout(() => {
+      scale.value = withSpring(1.0, { damping: 15, stiffness: 350 });
+    }, 120);
   };
 
   const handlePress = () => {

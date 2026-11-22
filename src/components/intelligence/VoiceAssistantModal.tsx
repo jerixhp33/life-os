@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import { Audio } from 'expo-av';
 import * as Haptics from 'expo-haptics';
 import Animated, {
   useSharedValue,
@@ -24,6 +25,7 @@ import Animated, {
 import { useQueryClient } from '@tanstack/react-query';
 import { useTheme } from '../../theme/ThemeContext';
 import { parseOmniInput, OmniIntent } from '../../lib/intelligence/omniParser';
+import { playTactileCue } from '../../lib/sound/soundService';
 import { useAuthStore } from '../../stores/authStore';
 import { createTask } from '../../features/tasks/api';
 import { createTransaction } from '../../features/finance/api';
@@ -36,7 +38,8 @@ interface VoiceAssistantModalProps {
 }
 
 const SAMPLE_COMMANDS = [
-  'Task: Prepare board report by tomorrow high priority',
+  'Paid ₹350 for Lunch via UPI',
+  'Task: Prepare board report by tomorrow !high',
   'Expense: 850 rupees for lunch at cafe',
   'Note: Ideas for mobile app animations',
 ];
@@ -49,6 +52,8 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
   const [spokenText, setSpokenText] = useState('');
   const [parsedIntent, setParsedIntent] = useState<OmniIntent | null>(null);
   const [isExecuting, setIsExecuting] = useState(false);
+  const [isMicActive, setIsMicActive] = useState(false);
+  const recordingRef = useRef<Audio.Recording | null>(null);
 
   // Dynamic soundwave bar animations
   const bar1 = useSharedValue(12);
@@ -57,8 +62,13 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
   const bar4 = useSharedValue(18);
   const bar5 = useSharedValue(30);
 
+  // Hardware Microphone & Metering Setup
   useEffect(() => {
+    let recObj: Audio.Recording | null = null;
+    let isCancelled = false;
+
     if (visible) {
+      // Default ambient loop while waiting for mic permission
       const animateBar = (val: typeof bar1, high: number, low: number, duration: number) => {
         val.value = withRepeat(
           withSequence(
@@ -70,12 +80,70 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
         );
       };
 
-      animateBar(bar1, 40, 10, 350);
-      animateBar(bar2, 55, 14, 450);
-      animateBar(bar3, 65, 20, 320);
-      animateBar(bar4, 48, 12, 400);
-      animateBar(bar5, 52, 16, 380);
+      animateBar(bar1, 35, 10, 400);
+      animateBar(bar2, 48, 14, 480);
+      animateBar(bar3, 60, 20, 360);
+      animateBar(bar4, 42, 12, 440);
+      animateBar(bar5, 46, 16, 420);
+
+      const setupMicrophone = async () => {
+        try {
+          const { status } = await Audio.requestPermissionsAsync();
+          if (status !== 'granted' || isCancelled) {
+            setIsMicActive(false);
+            return;
+          }
+
+          await Audio.setAudioModeAsync({
+            allowsRecordingIOS: true,
+            playsInSilentModeIOS: true,
+          });
+
+          const recording = new Audio.Recording();
+          await recording.prepareToRecordAsync({
+            ...Audio.RecordingOptionsPresets.HIGH_QUALITY,
+            isMeteringEnabled: true,
+          });
+
+          recording.setOnRecordingStatusUpdate((st) => {
+            if (st.canRecord && st.isRecording && typeof st.metering === 'number') {
+              // Status metering dB: -160 dB (silence) to 0 dB (peak)
+              // Map speech range (-50 dB to -5 dB) to 0..1 scale
+              const norm = Math.max(0, Math.min(1, (st.metering + 50) / 45));
+              bar1.value = withTiming(10 + norm * 35, { duration: 90 });
+              bar2.value = withTiming(14 + norm * 50, { duration: 90 });
+              bar3.value = withTiming(18 + norm * 65, { duration: 90 });
+              bar4.value = withTiming(12 + norm * 45, { duration: 90 });
+              bar5.value = withTiming(16 + norm * 40, { duration: 90 });
+            }
+          });
+
+          await recording.startAsync();
+          if (!isCancelled) {
+            recObj = recording;
+            recordingRef.current = recording;
+            setIsMicActive(true);
+            playTactileCue('click');
+          } else {
+            await recording.stopAndUnloadAsync();
+          }
+        } catch (e) {
+          console.warn('[Voice Assistant] Mic setup warning:', e);
+          setIsMicActive(false);
+        }
+      };
+
+      setupMicrophone();
     }
+
+    return () => {
+      isCancelled = true;
+      if (recordingRef.current) {
+        recordingRef.current.stopAndUnloadAsync().catch(() => {});
+        recordingRef.current = null;
+      }
+      setIsMicActive(false);
+    };
   }, [visible]);
 
   useEffect(() => {
@@ -91,6 +159,14 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
     if (!parsedIntent || !uid) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setIsExecuting(true);
+
+    if (recordingRef.current) {
+      try {
+        await recordingRef.current.stopAndUnloadAsync();
+      } catch {}
+      recordingRef.current = null;
+      setIsMicActive(false);
+    }
 
     try {
       if (parsedIntent.type === 'task') {
@@ -127,6 +203,7 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
         qc.invalidateQueries({ queryKey: ['notes'] });
       }
 
+      playTactileCue('success');
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       setSpokenText('');
       setParsedIntent(null);
@@ -174,14 +251,14 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
           {/* Header */}
           <View style={styles.modalHeader}>
             <View style={styles.assistantBadge}>
-              <View style={styles.pulsingDot} />
+              <View style={[styles.pulsingDot, { backgroundColor: isMicActive ? '#10B981' : '#F59E0B' }]} />
               <Text
                 style={[
                   styles.assistantBadgeText,
                   { color: isDark ? '#38BDF8' : '#0284C7' },
                 ]}
               >
-                LifeOS Voice Copilot
+                {isMicActive ? 'Microphone Active • Listening' : 'LifeOS Voice Copilot'}
               </Text>
             </View>
 
@@ -210,7 +287,7 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
           </View>
 
           <Text style={[styles.listeningText, { color: theme.text.primary }]}>
-            Listening... speak or tap a suggestion
+            {isMicActive ? 'Speak naturally or tap a quick action below' : 'Listening... speak or tap a suggestion'}
           </Text>
 
           {/* Speech Text Input */}

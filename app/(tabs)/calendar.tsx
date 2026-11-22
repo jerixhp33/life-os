@@ -115,7 +115,7 @@ export default function CalendarScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 120 }}
+        contentContainerStyle={{ paddingBottom: 140 }}
       >
         {/* ============================================================== */}
         {/* FROSTED GLASS WIDGET CARD (EXACT MATCH TO REFERENCE IMAGE)      */}

@@ -627,7 +627,7 @@ export default function HomeScreen() {
           </Animated.View>
         )}
 
-        <View style={{ height: 120 }} />
+        <View style={{ height: 140 }} />
       </ScrollView>
 
       {/* Autonomous Hands-Free Voice Copilot Modal */}
@@ -647,7 +647,7 @@ export default function HomeScreen() {
 
 const s = StyleSheet.create({
   safe: { flex: 1 },
-  scroll: { paddingHorizontal: 18, paddingTop: 12, paddingBottom: 0 },
+  scroll: { paddingHorizontal: 18, paddingTop: 56, paddingBottom: 30 },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',

@@ -57,9 +57,10 @@ const BLUR_OPTIONS = [
 ];
 
 const GLOW_OPTIONS = [
-  { label: 'Soft', value: 0.45 },
+  { label: 'Soft', value: 0.50 },
   { label: 'Balanced', value: 0.75 },
-  { label: 'Vivid', value: 0.98 },
+  { label: 'Vivid', value: 0.90 },
+  { label: 'Full (100%)', value: 1.0 },
 ];
 
 export default function WallpaperSettingsScreen() {

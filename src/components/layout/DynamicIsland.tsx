@@ -87,7 +87,7 @@ export function DynamicIsland() {
     router.push('/focus');
   };
 
-  const topPosition = Math.max(insets.top, Platform.OS === 'ios' ? 44 : 28) + 4;
+  const topPosition = Platform.OS === 'android' ? Math.max(insets.top - 4, 8) : insets.top + 2;
 
   return (
     <View

@@ -46,6 +46,7 @@ export function AppBackground({
 
   const baseBg = isDark ? presetMeta.darkBg : presetMeta.lightBg;
   const shapeOpacity = config.shapeOpacity ?? 0.95;
+  const isFullIntensity = shapeOpacity >= 0.98;
   const blurIntensity = Math.max(10, Math.min(100, config.blurAmount));
 
   return (
@@ -59,7 +60,7 @@ export function AppBackground({
             source={STARLIGHT_PATTERN}
             style={[
               styles.patternImage,
-              { opacity: isDark ? 0.38 : 0.16 },
+              { opacity: isDark ? (isFullIntensity ? 0.55 : 0.38) : 0.18 },
             ]}
             resizeMode="cover"
           />
@@ -81,7 +82,7 @@ export function AppBackground({
             source={{ uri: config.customImageUri }}
             style={[
               styles.patternImage,
-              { opacity: isDark ? 0.55 : 0.3 },
+              { opacity: isDark ? (isFullIntensity ? 0.75 : 0.55) : 0.35 },
             ]}
             resizeMode="cover"
           />
@@ -103,7 +104,10 @@ export function AppBackground({
       <View
         style={[
           styles.shapesContainer,
-          { opacity: isDark ? shapeOpacity : shapeOpacity * 0.7 },
+          {
+            opacity: isDark ? shapeOpacity : (isFullIntensity ? 0.95 : shapeOpacity * 0.75),
+            height: isFullIntensity ? SCREEN_HEIGHT * 0.60 : SHAPE_HEIGHT,
+          },
         ]}
         pointerEvents="none"
       >
@@ -113,6 +117,7 @@ export function AppBackground({
             styles.circle,
             styles.circle1,
             { backgroundColor: presetMeta.circles[0] },
+            isFullIntensity && { transform: [{ scale: 1.15 }] },
           ]}
         />
 
@@ -122,6 +127,7 @@ export function AppBackground({
             styles.circle,
             styles.circle2,
             { backgroundColor: presetMeta.circles[1] },
+            isFullIntensity && { transform: [{ scale: 1.12 }] },
           ]}
         />
 
@@ -131,6 +137,7 @@ export function AppBackground({
             styles.circle,
             styles.circle3,
             { backgroundColor: presetMeta.circles[2] },
+            isFullIntensity && { transform: [{ scale: 1.15 }] },
           ]}
         />
 
@@ -140,6 +147,7 @@ export function AppBackground({
             styles.circle,
             styles.circle4,
             { backgroundColor: presetMeta.circles[3] },
+            isFullIntensity && { transform: [{ scale: 1.20 }] },
           ]}
         />
 
@@ -151,7 +159,10 @@ export function AppBackground({
           ]}
           start={{ x: 0.5, y: 0 }}
           end={{ x: 0.5, y: 1 }}
-          style={styles.coreGlowGradient}
+          style={[
+            styles.coreGlowGradient,
+            { opacity: isFullIntensity ? 0.65 : 0.35 },
+          ]}
         />
       </View>
 

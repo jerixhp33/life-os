@@ -29,6 +29,11 @@ import {
   FocusMode,
   SoundscapeType,
 } from '../../src/stores/focusStore';
+import {
+  playSoundscape,
+  stopSoundscape,
+  playTactileCue,
+} from '../../src/lib/sound/soundService';
 import { useTodayTasks } from '../../src/features/tasks/hooks';
 import { fontSize, fontWeight, radius, shadows, spacing } from '../../src/theme/tokens';
 
@@ -84,6 +89,26 @@ export default function FocusStudioScreen() {
     };
   }, [status, tick]);
 
+  // Ambient soundscape audio player synchronization
+  useEffect(() => {
+    if (soundscape !== 'none') {
+      playSoundscape(soundscape);
+    } else {
+      stopSoundscape();
+    }
+    return () => {
+      stopSoundscape();
+    };
+  }, [soundscape]);
+
+  // Session completion audio chime
+  useEffect(() => {
+    if (status === 'break') {
+      playTactileCue('bell');
+      playTactileCue('success');
+    }
+  }, [status]);
+
   // Breathing pulse animation for active focus ring
   const pulseScale = useSharedValue(1);
   useEffect(() => {
@@ -114,6 +139,7 @@ export default function FocusStudioScreen() {
 
   const handleToggleTimer = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    playTactileCue('click');
     if (status === 'running') {
       pause();
     } else if (status === 'paused') {
@@ -125,6 +151,7 @@ export default function FocusStudioScreen() {
 
   const handleReset = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    playTactileCue('click');
     reset();
   };
 
