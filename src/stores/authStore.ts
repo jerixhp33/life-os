@@ -45,9 +45,18 @@ const DEFAULT_PROFILE: UserProfile = {
   updated_at: new Date().toISOString(),
 };
 
+const DEFAULT_OFFLINE_USER: User = {
+  id: DEFAULT_PROFILE.id,
+  email: DEFAULT_PROFILE.email,
+  app_metadata: {},
+  user_metadata: {},
+  aud: 'authenticated',
+  created_at: DEFAULT_PROFILE.created_at,
+} as any;
+
 export const useAuthStore = create<AuthState>((set, get) => ({
   session: null,
-  user: null,
+  user: DEFAULT_OFFLINE_USER,
   profile: DEFAULT_PROFILE,
   isLoading: false,
   isInitialized: false,
@@ -100,7 +109,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         console.warn('[Auth] Session check timed out or offline:', sessErr);
       }
 
-      set({ session, user: session?.user ?? null });
+      set({ session, user: session?.user ?? DEFAULT_OFFLINE_USER });
 
       // 4. If session active, sync remote profile
       if (session?.user) {

@@ -39,14 +39,30 @@ export const useFocusStore = create<FocusState>((set, get) => ({
   completedSessions: 0,
 
   start: (task, customMinutes) => {
-    const duration = (customMinutes ?? 25) * 60;
+    const current = get();
+    let mode = current.mode;
+    let duration = current.duration;
+
+    if (customMinutes) {
+      duration = customMinutes * 60;
+      mode = 'pomodoro';
+    } else if (current.status === 'idle') {
+      if (mode === 'short_break') {
+        duration = DEFAULT_SHORT_BREAK_SECONDS;
+      } else if (mode === 'long_break') {
+        duration = DEFAULT_LONG_BREAK_SECONDS;
+      } else {
+        duration = DEFAULT_POMODORO_SECONDS;
+      }
+    }
+
     set({
       status: 'running',
-      mode: 'pomodoro',
-      timeLeft: duration,
+      mode,
+      timeLeft: current.status === 'idle' ? duration : current.timeLeft,
       duration,
-      activeTaskId: task?.id ?? null,
-      activeTaskTitle: task?.title ?? null,
+      activeTaskId: task?.id ?? current.activeTaskId,
+      activeTaskTitle: task?.title ?? current.activeTaskTitle,
     });
   },
 
@@ -63,8 +79,13 @@ export const useFocusStore = create<FocusState>((set, get) => ({
   },
 
   reset: () => {
-    const isBreak = get().mode !== 'pomodoro';
-    const duration = isBreak ? DEFAULT_SHORT_BREAK_SECONDS : DEFAULT_POMODORO_SECONDS;
+    const current = get();
+    let duration = DEFAULT_POMODORO_SECONDS;
+    if (current.mode === 'short_break') {
+      duration = DEFAULT_SHORT_BREAK_SECONDS; // 5m
+    } else if (current.mode === 'long_break') {
+      duration = DEFAULT_LONG_BREAK_SECONDS; // 15m!
+    }
     set({
       status: 'idle',
       timeLeft: duration,

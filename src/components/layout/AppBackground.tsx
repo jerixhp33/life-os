@@ -171,8 +171,9 @@ export function AppBackground({
       {/* ============================================================== */}
       {blurIntensity > 0 && (
         <BlurView
-          intensity={blurIntensity}
+          intensity={Platform.OS === 'android' ? Math.max(blurIntensity, 75) : blurIntensity}
           tint={isDark ? 'dark' : 'light'}
+          experimentalBlurMethod="dimezisBlurView"
           style={styles.blurLayer}
           pointerEvents="none"
         />
@@ -184,8 +185,8 @@ export function AppBackground({
       <LinearGradient
         colors={[
           'transparent',
-          isDark ? 'rgba(6, 11, 19, 0.25)' : 'rgba(240, 247, 255, 0.25)',
-          isDark ? 'rgba(6, 11, 19, 0.75)' : 'rgba(240, 247, 255, 0.75)',
+          isDark ? 'rgba(12, 11, 10, 0.25)' : 'rgba(250, 247, 242, 0.25)',
+          isDark ? 'rgba(12, 11, 10, 0.75)' : 'rgba(250, 247, 242, 0.75)',
           baseBg,
           baseBg,
         ]}

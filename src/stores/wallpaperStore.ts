@@ -24,13 +24,13 @@ export interface WallpaperPresetMeta {
 export const WALLPAPER_PRESETS: Record<WallpaperPresetId, WallpaperPresetMeta> = {
   nova: {
     id: 'nova',
-    name: 'Nova AI',
-    subtitle: 'Luminous organic U-shape blue blend',
+    name: 'Ambient Amber Glow',
+    subtitle: 'Warm luxury amber, copper & obsidian atmospheric blend',
     badge: 'SIGNATURE',
-    circles: ['#2563EB', '#93C5FD', '#1D4ED8', '#3B82F6'],
-    gradientBase: ['#1E40AF', '#060B13'],
-    darkBg: '#060B13',
-    lightBg: '#F0F7FF',
+    circles: ['#C2410C', '#FDE68A', '#EA580C', '#F59E0B'],
+    gradientBase: ['#9A3412', '#0C0B0A'],
+    darkBg: '#0C0B0A',
+    lightBg: '#FAF7F2',
   },
   starlight: {
     id: 'starlight',
@@ -75,10 +75,10 @@ export const WALLPAPER_PRESETS: Record<WallpaperPresetId, WallpaperPresetMeta> =
     name: 'Custom Photo',
     subtitle: 'Your personal gallery photo or artwork',
     badge: 'PHOTO',
-    circles: ['#2563EB', '#93C5FD', '#1D4ED8', '#3B82F6'],
-    gradientBase: ['#1E40AF', '#060B13'],
-    darkBg: '#060B13',
-    lightBg: '#F8FAFC',
+    circles: ['#C2410C', '#FDE68A', '#EA580C', '#F59E0B'],
+    gradientBase: ['#9A3412', '#0C0B0A'],
+    darkBg: '#0C0B0A',
+    lightBg: '#FAF7F2',
   },
 };
 

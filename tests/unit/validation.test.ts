@@ -1,4 +1,6 @@
 import { signUpSchema, signInSchema, taskSchema, transactionSchema, eventSchema, goalSchema } from '../../src/lib/validation/schemas';
+import { parseOmniInput } from '../../src/lib/intelligence/omniParser';
+
 describe('signUpSchema',()=>{
   const v={ full_name:'Alex Johnson', email:'alex@example.com', password:'SecurePass1', confirm_password:'SecurePass1' };
   it('passes valid data',()=>expect(signUpSchema.safeParse(v).success).toBe(true));
@@ -32,4 +34,19 @@ describe('goalSchema',()=>{
   const v={ title:'Learn TypeScript', category:'learning' as const };
   it('passes valid goal',()=>expect(goalSchema.safeParse(v).success).toBe(true));
   it('rejects invalid category',()=>expect(goalSchema.safeParse({...v,category:'sports'}).success).toBe(false));
+});
+
+describe('omniParser', () => {
+  it('parses natural expense input with rupee symbol and category', () => {
+    const res = parseOmniInput('Paid ₹350 for Lunch via UPI');
+    expect(res.type).toBe('finance');
+    expect(res.amount).toBe(350);
+    expect(res.category).toBe('Food & Dining');
+  });
+
+  it('parses task input with Add Task prefix', () => {
+    const res = parseOmniInput('Add Task: Prepare monthly report');
+    expect(res.type).toBe('task');
+    expect(res.title).toBe('Prepare monthly report');
+  });
 });

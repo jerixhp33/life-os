@@ -148,7 +148,7 @@ export function parseOmniInput(input: string, defaultCurrency = 'INR'): ParsedOm
 
   // Clean remaining prepositions
   const taskTitle = cleanText
-    .replace(/^(?:remind me to|need to|have to|todo|task:?)\s*/i, '')
+    .replace(/^(?:add\s+task:?|create\s+task:?|remind\s+(?:me\s+)?to|need\s+to|have\s+to|todo:?|task:?)\s*/i, '')
     .replace(/\s+(?:at|on|by)\s*$/i, '')
     .trim();
 

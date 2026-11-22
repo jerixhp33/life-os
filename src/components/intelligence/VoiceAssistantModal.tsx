@@ -46,7 +46,7 @@ const SAMPLE_COMMANDS = [
 
 export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalProps) {
   const { theme, isDark } = useTheme();
-  const uid = useAuthStore((s) => s.user?.id);
+  const uid = useAuthStore((s) => s.user?.id ?? s.profile?.id ?? '72174898-5ffa-49b2-a5fa-5c85972e819f');
   const qc = useQueryClient();
 
   const [spokenText, setSpokenText] = useState('');
@@ -215,10 +215,10 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
             styles.modalCard,
             {
               backgroundColor: isDark
-                ? 'rgba(10, 36, 56, 0.95)'
+                ? 'rgba(24, 21, 18, 0.94)'
                 : 'rgba(255, 255, 255, 0.96)',
               borderColor: isDark
-                ? 'rgba(255, 255, 255, 0.22)'
+                ? 'rgba(255, 255, 255, 0.18)'
                 : 'rgba(15, 23, 42, 0.1)',
             },
           ]}
@@ -230,7 +230,7 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
               <Text
                 style={[
                   styles.assistantBadgeText,
-                  { color: isDark ? '#38BDF8' : '#0284C7' },
+                  { color: isDark ? '#F59E0B' : '#D97706' },
                 ]}
               >
                 {isMicActive ? 'Microphone Active • Listening' : 'LifeOS Voice Copilot'}
@@ -254,11 +254,11 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
 
           {/* Soundwave Visualizer */}
           <View style={styles.visualizerContainer}>
-            <Animated.View style={[styles.soundwaveBar, bar1Style]} />
-            <Animated.View style={[styles.soundwaveBar, bar2Style]} />
-            <Animated.View style={[styles.soundwaveBar, bar3Style, { backgroundColor: '#38BDF8' }]} />
-            <Animated.View style={[styles.soundwaveBar, bar4Style]} />
-            <Animated.View style={[styles.soundwaveBar, bar5Style]} />
+            <Animated.View style={[styles.soundwaveBar, bar1Style, { backgroundColor: '#F59E0B' }]} />
+            <Animated.View style={[styles.soundwaveBar, bar2Style, { backgroundColor: '#EA580C' }]} />
+            <Animated.View style={[styles.soundwaveBar, bar3Style, { backgroundColor: '#FDE68A' }]} />
+            <Animated.View style={[styles.soundwaveBar, bar4Style, { backgroundColor: '#F59E0B' }]} />
+            <Animated.View style={[styles.soundwaveBar, bar5Style, { backgroundColor: '#D97706' }]} />
           </View>
 
           <Text style={[styles.listeningText, { color: theme.text.primary }]}>
@@ -269,15 +269,15 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
           <TextInput
             value={spokenText}
             onChangeText={setSpokenText}
-            placeholder="e.g. Add urgent task Review proposal tomorrow..."
-            placeholderTextColor={isDark ? '#819BB3' : '#94A3B8'}
+            placeholder="e.g. Add task: Prepare monthly report..."
+            placeholderTextColor={isDark ? '#A89F91' : '#94A3B8'}
             multiline
             style={[
               styles.inputBox,
               {
                 color: theme.text.primary,
                 backgroundColor: isDark
-                  ? 'rgba(255, 255, 255, 0.08)'
+                  ? 'rgba(255, 255, 255, 0.06)'
                   : 'rgba(15, 23, 42, 0.05)',
                 borderColor: isDark
                   ? 'rgba(255, 255, 255, 0.14)'
@@ -299,15 +299,15 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
                   styles.sampleChip,
                   {
                     backgroundColor: isDark
-                      ? 'rgba(56, 189, 248, 0.12)'
-                      : 'rgba(2, 132, 199, 0.08)',
+                      ? 'rgba(245, 158, 11, 0.14)'
+                      : 'rgba(217, 119, 6, 0.08)',
                   },
                 ]}
               >
                 <Text
                   style={[
                     styles.sampleText,
-                    { color: isDark ? '#38BDF8' : '#0284C7' },
+                    { color: isDark ? '#F59E0B' : '#D97706' },
                   ]}
                   numberOfLines={1}
                 >
@@ -324,11 +324,11 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
                 styles.intentCard,
                 {
                   backgroundColor: isDark
-                    ? 'rgba(56, 189, 248, 0.14)'
-                    : 'rgba(2, 132, 199, 0.1)',
+                    ? 'rgba(245, 158, 11, 0.15)'
+                    : 'rgba(217, 119, 6, 0.10)',
                   borderColor: isDark
-                    ? 'rgba(56, 189, 248, 0.3)'
-                    : 'rgba(2, 132, 199, 0.2)',
+                    ? 'rgba(245, 158, 11, 0.35)'
+                    : 'rgba(217, 119, 6, 0.20)',
                 },
               ]}
             >
@@ -341,13 +341,13 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
                     : 'document-text'
                 }
                 size={16}
-                color={isDark ? '#38BDF8' : '#0284C7'}
+                color={isDark ? '#F59E0B' : '#D97706'}
               />
               <View style={{ flex: 1 }}>
                 <Text
                   style={[
                     styles.intentTitle,
-                    { color: isDark ? '#E2E8F0' : '#0F172A' },
+                    { color: isDark ? '#E8DFD6' : '#1A1612' },
                   ]}
                 >
                   Identified as: {parsedIntent.type.toUpperCase()}
@@ -355,7 +355,7 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
                 <Text
                   style={[
                     styles.intentDetail,
-                    { color: isDark ? '#94A3B8' : '#64748B' },
+                    { color: isDark ? '#A89F91' : '#64748B' },
                   ]}
                   numberOfLines={1}
                 >
@@ -379,7 +379,7 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
             ]}
           >
             <LinearGradient
-              colors={['#2563EB', '#38BDF8']}
+              colors={['#F59E0B', '#EA580C']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
               style={styles.executeGradient}

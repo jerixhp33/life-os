@@ -29,10 +29,10 @@ const SUGGESTIONS = [
 ];
 
 export default function AiChatScreen() {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const qc = useQueryClient();
   const profile = useAuthStore((s) => s.profile);
-  const uid = useAuthStore((s) => s.user?.id);
+  const uid = useAuthStore((s) => s.user?.id ?? s.profile?.id ?? '72174898-5ffa-49b2-a5fa-5c85972e819f');
   const currency = profile?.currency ?? 'INR';
 
   const [msgs, setMsgs] = useState<Msg[]>([
@@ -83,17 +83,18 @@ export default function AiChatScreen() {
           qc.invalidateQueries({ queryKey: ['transactions'] });
           qc.invalidateQueries({ queryKey: ['spending_summary'] });
         } else if (
-          (parsed.type === 'task' &&
-            (/^(?:add\s+task|task:|todo:|remind|create\s+task)/i.test(text) ||
-              text.includes('!urgent') ||
-              text.includes('!high') ||
-              Boolean(parsed.dueDate))) &&
+          (parsed.type === 'task' ||
+            /^(?:add\s+task|create\s+task|task:|todo:|remind|buy|prepare|meeting|call|finish|draft|clean|schedule)/i.test(text) ||
+            text.includes('!urgent') ||
+            text.includes('!high') ||
+            Boolean(parsed.dueDate)) &&
           uid
         ) {
+          const taskTitle = parsed.title || text.replace(/^(?:add\s+task:?|create\s+task:?|task:?|todo:?)\s*/i, '').trim();
           const executionResult = await executeAiToolCall(
             'create_task',
             {
-              title: parsed.title,
+              title: taskTitle,
               priority: parsed.priority || 'medium',
               due_date: parsed.dueDate,
             },
@@ -106,7 +107,7 @@ export default function AiChatScreen() {
           qc.invalidateQueries({ queryKey: ['tasks'] });
           qc.invalidateQueries({ queryKey: ['tasks:today'] });
         } else if (
-          /summar(y|ize)|spending|total\s+expenses?|financial\s+summary|monthly\s+budget/i.test(text) &&
+          /summar(y|ize)|spending|total\s+expenses?|financial\s+summary|monthly\s+budget|how\s+much\s+(did\s+i\s+spend|spent)/i.test(text) &&
           uid
         ) {
           const executionResult = await executeAiToolCall(
@@ -193,13 +194,13 @@ Always be concise, practical, and helpful. Strictly do not use any emojis in any
           const lower = text.toLowerCase();
           const firstName = profile?.full_name?.split(' ')[0] ?? 'there';
           if (/^(?:hi|hello|hey|good\s+morning|good\s+evening)/.test(lower)) {
-            reply = `Hello ${firstName}. I am ready to help you manage your day. You can ask me to log expenses, schedule tasks, or review your daily productivity.`;
+            reply = `Hello ${firstName}. I am your LifeOS copilot. How can I assist you right now? You can log expenses, create tasks, or review your daily focus goals.`;
           } else if (/how\s+to|what\s+can\s+you\s+do|help/i.test(lower)) {
-            reply = `Here is what I can do for you:\n• Log expenses or income: "Paid ₹350 for Lunch via UPI"\n• Schedule tasks: "Add Task: Prepare quarterly roadmap by Friday"\n• Review spending: "Summarize my spending"\n• Focus sessions: start a deep focus timer anytime in Focus Studio.`;
+            reply = `Here is what I can do for you:\n• Log expenses or income: "Paid ₹350 for Lunch via UPI"\n• Schedule tasks: "Add Task: Prepare monthly report"\n• Review spending: "Summarize my spending"\n• Focus sessions: start a deep focus timer anytime in Focus Studio.`;
           } else if (/plan|schedule|today/i.test(lower)) {
             reply = `Your day is on track, ${firstName}. Head over to the Home dashboard to view your active focus streak and upcoming calendar events.`;
           } else {
-            reply = `I have received your request. In offline mode, you can log transactions (e.g. 'Paid ₹400 for dinner'), create tasks (e.g. 'Task: Follow up with team'), or ask for a spending summary.`;
+            reply = `Understood. You can direct me anytime to log expenses ("Paid ₹350 for Lunch"), create tasks ("Add Task: Prepare monthly report"), or query your spending summary.`;
           }
         }
 
@@ -256,19 +257,23 @@ Always be concise, practical, and helpful. Strictly do not use any emojis in any
                     s.bubble,
                     isUser
                       ? { backgroundColor: theme.brand.primary }
-                      : { backgroundColor: theme.surface.default, borderColor: theme.border.subtle, borderWidth: 1 }
+                      : {
+                          backgroundColor: isDark ? 'rgba(255, 255, 255, 0.07)' : 'rgba(255, 255, 255, 0.85)',
+                          borderColor: isDark ? 'rgba(255, 255, 255, 0.16)' : theme.border.subtle,
+                          borderWidth: 1,
+                        }
                   ]}
                 >
                   {item.actionExecuted && (
                     <View style={s.actionBadge}>
-                      <Ionicons name="checkmark-circle" size={14} color={theme.success} />
-                      <Text style={[s.actionBadgeTxt, { color: theme.success }]}>Action Executed</Text>
+                      <Ionicons name="checkmark-circle" size={14} color="#10B981" />
+                      <Text style={[s.actionBadgeTxt, { color: '#10B981' }]}>Action Executed</Text>
                     </View>
                   )}
-                  <Text style={[s.msgText, { color: isUser ? '#ffffff' : theme.text.primary }]}>
+                  <Text style={[s.msgText, { color: isUser ? '#ffffff' : (isDark ? '#FFFFFF' : theme.text.primary) }]}>
                     {item.content}
                   </Text>
-                  <Text style={[s.ts, { color: isUser ? 'rgba(255,255,255,0.7)' : theme.text.disabled }]}>
+                  <Text style={[s.ts, { color: isUser ? 'rgba(255,255,255,0.7)' : (isDark ? '#A89F91' : theme.text.disabled) }]}>
                     {format(new Date(item.ts), 'h:mm a')}
                   </Text>
                 </View>

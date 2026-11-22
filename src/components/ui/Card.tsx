@@ -37,17 +37,17 @@ function elevationShadow(elevation: CardProps['elevation']) {
   return shadows.md;
 }
 
-// Glassy white transparent gradients with specular reflection
+// Full glass cards without inner color - pure frosted translucent glass (Matches Image 3)
 const DARK_GRADIENT: readonly [string, string, ...string[]] = [
-  'rgba(255, 255, 255, 0.18)',
-  'rgba(255, 255, 255, 0.06)',
-  'rgba(14, 28, 48, 0.70)',
+  'rgba(255, 255, 255, 0.08)',
+  'rgba(255, 255, 255, 0.03)',
+  'rgba(255, 255, 255, 0.01)',
 ];
 
 const LIGHT_GRADIENT: readonly [string, string, ...string[]] = [
-  'rgba(255, 255, 255, 0.96)',
-  'rgba(255, 255, 255, 0.85)',
-  'rgba(238, 245, 252, 0.78)',
+  'rgba(255, 255, 255, 0.82)',
+  'rgba(255, 255, 255, 0.65)',
+  'rgba(255, 255, 255, 0.45)',
 ];
 
 export function Card({
@@ -59,8 +59,8 @@ export function Card({
   const { isDark } = useTheme();
 
   const borderColor = isDark
-    ? 'rgba(255, 255, 255, 0.22)'
-    : 'rgba(255, 255, 255, 0.92)';
+    ? 'rgba(255, 255, 255, 0.15)'
+    : 'rgba(255, 255, 255, 0.90)';
 
   return (
     <Animated.View
@@ -75,6 +75,7 @@ export function Card({
       <BlurView
         tint={isDark ? 'dark' : 'light'}
         intensity={Platform.OS === 'ios' ? 60 : 45}
+        experimentalBlurMethod="dimezisBlurView"
         style={StyleSheet.absoluteFill}
       />
       <LinearGradient
@@ -114,8 +115,8 @@ export function TouchableCard({
   }));
 
   const borderColor = isDark
-    ? 'rgba(255, 255, 255, 0.24)'
-    : 'rgba(255, 255, 255, 0.92)';
+    ? 'rgba(255, 255, 255, 0.16)'
+    : 'rgba(255, 255, 255, 0.90)';
 
   return (
     <AnimatedPressable
@@ -139,6 +140,7 @@ export function TouchableCard({
       <BlurView
         tint={isDark ? 'dark' : 'light'}
         intensity={Platform.OS === 'ios' ? 60 : 45}
+        experimentalBlurMethod="dimezisBlurView"
         style={StyleSheet.absoluteFill}
       />
       <LinearGradient

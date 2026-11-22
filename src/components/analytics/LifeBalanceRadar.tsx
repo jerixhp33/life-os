@@ -33,7 +33,7 @@ export interface LifeDimensionScore {
 
 export function LifeBalanceRadar() {
   const { theme, isDark } = useTheme();
-  const uid = useAuthStore((s) => s.user?.id);
+  const uid = useAuthStore((s) => s.user?.id ?? s.profile?.id ?? '72174898-5ffa-49b2-a5fa-5c85972e819f');
   const profile = useAuthStore((s) => s.profile);
   const currency = profile?.currency ?? 'INR';
 
@@ -175,8 +175,8 @@ export function LifeBalanceRadar() {
       style={[
         s.container,
         {
-          backgroundColor: isDark ? 'rgba(10, 36, 56, 0.85)' : 'rgba(255, 255, 255, 0.88)',
-          borderColor: isDark ? 'rgba(168, 220, 244, 0.28)' : 'rgba(255, 255, 255, 0.95)',
+          backgroundColor: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(255, 255, 255, 0.88)',
+          borderColor: isDark ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.95)',
         },
       ]}
     >
@@ -184,7 +184,7 @@ export function LifeBalanceRadar() {
       <View style={s.headerRow}>
         <View style={{ flex: 1 }}>
           <Text style={[s.title, { color: theme.text.primary }]}>Life Balance Equilibrium</Text>
-          <Text style={[s.sub, { color: isDark ? '#819BB3' : '#64748B' }]}>
+          <Text style={[s.sub, { color: isDark ? '#A89F91' : '#64748B' }]}>
             {statusHeadline} • Live Data
           </Text>
         </View>
@@ -192,15 +192,15 @@ export function LifeBalanceRadar() {
           style={[
             s.badge,
             {
-              backgroundColor: isDark ? 'rgba(56, 189, 248, 0.18)' : 'rgba(2, 132, 199, 0.1)',
-              borderColor: isDark ? 'rgba(56, 189, 248, 0.35)' : 'rgba(2, 132, 199, 0.2)',
+              backgroundColor: isDark ? 'rgba(245, 158, 11, 0.18)' : 'rgba(217, 119, 6, 0.10)',
+              borderColor: isDark ? 'rgba(245, 158, 11, 0.35)' : 'rgba(217, 119, 6, 0.20)',
             },
           ]}
         >
-          <Text style={[s.badgeNumber, { color: isDark ? '#38BDF8' : '#0284C7' }]}>
+          <Text style={[s.badgeNumber, { color: isDark ? '#F59E0B' : '#D97706' }]}>
             {averageScore}
           </Text>
-          <Text style={[s.badgeLabel, { color: isDark ? '#819BB3' : '#64748B' }]}>/100</Text>
+          <Text style={[s.badgeLabel, { color: isDark ? '#A89F91' : '#64748B' }]}>/100</Text>
         </View>
       </View>
 
@@ -209,8 +209,8 @@ export function LifeBalanceRadar() {
         <Svg width={CHART_SIZE} height={CHART_SIZE}>
           <Defs>
             <LinearGradient id="radarFill" x1="0%" y1="0%" x2="100%" y2="100%">
-              <Stop offset="0%" stopColor="#38BDF8" stopOpacity={0.45} />
-              <Stop offset="100%" stopColor="#6366F1" stopOpacity={0.25} />
+              <Stop offset="0%" stopColor="#F59E0B" stopOpacity={0.45} />
+              <Stop offset="100%" stopColor="#EA580C" stopOpacity={0.25} />
             </LinearGradient>
           </Defs>
 

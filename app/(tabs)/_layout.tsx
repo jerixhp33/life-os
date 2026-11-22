@@ -45,8 +45,8 @@ export default function TabsLayout() {
               ? 'rgba(255, 255, 255, 0.35)'
               : 'rgba(255, 255, 255, 0.95)',
             backgroundColor: isDark
-              ? 'rgba(10, 24, 40, 0.72)'
-              : 'rgba(255, 255, 255, 0.75)',
+              ? 'rgba(255, 255, 255, 0.08)'
+              : 'rgba(255, 255, 255, 0.82)',
             paddingBottom: 6,
             paddingTop: 6,
             elevation: 20,
@@ -60,6 +60,7 @@ export default function TabsLayout() {
               <BlurView
                 tint={isDark ? 'dark' : 'light'}
                 intensity={Platform.OS === 'ios' ? 80 : 60}
+                experimentalBlurMethod="dimezisBlurView"
                 style={StyleSheet.absoluteFill}
               />
               <View
@@ -67,7 +68,7 @@ export default function TabsLayout() {
                   StyleSheet.absoluteFill,
                   {
                     backgroundColor: isDark
-                      ? 'rgba(255, 255, 255, 0.10)'
+                      ? 'rgba(255, 255, 255, 0.08)'
                       : 'rgba(255, 255, 255, 0.82)',
                   },
                 ]}
@@ -86,8 +87,8 @@ export default function TabsLayout() {
               />
             </View>
           ),
-          tabBarActiveTintColor: isDark ? '#38BDF8' : '#0284C7',
-          tabBarInactiveTintColor: isDark ? '#6F9DB5' : '#94A3B8',
+          tabBarActiveTintColor: isDark ? '#F59E0B' : '#D97706',
+          tabBarInactiveTintColor: isDark ? '#A89F91' : '#64748B',
           tabBarLabelStyle: { fontSize: 10, fontWeight: '700', marginTop: 1 },
         }}
       >
@@ -207,11 +208,11 @@ function TabIconWithSpring({
           iconStyles.indicatorPill,
           {
             backgroundColor: isDark
-              ? 'rgba(56, 189, 248, 0.20)'
-              : 'rgba(2, 132, 199, 0.12)',
+              ? 'rgba(245, 158, 11, 0.20)'
+              : 'rgba(217, 119, 6, 0.12)',
             borderColor: isDark
-              ? 'rgba(56, 189, 248, 0.35)'
-              : 'rgba(2, 132, 199, 0.20)',
+              ? 'rgba(245, 158, 11, 0.40)'
+              : 'rgba(217, 119, 6, 0.25)',
           },
           pillStyle,
         ]}
@@ -275,8 +276,8 @@ function CreateTabButton({ onPress, isDark }: { onPress?: () => void; isDark: bo
         style={[
           cS.btn,
           {
-            backgroundColor: isDark ? '#38BDF8' : '#0284C7',
-            shadowColor: isDark ? '#38BDF8' : '#0284C7',
+            backgroundColor: isDark ? '#F59E0B' : '#D97706',
+            shadowColor: isDark ? '#F59E0B' : '#D97706',
           },
           animStyle,
         ]}

@@ -65,7 +65,7 @@ export function SmartActionPills() {
           icon: 'timer-outline',
           label: 'Deep Work',
           actionText: `Focus on ${urgentTask.title.slice(0, 18)}...`,
-          gradient: ['#2563EB', '#38BDF8'],
+          gradient: ['#F59E0B', '#EA580C'],
           onPress: () => {
             startFocus({ id: urgentTask.id, title: urgentTask.title }, 25);
             router.push('/focus');
@@ -77,7 +77,7 @@ export function SmartActionPills() {
           icon: 'timer-outline',
           label: 'Sprint',
           actionText: 'Start 25m Focus Block',
-          gradient: ['#2563EB', '#38BDF8'],
+          gradient: ['#F59E0B', '#D97706'],
           onPress: () => {
             startFocus(undefined, 25);
             router.push('/focus');
@@ -166,8 +166,8 @@ export function SmartActionPills() {
               styles.pillCard,
               {
                 backgroundColor: isDark
-                  ? 'rgba(10, 36, 56, 0.82)'
-                  : 'rgba(255, 255, 255, 0.94)',
+                  ? 'rgba(255, 255, 255, 0.06)'
+                  : 'rgba(255, 255, 255, 0.85)',
                 borderColor: isDark
                   ? 'rgba(255, 255, 255, 0.16)'
                   : 'rgba(15, 23, 42, 0.08)',
@@ -199,7 +199,7 @@ export function SmartActionPills() {
               <Text
                 style={[
                   styles.pillLabel,
-                  { color: isDark ? '#819BB3' : '#64748B' },
+                  { color: isDark ? '#A89F91' : '#64748B' },
                 ]}
               >
                 {pill.label}

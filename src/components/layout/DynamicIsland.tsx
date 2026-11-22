@@ -102,10 +102,10 @@ export function DynamicIsland() {
             height: expanded ? 135 : 38,
             borderRadius: expanded ? 24 : 19,
             backgroundColor: isDark
-              ? 'rgba(10, 24, 40, 0.94)'
-              : 'rgba(255, 255, 255, 0.95)',
+              ? 'rgba(24, 21, 18, 0.88)'
+              : 'rgba(255, 255, 255, 0.92)',
             borderColor: isDark
-              ? 'rgba(255, 255, 255, 0.22)'
+              ? 'rgba(255, 255, 255, 0.20)'
               : 'rgba(15, 23, 42, 0.1)',
           },
         ]}
@@ -113,6 +113,7 @@ export function DynamicIsland() {
         <BlurView
           intensity={Platform.OS === 'ios' ? 75 : 50}
           tint={isDark ? 'dark' : 'light'}
+          experimentalBlurMethod="dimezisBlurView"
           style={StyleSheet.absoluteFill}
         />
 
@@ -161,7 +162,7 @@ export function DynamicIsland() {
                   <Text
                     style={[
                       styles.taskSnippet,
-                      { color: isDark ? '#38BDF8' : '#0284C7' },
+                      { color: isDark ? '#F59E0B' : '#D97706' },
                     ]}
                     numberOfLines={1}
                   >
@@ -193,7 +194,7 @@ export function DynamicIsland() {
                   <Ionicons
                     name="sparkles"
                     size={13}
-                    color={isDark ? '#38BDF8' : '#0284C7'}
+                    color={isDark ? '#F59E0B' : '#D97706'}
                   />
                 </View>
               </>

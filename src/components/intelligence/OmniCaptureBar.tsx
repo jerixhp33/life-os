@@ -104,20 +104,20 @@ export function OmniCaptureBar({
         style={[
           s.inputCard,
           {
-            backgroundColor: isDark ? 'rgba(10, 36, 56, 0.88)' : 'rgba(255, 255, 255, 0.92)',
+            backgroundColor: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(255, 255, 255, 0.90)',
             borderColor: hasContent
               ? isDark
-                ? '#38BDF8'
-                : '#0284C7'
+                ? '#F59E0B'
+                : '#D97706'
               : isDark
-              ? 'rgba(168, 220, 244, 0.28)'
+              ? 'rgba(255, 255, 255, 0.16)'
               : 'rgba(255, 255, 255, 0.95)',
             ...shadows.sm,
           },
         ]}
       >
         <LinearGradient
-          colors={['#4F46E5', '#7C3AED']}
+          colors={['#F59E0B', '#D97706']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={s.sparkleBox}
@@ -129,7 +129,7 @@ export function OmniCaptureBar({
           value={input}
           onChangeText={setInput}
           placeholder={placeholder}
-          placeholderTextColor={isDark ? '#819BB3' : '#94A3B8'}
+          placeholderTextColor={isDark ? '#A89F91' : '#94A3B8'}
           style={[s.textInput, { color: theme.text.primary }]}
           returnKeyType="done"
           onSubmitEditing={handleSubmit}
@@ -143,7 +143,7 @@ export function OmniCaptureBar({
             style={s.submitBtn}
           >
             <LinearGradient
-              colors={['#4338CA', '#4F46E5', '#6366F1']}
+              colors={['#F59E0B', '#EA580C']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={s.submitGradient}

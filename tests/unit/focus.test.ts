@@ -49,4 +49,32 @@ describe('Focus Store', () => {
     expect(s.mode).toBe('long_break');
     expect(s.timeLeft).toBe(15 * 60);
   });
+
+  it('starts short break and long break without reverting to 25m pomodoro', () => {
+    useFocusStore.getState().setMode('short_break');
+    useFocusStore.getState().start();
+    let s = useFocusStore.getState();
+    expect(s.status).toBe('running');
+    expect(s.mode).toBe('short_break');
+    expect(s.timeLeft).toBe(5 * 60);
+
+    useFocusStore.getState().setMode('long_break');
+    useFocusStore.getState().start();
+    s = useFocusStore.getState();
+    expect(s.status).toBe('running');
+    expect(s.mode).toBe('long_break');
+    expect(s.timeLeft).toBe(15 * 60);
+  });
+
+  it('resets 15m long_break accurately to 15 minutes', () => {
+    useFocusStore.getState().setMode('long_break');
+    useFocusStore.getState().start();
+    useFocusStore.setState({ timeLeft: 400 });
+    useFocusStore.getState().reset();
+    const s = useFocusStore.getState();
+    expect(s.status).toBe('idle');
+    expect(s.mode).toBe('long_break');
+    expect(s.timeLeft).toBe(15 * 60);
+    expect(s.duration).toBe(15 * 60);
+  });
 });
