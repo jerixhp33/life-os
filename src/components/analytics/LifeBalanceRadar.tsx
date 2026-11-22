@@ -2,9 +2,13 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Svg, { Polygon, Line, Circle, Text as SvgText, Defs, LinearGradient, Stop } from 'react-native-svg';
 import { Ionicons } from '@expo/vector-icons';
+import { useQuery } from '@tanstack/react-query';
 import { useTheme } from '../../theme/ThemeContext';
+import { useAuthStore } from '../../stores/authStore';
 import { useTodayTasks } from '../../features/tasks/hooks';
 import { useHabits, useTodayHabitLogs } from '../../features/habits/hooks';
+import { useNotes } from '../../features/notes/hooks';
+import { fetchMonthlyTransactions, buildSpendingSummary } from '../../features/finance/api';
 import { useFocusStore } from '../../stores/focusStore';
 import {
   calculatePolygonPoints,
@@ -24,58 +28,147 @@ export interface LifeDimensionScore {
   icon: keyof typeof Ionicons.glyphMap;
   score: number; // 0 to 100
   color: string;
+  detail?: string;
 }
 
 export function LifeBalanceRadar() {
   const { theme, isDark } = useTheme();
+  const uid = useAuthStore((s) => s.user?.id);
+  const profile = useAuthStore((s) => s.profile);
+  const currency = profile?.currency ?? 'INR';
 
+  // Real Database Hooks
   const { data: tasks } = useTodayTasks();
   const { data: habits } = useHabits();
   const { data: habitLogs } = useTodayHabitLogs();
+  const { data: notes } = useNotes();
   const completedFocusSessions = useFocusStore((s) => s.completedSessions);
 
-  // Compute authentic scores from real data
+  const { data: transactions } = useQuery({
+    queryKey: ['transactions', uid, 0],
+    queryFn: () => fetchMonthlyTransactions(uid!, 0),
+    enabled: Boolean(uid),
+    staleTime: 30_000,
+  });
+
+  // Compute 100% authentic scores from real database records
   const dimensions: LifeDimensionScore[] = useMemo(() => {
-    // 1. Productivity: Task completion rate
+    // 1. Productivity: Real today task completion rate
     const allTasks = tasks ?? [];
     const completedTasks = allTasks.filter((t) => t.status === 'completed');
     const prodScore =
       allTasks.length > 0
         ? Math.min(100, Math.round((completedTasks.length / allTasks.length) * 100))
-        : 80;
+        : 0;
 
-    // 2. Consistency: Habit completion rate
+    // 2. Consistency: Real today habit completion rate
     const totalHabits = habits?.length ?? 0;
     const completedHabitCount = habitLogs?.length ?? 0;
     const habitScore =
       totalHabits > 0
         ? Math.min(100, Math.round((completedHabitCount / totalHabits) * 100))
-        : 75;
+        : 0;
 
-    // 3. Focus: Completed Pomodoro sessions
-    const focusScore = Math.min(100, Math.max(30, completedFocusSessions * 25));
+    // 3. Deep Focus: Real completed pomodoro sessions (daily target: 4 sessions = 100%)
+    const focusScore = Math.min(100, completedFocusSessions * 25);
 
-    // 4. Financial Health (Adherence ratio baseline)
-    const financeScore = 85;
+    // 4. Financial Health: Real monthly transactions & savings ratio
+    let financeScore = 0;
+    const txList = transactions ?? [];
+    if (txList.length > 0) {
+      const summary = buildSpendingSummary(txList, currency);
+      if (summary.total_income > 0) {
+        if (summary.total_income >= summary.total_expenses) {
+          financeScore = Math.min(
+            100,
+            Math.max(30, Math.round(((summary.total_income - summary.total_expenses) / summary.total_income) * 100))
+          );
+        } else {
+          financeScore = Math.max(10, Math.round((summary.total_income / summary.total_expenses) * 50));
+        }
+      } else {
+        financeScore = Math.min(90, Math.max(25, txList.length * 20));
+      }
+    }
 
-    // 5. Mindfulness & Reflection
-    const mindScore = 78;
+    // 5. Mindfulness: Real notes logged & daily reflections recorded
+    let mindScore = 0;
+    const allNotes = notes ?? [];
+    if (allNotes.length > 0) {
+      const today = new Date().toISOString().slice(0, 10);
+      const hasRecentNote = allNotes.some((n) => {
+        const createdDate = (n.created_at || '').slice(0, 10);
+        const updatedDate = (n.updated_at || '').slice(0, 10);
+        return createdDate === today || updatedDate === today;
+      });
+      if (hasRecentNote) {
+        mindScore = 100;
+      } else {
+        mindScore = Math.min(80, allNotes.length * 20);
+      }
+    }
 
     return [
-      { key: 'productivity', label: 'Productivity', icon: 'checkbox-outline', score: prodScore, color: '#38BDF8' },
-      { key: 'consistency', label: 'Consistency', icon: 'flame-outline', score: habitScore, color: '#F59E0B' },
-      { key: 'focus', label: 'Deep Focus', icon: 'timer-outline', score: focusScore, color: '#A855F7' },
-      { key: 'finance', label: 'Finance', icon: 'wallet-outline', score: financeScore, color: '#10B981' },
-      { key: 'mindfulness', label: 'Mindfulness', icon: 'journal-outline', score: mindScore, color: '#EC4899' },
+      {
+        key: 'productivity',
+        label: 'Productivity',
+        icon: 'checkbox-outline',
+        score: prodScore,
+        color: '#38BDF8',
+        detail: allTasks.length > 0 ? `${completedTasks.length}/${allTasks.length} tasks done` : 'No tasks logged',
+      },
+      {
+        key: 'consistency',
+        label: 'Consistency',
+        icon: 'flame-outline',
+        score: habitScore,
+        color: '#F59E0B',
+        detail: totalHabits > 0 ? `${completedHabitCount}/${totalHabits} habits logged` : 'No habits logged',
+      },
+      {
+        key: 'focus',
+        label: 'Deep Focus',
+        icon: 'timer-outline',
+        score: focusScore,
+        color: '#A855F7',
+        detail: `${completedFocusSessions} sessions completed`,
+      },
+      {
+        key: 'finance',
+        label: 'Finance',
+        icon: 'wallet-outline',
+        score: financeScore,
+        color: '#10B981',
+        detail: `${txList.length} transactions tracked`,
+      },
+      {
+        key: 'mindfulness',
+        label: 'Mindfulness',
+        icon: 'journal-outline',
+        score: mindScore,
+        color: '#EC4899',
+        detail: `${allNotes.length} notes in vault`,
+      },
     ];
-  }, [tasks, habits, habitLogs, completedFocusSessions]);
+  }, [tasks, habits, habitLogs, completedFocusSessions, transactions, notes, currency]);
 
   const scores = dimensions.map((d) => d.score);
   const averageScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
 
   // Concentric grid polygons
   const gridLevels = [0.25, 0.5, 0.75, 1.0];
-  const dataPoints = calculatePolygonPoints(scores, MAX_RADIUS, CENTER);
+  // Ensure minimum 4% visual radius so points don't collapse to 0 width while preserving accurate text numbers
+  const visualScores = scores.map((s) => Math.max(4, s));
+  const dataPoints = calculatePolygonPoints(visualScores, MAX_RADIUS, CENTER);
+
+  const statusHeadline =
+    averageScore >= 80
+      ? 'Optimal Equilibrium'
+      : averageScore >= 50
+      ? 'Balanced Momentum'
+      : averageScore > 0
+      ? 'Building Habits'
+      : 'Awaiting Today Activity';
 
   return (
     <View
@@ -89,10 +182,10 @@ export function LifeBalanceRadar() {
     >
       {/* Header */}
       <View style={s.headerRow}>
-        <View>
+        <View style={{ flex: 1 }}>
           <Text style={[s.title, { color: theme.text.primary }]}>Life Balance Equilibrium</Text>
           <Text style={[s.sub, { color: isDark ? '#819BB3' : '#64748B' }]}>
-            5-Axis Multi-Dimensional Harmony
+            {statusHeadline} • Live Data
           </Text>
         </View>
         <View
@@ -167,7 +260,7 @@ export function LifeBalanceRadar() {
           />
 
           {/* Data Vertices */}
-          {scores.map((score, index) => {
+          {visualScores.map((score, index) => {
             const angle = -Math.PI / 2 + (index * 2 * Math.PI) / AXES_COUNT;
             const r = (score / 100) * MAX_RADIUS;
             const x = CENTER + r * Math.cos(angle);
@@ -187,15 +280,22 @@ export function LifeBalanceRadar() {
         </Svg>
       </View>
 
-      {/* Metric Breakdown Grid */}
+      {/* Metric Breakdown Grid with Real Data Metrics */}
       <View style={s.metricsGrid}>
         {dimensions.map((dim) => (
           <View key={dim.key} style={s.metricItem}>
             <View style={[s.metricDot, { backgroundColor: dim.color }]} />
-            <Text style={[s.metricLabel, { color: isDark ? '#819BB3' : '#64748B' }]}>
-              {dim.label}
-            </Text>
-            <Text style={[s.metricVal, { color: theme.text.primary }]}>{dim.score}%</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={[s.metricLabel, { color: isDark ? '#E2E8F0' : '#1E293B' }]}>
+                {dim.label}
+              </Text>
+              {dim.detail && (
+                <Text style={[s.metricDetail, { color: isDark ? '#819BB3' : '#64748B' }]}>
+                  {dim.detail}
+                </Text>
+              )}
+            </View>
+            <Text style={[s.metricVal, { color: dim.color }]}>{dim.score}%</Text>
           </View>
         ))}
       </View>
@@ -261,21 +361,26 @@ const s = StyleSheet.create({
   metricItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    width: '47%',
+    gap: 8,
+    width: '48%',
+    paddingVertical: 2,
   },
   metricDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 3.5,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
   },
   metricLabel: {
     fontSize: 12,
-    fontWeight: '500',
-    flex: 1,
+    fontWeight: '600',
+  },
+  metricDetail: {
+    fontSize: 10,
+    fontWeight: '400',
+    marginTop: 1,
   },
   metricVal: {
-    fontSize: 12,
-    fontWeight: '700',
+    fontSize: 13,
+    fontWeight: '800',
   },
 });
