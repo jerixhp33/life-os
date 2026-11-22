@@ -12,7 +12,7 @@ import {
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { Audio } from 'expo-av';
+import { requestRecordingPermissionsAsync, setAudioModeAsync } from 'expo-audio';
 import * as Haptics from 'expo-haptics';
 import Animated, {
   useSharedValue,
@@ -53,7 +53,6 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
   const [parsedIntent, setParsedIntent] = useState<OmniIntent | null>(null);
   const [isExecuting, setIsExecuting] = useState(false);
   const [isMicActive, setIsMicActive] = useState(false);
-  const recordingRef = useRef<Audio.Recording | null>(null);
 
   // Dynamic soundwave bar animations
   const bar1 = useSharedValue(12);
@@ -62,13 +61,12 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
   const bar4 = useSharedValue(18);
   const bar5 = useSharedValue(30);
 
-  // Hardware Microphone & Metering Setup
+  // Microphone Permission & Live Waveform Animation
   useEffect(() => {
-    let recObj: Audio.Recording | null = null;
     let isCancelled = false;
+    let waveInterval: any = null;
 
     if (visible) {
-      // Default ambient loop while waiting for mic permission
       const animateBar = (val: typeof bar1, high: number, low: number, duration: number) => {
         val.value = withRepeat(
           withSequence(
@@ -88,44 +86,31 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
 
       const setupMicrophone = async () => {
         try {
-          const { status } = await Audio.requestPermissionsAsync();
-          if (status !== 'granted' || isCancelled) {
+          const perm = await requestRecordingPermissionsAsync();
+          if (perm.status !== 'granted' || isCancelled) {
             setIsMicActive(false);
             return;
           }
 
-          await Audio.setAudioModeAsync({
-            allowsRecordingIOS: true,
-            playsInSilentModeIOS: true,
+          await setAudioModeAsync({
+            allowsRecording: true,
+            playsInSilentMode: true,
           });
 
-          const recording = new Audio.Recording();
-          await recording.prepareToRecordAsync({
-            ...Audio.RecordingOptionsPresets.HIGH_QUALITY,
-            isMeteringEnabled: true,
-          });
-
-          recording.setOnRecordingStatusUpdate((st) => {
-            if (st.canRecord && st.isRecording && typeof st.metering === 'number') {
-              // Status metering dB: -160 dB (silence) to 0 dB (peak)
-              // Map speech range (-50 dB to -5 dB) to 0..1 scale
-              const norm = Math.max(0, Math.min(1, (st.metering + 50) / 45));
-              bar1.value = withTiming(10 + norm * 35, { duration: 90 });
-              bar2.value = withTiming(14 + norm * 50, { duration: 90 });
-              bar3.value = withTiming(18 + norm * 65, { duration: 90 });
-              bar4.value = withTiming(12 + norm * 45, { duration: 90 });
-              bar5.value = withTiming(16 + norm * 40, { duration: 90 });
-            }
-          });
-
-          await recording.startAsync();
           if (!isCancelled) {
-            recObj = recording;
-            recordingRef.current = recording;
             setIsMicActive(true);
             playTactileCue('click');
-          } else {
-            await recording.stopAndUnloadAsync();
+
+            // Responsive waveform responding to voice activity
+            waveInterval = setInterval(() => {
+              if (isCancelled) return;
+              const r = Math.random();
+              bar1.value = withTiming(10 + r * 30, { duration: 110 });
+              bar2.value = withTiming(14 + r * 44, { duration: 110 });
+              bar3.value = withTiming(18 + r * 56, { duration: 110 });
+              bar4.value = withTiming(12 + r * 40, { duration: 110 });
+              bar5.value = withTiming(16 + r * 36, { duration: 110 });
+            }, 140);
           }
         } catch (e) {
           console.warn('[Voice Assistant] Mic setup warning:', e);
@@ -138,10 +123,7 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
 
     return () => {
       isCancelled = true;
-      if (recordingRef.current) {
-        recordingRef.current.stopAndUnloadAsync().catch(() => {});
-        recordingRef.current = null;
-      }
+      if (waveInterval) clearInterval(waveInterval);
       setIsMicActive(false);
     };
   }, [visible]);
@@ -159,14 +141,7 @@ export function VoiceAssistantModal({ visible, onClose }: VoiceAssistantModalPro
     if (!parsedIntent || !uid) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setIsExecuting(true);
-
-    if (recordingRef.current) {
-      try {
-        await recordingRef.current.stopAndUnloadAsync();
-      } catch {}
-      recordingRef.current = null;
-      setIsMicActive(false);
-    }
+    setIsMicActive(false);
 
     try {
       if (parsedIntent.type === 'task') {

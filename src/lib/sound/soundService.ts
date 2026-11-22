@@ -1,4 +1,4 @@
-import { Audio } from 'expo-av';
+import { createAudioPlayer, type AudioPlayer } from 'expo-audio';
 import { useSoundStore } from '../../stores/soundStore';
 import type { SoundscapeType } from '../../stores/focusStore';
 
@@ -12,40 +12,21 @@ const SOUND_ASSETS: Record<string, any> = {
   lofi: require('../../../assets/sounds/lofi.wav'),
 };
 
-let currentSoundscapeObj: Audio.Sound | null = null;
+let currentPlayer: AudioPlayer | null = null;
 let activeSoundscapeType: SoundscapeType = 'none';
-
-/**
- * Configure global audio mode for ambient background playback.
- */
-export async function initializeAudio(): Promise<void> {
-  try {
-    await Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-      playsInSilentModeIOS: true,
-      staysActiveInBackground: true,
-      shouldDuckAndroid: true,
-      playThroughEarpieceAndroid: false,
-    });
-  } catch (e) {
-    console.warn('[Audio] Failed to set audio mode:', e);
-  }
-}
 
 /**
  * Plays an ambient looping soundscape for Focus sessions.
  */
 export async function playSoundscape(type: SoundscapeType): Promise<void> {
-  // If already playing this type, do nothing
   if (type === activeSoundscapeType) return;
 
-  // Stop & unload existing soundscape
-  if (currentSoundscapeObj) {
+  if (currentPlayer) {
     try {
-      await currentSoundscapeObj.stopAsync();
-      await currentSoundscapeObj.unloadAsync();
+      currentPlayer.pause();
+      currentPlayer.remove();
     } catch {}
-    currentSoundscapeObj = null;
+    currentPlayer = null;
     activeSoundscapeType = 'none';
   }
 
@@ -55,12 +36,11 @@ export async function playSoundscape(type: SoundscapeType): Promise<void> {
   if (!asset) return;
 
   try {
-    await initializeAudio();
-    const { sound } = await Audio.Sound.createAsync(
-      asset,
-      { shouldPlay: true, isLooping: true, volume: 0.85 }
-    );
-    currentSoundscapeObj = sound;
+    const player = createAudioPlayer(asset);
+    player.loop = true;
+    player.volume = 0.85;
+    player.play();
+    currentPlayer = player;
     activeSoundscapeType = type;
   } catch (e) {
     console.warn('[Audio] Failed to play soundscape:', e);
@@ -71,12 +51,12 @@ export async function playSoundscape(type: SoundscapeType): Promise<void> {
  * Stops any actively playing focus soundscape.
  */
 export async function stopSoundscape(): Promise<void> {
-  if (currentSoundscapeObj) {
+  if (currentPlayer) {
     try {
-      await currentSoundscapeObj.stopAsync();
-      await currentSoundscapeObj.unloadAsync();
+      currentPlayer.pause();
+      currentPlayer.remove();
     } catch {}
-    currentSoundscapeObj = null;
+    currentPlayer = null;
     activeSoundscapeType = 'none';
   }
 }
@@ -92,14 +72,10 @@ export async function playTactileCue(cue: 'click' | 'success' | 'bell'): Promise
   if (!asset) return;
 
   try {
-    const { sound } = await Audio.Sound.createAsync(
-      asset,
-      { shouldPlay: true, isLooping: false, volume: 0.6 }
-    );
-    sound.setOnPlaybackStatusUpdate((status) => {
-      if (status.isLoaded && status.didJustFinish) {
-        sound.unloadAsync().catch(() => {});
-      }
-    });
-  } catch {}
+    const player = createAudioPlayer(asset);
+    player.volume = 0.6;
+    player.play();
+  } catch (e) {
+    console.warn('[Audio] Failed to play tactile cue:', e);
+  }
 }
