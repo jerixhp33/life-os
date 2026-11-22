@@ -90,8 +90,8 @@ const MODULES: ModuleItem[] = [
     label: 'AI Assistant',
     desc: 'Autonomous intelligence',
     route: '/ai/chat',
-    gradient: ['#4F46E5', '#818CF8'],
-    accent: '#6366F1',
+    gradient: ['#F59E0B', '#D97706'],
+    accent: '#F59E0B',
     badge: 'AI PRO',
   },
   {
@@ -99,8 +99,8 @@ const MODULES: ModuleItem[] = [
     label: 'Focus Studio',
     desc: 'Deep work & soundscapes',
     route: '/focus',
-    gradient: ['#0284C7', '#6366F1'],
-    accent: '#38BDF8',
+    gradient: ['#F59E0B', '#EA580C'],
+    accent: '#F59E0B',
     badge: 'NEW',
   },
 ];
@@ -491,7 +491,7 @@ export default function MoreScreen() {
               activeOpacity={0.7}
             >
               <LinearGradient
-                colors={['#2563EB', '#38BDF8']}
+                colors={['#F59E0B', '#EA580C']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={s.settSquircle}
