@@ -11,6 +11,8 @@ import { useSecurityStore } from '../src/stores/securityStore';
 import { useWallpaperStore } from '../src/stores/wallpaperStore';
 import { useRealtimeSync } from '../src/lib/supabase/realtime';
 import { setupNotificationChannels } from '../src/lib/notifications/service';
+import { initializeNotificationChannels } from '../src/lib/notifications/scheduler';
+import { useNotificationStore } from '../src/stores/notificationStore';
 import { LoadingScreen } from '../src/components/feedback';
 import { OfflineBanner } from '../src/components/feedback/OfflineBanner';
 import { BiometricLockModal } from '../src/components/security/BiometricLockModal';
@@ -29,7 +31,9 @@ function Inner() {
     initialize();
     initSecurity();
     useWallpaperStore.getState().initialize();
+    useNotificationStore.getState().initialize();
     setupNotificationChannels().catch(() => {});
+    initializeNotificationChannels().catch(() => {});
 
     const sub = AppState.addEventListener('change', (nextState: AppStateStatus) => {
       if (nextState === 'background' || nextState === 'inactive') {
@@ -81,6 +85,7 @@ function Inner() {
         <Stack.Screen name="settings/security" options={{ presentation: 'card', animation: 'slide_from_right', gestureEnabled: true }} />
         <Stack.Screen name="settings/wallpaper" options={{ presentation: 'card', animation: 'slide_from_right', gestureEnabled: true }} />
         <Stack.Screen name="settings/sound" options={{ presentation: 'card', animation: 'slide_from_right', gestureEnabled: true }} />
+        <Stack.Screen name="settings/notifications" options={{ presentation: 'card', animation: 'slide_from_right', gestureEnabled: true }} />
         <Stack.Screen name="settings/export" options={{ presentation: 'card', animation: 'slide_from_right', gestureEnabled: true }} />
         <Stack.Screen name="search/index" options={{ presentation: 'modal', animation: 'fade_from_bottom', gestureEnabled: true }} />
         <Stack.Screen name="focus/index" options={{ presentation: 'fullScreenModal', animation: 'slide_from_bottom', gestureEnabled: true }} />

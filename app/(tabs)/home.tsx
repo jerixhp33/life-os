@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, RefreshControl, Image, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -22,6 +22,12 @@ import { OmniCaptureBar } from '../../src/components/intelligence/OmniCaptureBar
 import { DailyBriefCard } from '../../src/components/intelligence/DailyBriefCard';
 import { SmartActionPills } from '../../src/components/intelligence/SmartActionPills';
 import { VoiceAssistantModal } from '../../src/components/intelligence/VoiceAssistantModal';
+import { NotificationCenterModal } from '../../src/components/notifications/NotificationCenterModal';
+import { useNotificationStore } from '../../src/stores/notificationStore';
+import {
+  evaluateGreetingState,
+  WISDOM_SNIPPETS,
+} from '../../src/lib/intelligence/greetingEngine';
 import { AppBackground } from '../../src/components/layout/AppBackground';
 
 const AVATAR_CACHE_KEY = 'lifeos_cached_avatar_url';
@@ -56,6 +62,10 @@ export default function HomeScreen() {
   const profile = useAuthStore((s) => s.profile);
   const [cachedAvatar, setCachedAvatar] = useState<string | null>(null);
   const [voiceModalVisible, setVoiceModalVisible] = useState(false);
+  const [notifModalVisible, setNotifModalVisible] = useState(false);
+  const [wisdomToast, setWisdomToast] = useState<string | null>(null);
+
+  const unreadNotifCount = useNotificationStore((s) => s.unreadCount);
 
   useEffect(() => {
     AsyncStorage.getItem(AVATAR_CACHE_KEY).then((stored) => {
@@ -74,11 +84,19 @@ export default function HomeScreen() {
   const { data: habitLogs } = useTodayHabitLogs();
   const complete = useCompleteTask();
 
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
   const rawName = profile?.full_name?.trim();
   const emailName = profile?.email ? profile.email.split('@')[0] : '';
   const firstName = rawName ? rawName.split(' ')[0] : emailName || 'There';
+
+  const greetingState = useMemo(() => {
+    return evaluateGreetingState(
+      firstName,
+      tasks ?? [],
+      events ?? [],
+      habits ?? [],
+      habitLogs ?? []
+    );
+  }, [firstName, tasks, events, habits, habitLogs]);
 
   const onRefresh = useCallback(async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -113,23 +131,31 @@ export default function HomeScreen() {
         {/* ============================================================== */}
         <Animated.View entering={FadeInDown.duration(420)} style={s.header}>
           <View style={{ flex: 1 }}>
-            <View style={s.brandHeaderRow}>
+            <TouchableOpacity
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                const next = WISDOM_SNIPPETS[Math.floor(Math.random() * WISDOM_SNIPPETS.length)];
+                setWisdomToast(next);
+              }}
+              activeOpacity={0.8}
+              style={s.brandHeaderRow}
+            >
               <Image
                 source={require('../../assets/logo.png')}
                 style={s.headerAppLogo}
                 resizeMode="contain"
               />
               <Text style={[s.greetingSub, { color: isDark ? '#94A3B8' : '#64748B' }]}>
-                {greeting}
+                {greetingState.greetingText}
               </Text>
-            </View>
+            </TouchableOpacity>
             <View style={s.nameGreetingRow}>
               <Text style={[s.nameTitle, { color: theme.text.primary }]}>
                 Hello, {firstName} 👋
               </Text>
             </View>
-            <Text style={[s.mottoText, { color: isDark ? '#819BB3' : '#64748B' }]}>
-              Make today productive and achieve your goals.
+            <Text style={[s.mottoText, { color: isDark ? '#819BB3' : '#64748B' }]} numberOfLines={2}>
+              {wisdomToast || greetingState.contextualSubtitle}
             </Text>
           </View>
 
@@ -178,7 +204,7 @@ export default function HomeScreen() {
               <TouchableOpacity
                 onPress={() => {
                   Haptics.selectionAsync();
-                  router.push('/settings/security');
+                  setNotifModalVisible(true);
                 }}
                 style={[
                   s.topGlassBtn,
@@ -191,7 +217,7 @@ export default function HomeScreen() {
                 accessibilityLabel="Notifications"
               >
                 <Ionicons name="notifications-outline" size={17} color={theme.text.primary} />
-                <View style={s.notifDot} />
+                {unreadNotifCount > 0 && <View style={s.notifDot} />}
               </TouchableOpacity>
             </View>
 
@@ -608,6 +634,12 @@ export default function HomeScreen() {
       <VoiceAssistantModal
         visible={voiceModalVisible}
         onClose={() => setVoiceModalVisible(false)}
+      />
+
+      {/* In-App Frosted Notification Center & Activity Inbox */}
+      <NotificationCenterModal
+        visible={notifModalVisible}
+        onClose={() => setNotifModalVisible(false)}
       />
     </SafeAreaView>
   );

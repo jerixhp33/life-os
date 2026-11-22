@@ -537,6 +537,34 @@ export default function MoreScreen() {
 
             <View style={[s.rowDivider, { backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : '#F1F5F9' }]} />
 
+            {/* 3.6. Notifications & Routines */}
+            <TouchableOpacity
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                router.push('/settings/notifications' as never);
+              }}
+              style={s.settRow}
+              activeOpacity={0.7}
+            >
+              <LinearGradient
+                colors={['#EC4899', '#F43F5E']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={s.settSquircle}
+              >
+                <Ionicons name="notifications" size={17} color="#FFFFFF" />
+              </LinearGradient>
+              <View style={{ flex: 1 }}>
+                <Text style={[s.settLabel, { color: theme.text.primary }]}>Notifications & Routines</Text>
+                <Text style={[s.settSub, { color: isDark ? '#819BB3' : '#64748B' }]}>
+                  Morning briefing, streak guard & quiet hours
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={16} color={isDark ? '#819BB3' : '#94A3B8'} />
+            </TouchableOpacity>
+
+            <View style={[s.rowDivider, { backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : '#F1F5F9' }]} />
+
             {/* 4. Security & Biometrics */}
             <TouchableOpacity
               onPress={() => {
