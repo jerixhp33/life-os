@@ -472,7 +472,7 @@ export default function WallpaperSettingsScreen() {
                 <View style={styles.swatchContainer}>
                   {pid === 'starlight' ? (
                     <Image
-                      source={require('../../../assets/wallpapers/starlight.jpg')}
+                      source={require('../../assets/wallpapers/starlight.jpg')}
                       style={styles.swatchImage}
                     />
                   ) : pid === 'custom' && activeConfig.customImageUri ? (
