@@ -65,7 +65,14 @@
           "color": "#1A5A7F"
         }
       ],
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow LifeOS to access your microphone for voice copilot."
+        }
+      ],
+      "./plugins/withProguard.js"
     ],
     "experiments": {
       "typedRoutes": false
